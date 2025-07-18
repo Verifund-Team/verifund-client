@@ -15,3 +15,7 @@ export function formatIDRX(amount: number) {
     .format(amount)
     .replace('IDR', 'IDRX')
 }
+
+export function formatAddress(address: string) {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
+}

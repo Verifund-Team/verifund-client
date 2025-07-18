@@ -21,14 +21,11 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="#campaigns" className="text-muted-foreground hover:text-foreground">
+            <Link href="/" className="text-muted-foreground hover:text-foreground">
+              Beranda
+            </Link>
+            <Link href="/campaigns" className="text-muted-foreground hover:text-foreground">
               Kampanye
-            </Link>
-            <Link href="#about" className="text-muted-foreground hover:text-foreground">
-              Tentang
-            </Link>
-            <Link href="#how-it-works" className="text-muted-foreground hover:text-foreground">
-              Cara Kerja
             </Link>
           </div>
 
