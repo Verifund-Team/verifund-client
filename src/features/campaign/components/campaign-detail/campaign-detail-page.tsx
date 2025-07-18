@@ -6,7 +6,7 @@ import NewestDonation from './newest-donation'
 import DonationForm from './donation-form'
 import CampaignerInfo from './campaigner-info'
 
-const MOCK_CAMPAIGN_DATA = {
+const MOCK_CAMPAIGN_DATA: TCampaign = {
   id: 1,
   title: 'Bantuan Pendidikan Anak Yatim',
   description: `Assalamualaikum warahmatullahi wabarakatuh,
@@ -38,6 +38,7 @@ Jazakallahu khairan atas kebaikan Anda.`,
   daysLeft: 15,
   createdAt: '2024-01-15',
   category: 'Pendidikan',
+  status: 'ongoing',
   campaigner: {
     name: 'Yayasan Peduli Anak',
     address: '0x1234...5678',
@@ -46,25 +47,28 @@ Jazakallahu khairan atas kebaikan Anda.`,
     campaignsCount: 12,
     totalRaised: 850000000,
   },
-  allowedVendors: [
-    {
-      name: 'SD Negeri 01 Jakarta Timur',
-      address: '0xabcd...efgh',
-      purpose: 'Biaya sekolah dan seragam',
-    },
-    {
-      name: 'Toko Buku Pendidikan',
-      address: '0x9876...5432',
-      purpose: 'Buku dan alat tulis',
-    },
-    {
-      name: 'Lembaga Bimbel Cerdas',
-      address: '0xdef0...1234',
-      purpose: 'Program bimbingan belajar',
-    },
-  ],
 }
-export type TCampaign = typeof MOCK_CAMPAIGN_DATA
+export type TCampaign = {
+  id: number
+  title: string
+  description: string
+  image: string
+  raised: number
+  target: number
+  donors: number
+  daysLeft: number
+  createdAt: string
+  category: string
+  status: 'ongoing' | 'completed'
+  campaigner?: {
+    name: string
+    address: string
+    isVerified: boolean
+    avatar: string
+    campaignsCount: number
+    totalRaised: number
+  }
+}
 
 const MOCK_RECENT_DONATIONS = [
   {

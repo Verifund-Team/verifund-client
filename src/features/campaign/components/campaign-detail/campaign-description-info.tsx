@@ -15,7 +15,7 @@ const CampaignDescriptionInfo = ({ data }: { data: TCampaign }) => {
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Badge variant="secondary">{data.category}</Badge>
-              {data.campaigner.isVerified && (
+              {data.campaigner?.isVerified && (
                 <Badge className="bg-primary text-primary-foreground">
                   <Shield className="w-3 h-3 mr-1" />
                   Terverifikasi

@@ -15,15 +15,15 @@ const CampaignerInfo = ({ data }: { data: TCampaign }) => {
       <CardContent>
         <div className="flex items-start space-x-3">
           <Avatar className="w-12 h-12">
-            <AvatarImage src={data.campaigner.avatar || '/placeholder.svg'} />
+            <AvatarImage src={data.campaigner?.avatar || '/placeholder.svg'} />
             <AvatarFallback className="bg-primary text-primary-foreground">
-              {data.campaigner.name.charAt(0)}
+              {data.campaigner?.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-1">
-              <h4 className="font-medium text-foreground">{data.campaigner.name}</h4>
-              {data.campaigner.isVerified && (
+              <h4 className="font-medium text-foreground">{data.campaigner?.name}</h4>
+              {data.campaigner?.isVerified && (
                 <Badge variant="outline" className="text-primary border-primary">
                   <Shield className="w-3 h-3 mr-1" />
                   Terverifikasi
@@ -31,16 +31,16 @@ const CampaignerInfo = ({ data }: { data: TCampaign }) => {
               )}
             </div>
             <p className="text-sm text-muted-foreground mb-2">
-              {formatAddress(data.campaigner.address)}
+              {formatAddress(data.campaigner?.address)}
             </p>
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Kampanye:</span>
-                <span className="font-medium">{data.campaigner.campaignsCount}</span>
+                <span className="font-medium">{data.campaigner?.campaignsCount}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Terkumpul:</span>
-                <span className="font-medium">{formatIDRX(data.campaigner.totalRaised)}</span>
+                <span className="font-medium">{formatIDRX(data.campaigner?.totalRaised)}</span>
               </div>
             </div>
           </div>
