@@ -32,3 +32,12 @@ export function formatDate(date?: string) {
   if (!date) return ''
   return format(new Date(date), 'd MMMM yyyy HH:mm', { locale: id })
 }
+
+export function createInputChangeHandler<T>(setState: React.Dispatch<React.SetStateAction<T>>) {
+  return (field: keyof T, value: string) => {
+    setState((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+}
