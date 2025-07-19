@@ -14,8 +14,14 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary-foreground" />
+            <div className="w-8 h-8 relative">
+              <img
+                src="/logoverifund.png"
+                alt="Verifund Logo"
+                width={32}
+                height={32}
+                className="rounded-lg object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-foreground">Verifund</span>
           </div>
