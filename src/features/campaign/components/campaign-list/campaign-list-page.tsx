@@ -1,6 +1,5 @@
 'use client'
-
-import { useState } from 'react'
+import { useMemo, useState, useEffect } from 'react' 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -26,7 +25,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 100000000,
     donors: 234,
     daysLeft: 15,
-    createdAt: '2024-01-15',
+    createdAt: '2024-07-15',
     campaigner: {
       name: 'Yayasan Peduli Anak',
       address: '0x1234...5678',
@@ -48,7 +47,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 150000000,
     donors: 156,
     daysLeft: 22,
-    createdAt: '2024-01-10',
+    createdAt: '2024-07-10',
     campaigner: {
       name: 'Takmir Masjid Al-Ikhlas',
       address: '0xabcd...7890',
@@ -70,7 +69,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 200000000,
     donors: 445,
     daysLeft: 8,
-    createdAt: '2024-01-20',
+    createdAt: '2024-07-20',
     campaigner: {
       name: 'PMI Kalimantan Selatan',
       address: '0x7890...abcd',
@@ -91,7 +90,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 500000000,
     donors: 89,
     daysLeft: 45,
-    createdAt: '2024-01-05',
+    createdAt: '2024-07-05',
     campaigner: {
       name: 'AgriTech Indonesia',
       address: '0x4567...cdef',
@@ -112,7 +111,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 120000000,
     donors: 178,
     daysLeft: 30,
-    createdAt: '2024-01-12',
+    createdAt: '2024-07-12',
     campaigner: {
       name: 'Universitas Nusantara',
       address: '0x9876...abcd',
@@ -134,7 +133,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 150000000,
     donors: 267,
     daysLeft: 0,
-    createdAt: '2024-01-18',
+    createdAt: '2024-06-18',
     campaigner: {
       name: 'RS Jantung Harapan',
       address: '0xdead...beef',
@@ -155,7 +154,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 80000000,
     donors: 123,
     daysLeft: 25,
-    createdAt: '2024-01-08',
+    createdAt: '2024-07-08',
     campaigner: {
       name: 'Komunitas Literasi Desa',
       address: '0xbeef...cafe',
@@ -176,7 +175,7 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     target: 300000000,
     donors: 389,
     daysLeft: 0,
-    createdAt: '2024-01-16',
+    createdAt: '2024-06-16',
     campaigner: {
       name: 'Kadin Jakarta',
       address: '0xface...feed',
@@ -188,39 +187,193 @@ export const MOCK_CAMPAIGNS: TCampaign[] = [
     category: 'Ekonomi',
     status: 'completed',
   },
+  {
+    id: 9,
+    title: 'Penanaman 10.000 Pohon Mangrove',
+    description: 'Restorasi ekosistem pesisir pantai utara Jawa melalui penanaman mangrove.',
+    image: 'https://picsum.photos/seed/campaign9/1000',
+    raised: 88000000,
+    target: 120000000,
+    donors: 312,
+    daysLeft: 40,
+    createdAt: '2025-07-01',
+    campaigner: {
+      name: 'Yayasan Lestari Alam',
+      address: '0xcafe...babe',
+      isVerified: true,
+      avatar: '/placeholder.svg?height=40&width=40',
+      campaignsCount: 3,
+      totalRaised: 250000000,
+    },
+    category: 'Lingkungan',
+    status: 'ongoing',
+  },
+  {
+    id: 10,
+    title: 'Rumah Singgah Pasien Kanker',
+    description: 'Menyediakan tempat tinggal sementara bagi pasien kanker dan keluarga dari luar kota.',
+    image: 'https://picsum.photos/seed/campaign10/1000',
+    raised: 180000000,
+    target: 250000000,
+    donors: 450,
+    daysLeft: 55,
+    createdAt: '2025-06-25',
+    campaigner: {
+      name: 'Harapan Sehat Foundation',
+      address: '0xfeed...face',
+      isVerified: true,
+      avatar: '/placeholder.svg?height=40&width=40',
+      campaignsCount: 9,
+      totalRaised: 950000000,
+    },
+    category: 'Kesehatan',
+    status: 'ongoing',
+  },
+  {
+    id: 11,
+    title: 'Pelatihan Digital untuk Lansia',
+    description: 'Program pelatihan penggunaan smartphone dan internet untuk para lansia di Surakarta.',
+    image: 'https://picsum.photos/seed/campaign11/1000',
+    raised: 25000000,
+    target: 75000000,
+    donors: 95,
+    daysLeft: 60,
+    createdAt: '2025-07-22',
+    campaigner: {
+      name: 'Komunitas Digital Senior',
+      address: '0x1337...c0de',
+      isVerified: false,
+      avatar: '/placeholder.svg?height=40&width=40',
+      campaignsCount: 2,
+      totalRaised: 45000000,
+    },
+    category: 'Pendidikan',
+    status: 'ongoing',
+  },
+  {
+    id: 12,
+    title: 'Pengadaan Air Bersih NTT',
+    description: 'Pembangunan sumur bor untuk mengatasi kekeringan di desa terpencil Nusa Tenggara Timur.',
+    image: 'https://picsum.photos/seed/campaign12/1000',
+    raised: 450000000,
+    target: 450000000,
+    donors: 1204,
+    daysLeft: 0,
+    createdAt: '2025-05-10',
+    campaigner: {
+      name: 'Aksi Cepat Tanggap',
+      address: '0xbeef...dead',
+      isVerified: true,
+      avatar: '/placeholder.svg?height=40&width=40',
+      campaignsCount: 35,
+      totalRaised: 5100000000,
+    },
+    category: 'Kemanusiaan',
+    status: 'completed',
+  },
 ]
-
 const statusOptions = [
-  { value: 'all', label: 'Semua Kampanye' },
+  { value: 'all', label: 'Semua Status' },
   { value: 'ongoing', label: 'Sedang Berjalan' },
   { value: 'completed', label: 'Selesai' },
 ]
 
+const categoryOptions = [
+  { value: 'all', label: 'Semua Kategori' },
+  ...[...new Set(MOCK_CAMPAIGNS.map((c) => c.category))].map((category) => ({
+    value: category,
+    label: category,
+  })),
+]
+
+const sortOptions = [
+  { value: 'latest', label: 'Terbaru' },
+  { value: 'endingSoon', label: 'Segera Berakhir' },
+  { value: 'mostFunded', label: 'Paling Terkumpul' },
+  { value: 'leastFunded', label: 'Paling Sedikit Terkumpul' },
+]
+
+const formatCompactNumber = (num: number) => {
+  if (num >= 1_000_000_000) {
+    return `${(num / 1_000_000_000).toFixed(2)} M` 
+  }
+  if (num >= 1_000_000) {
+    return `${(num / 1_000_000).toFixed(0)} Jt` 
+  }
+  return num.toString()
+}
+const INITIAL_ITEMS = 8;
+
 export default function CampaignsListPage() {
-  const [statusFilter, setStatusFilter] = useState('all')
-
-  const filteredCampaigns = MOCK_CAMPAIGNS.filter((campaign) => {
-    if (statusFilter === 'all') return true
-    return campaign.status === statusFilter
+  const [filters, setFilters] = useState({
+    status: 'all',
+    category: 'all',
+    sortBy: 'latest',
   })
+  const [visibleCount, setVisibleCount] = useState(INITIAL_ITEMS)
+  const handleFilterChange = (filterName: keyof typeof filters, value: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: value,
+    }))
+  }
 
-  const stats = {
+  const filteredAndSortedCampaigns = useMemo(() => {
+    let campaigns = [...MOCK_CAMPAIGNS]
+    campaigns = campaigns.filter((campaign) => {
+      const statusMatch = filters.status === 'all' || campaign.status === filters.status
+      const categoryMatch = filters.category === 'all' || campaign.category === filters.category
+      return statusMatch && categoryMatch
+    })
+    switch (filters.sortBy) {
+      case 'latest':
+        campaigns.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        break
+      case 'endingSoon':
+        campaigns.sort((a, b) => {
+          if (a.status !== 'ongoing') return 1
+          if (b.status !== 'ongoing') return -1
+          return a.daysLeft - b.daysLeft
+        })
+        break
+      case 'mostFunded':
+        campaigns.sort((a, b) => b.raised - a.raised)
+        break
+      case 'leastFunded':
+        campaigns.sort((a, b) => a.raised - b.raised)
+        break
+      default:
+        break
+    }
+
+    return campaigns
+  }, [filters])
+  
+  // NEW: Reset visible count setiap kali hasil filter berubah
+  useEffect(() => {
+    setVisibleCount(INITIAL_ITEMS);
+  }, [filteredAndSortedCampaigns]);
+
+  // NEW: Buat array baru yang hanya berisi item yang akan ditampilkan
+  const displayedCampaigns = useMemo(() => {
+    return filteredAndSortedCampaigns.slice(0, visibleCount);
+  }, [filteredAndSortedCampaigns, visibleCount]);
+
+  const stats = useMemo(() => ({
     total: MOCK_CAMPAIGNS.length,
     ongoing: MOCK_CAMPAIGNS.filter((c) => c.status === 'ongoing').length,
     completed: MOCK_CAMPAIGNS.filter((c) => c.status === 'completed').length,
     totalRaised: MOCK_CAMPAIGNS.reduce((sum, c) => sum + c.raised, 0),
-  }
+  }), []);
+
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Semua Kampanye</h1>
         <p className="text-xl text-muted-foreground mb-6">
           Temukan dan dukung kampanye yang Anda pedulikan dengan transparansi penuh
         </p>
-
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardContent className="p-4 text-center">
@@ -243,37 +396,69 @@ export default function CampaignsListPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">
-                {formatIDRX(stats.totalRaised).replace('IDRX', '').trim()}B
+                {formatCompactNumber(stats.totalRaised)}
               </div>
               <div className="text-sm text-muted-foreground">Total Terkumpul</div>
             </CardContent>
           </Card>
         </div>
       </div>
-
-      {/* Simple Filter */}
-      <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="text-muted-foreground">
-          Menampilkan {filteredCampaigns.length} dari {MOCK_CAMPAIGNS.length} kampanye
+          Menampilkan {displayedCampaigns.length} dari {filteredAndSortedCampaigns.length} kampanye
         </div>
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter Status" />
-          </SelectTrigger>
-          <SelectContent>
-            {statusOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap gap-4">
+          <Select
+            value={filters.status}
+            onValueChange={(value) => handleFilterChange('status', value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter Status" />
+            </SelectTrigger>
+            <SelectContent>
+              {statusOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={filters.category}
+            onValueChange={(value) => handleFilterChange('category', value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter Kategori" />
+            </SelectTrigger>
+            <SelectContent>
+              {categoryOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={filters.sortBy}
+            onValueChange={(value) => handleFilterChange('sortBy', value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Urutkan" />
+            </SelectTrigger>
+            <SelectContent>
+              {sortOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
-
-      {filteredCampaigns.length > 0 ? (
+      {displayedCampaigns.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {filteredCampaigns.map((campaign) => (
+          {displayedCampaigns.map((campaign) => (
             <CampaignCard key={campaign.id} campaign={campaign} />
           ))}
         </div>
@@ -285,16 +470,22 @@ export default function CampaignsListPage() {
           <h3 className="text-lg font-semibold text-foreground mb-2">
             Tidak ada kampanye ditemukan
           </h3>
-          <p className="text-muted-foreground mb-4">Coba pilih filter status yang berbeda</p>
-          <Button variant="outline" onClick={() => setStatusFilter('all')}>
-            Tampilkan Semua Kampanye
+          <p className="text-muted-foreground mb-4">Coba ubah filter atau pilihan urutan Anda.</p>
+          <Button
+            variant="outline"
+            onClick={() => setFilters({ status: 'all', category: 'all', sortBy: 'latest' })}
+          >
+            Reset Semua Filter
           </Button>
         </div>
       )}
-
-      {filteredCampaigns.length > 0 && (
+      {visibleCount < filteredAndSortedCampaigns.length && (
         <div className="text-center">
-          <Button variant="outline" size="lg">
+          <Button 
+            variant="outline" 
+            size="lg"
+            onClick={() => setVisibleCount(prevCount => prevCount + INITIAL_ITEMS)}
+          >
             Muat Lebih Banyak
           </Button>
         </div>
