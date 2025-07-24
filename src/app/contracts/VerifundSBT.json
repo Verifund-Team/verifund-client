@@ -1,0 +1,23 @@
+{
+  "abi": [
+    {
+      "inputs": [{"internalType": "address", "name": "_user", "type": "address"}],
+      "name": "isVerified",
+      "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{"internalType": "address", "name": "_user", "type": "address"}],
+      "name": "getBadgeInfo",
+      "outputs": [
+        {"internalType": "bool", "name": "hasWhitelistPermission", "type": "bool"},
+        {"internalType": "bool", "name": "isCurrentlyVerified", "type": "bool"},
+        {"internalType": "uint256", "name": "tokenId", "type": "uint256"},
+        {"internalType": "string", "name": "metadataURI", "type": "string"}
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}

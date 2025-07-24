@@ -1,0 +1,65 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {"internalType": "address", "name": "_owner", "type": "address"},
+        {"internalType": "string", "name": "_name", "type": "string"},
+        {"internalType": "uint256", "name": "_targetAmount", "type": "uint256"},
+        {"internalType": "uint256", "name": "_deadline", "type": "uint256"},
+        {"internalType": "string", "name": "_ipfsHash", "type": "string"},
+        {"internalType": "address", "name": "_tokenAddress", "type": "address"}
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "getCampaignInfo",
+      "outputs": [
+        {"internalType": "address", "name": "campaignOwner", "type": "address"},
+        {"internalType": "string", "name": "campaignName", "type": "string"},
+        {"internalType": "uint256", "name": "target", "type": "uint256"},
+        {"internalType": "uint256", "name": "raised", "type": "uint256"},
+        {"internalType": "uint256", "name": "timeRemaining", "type": "uint256"},
+        {"internalType": "uint8", "name": "status", "type": "uint8"}
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "ipfsHash",
+      "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+      "name": "donate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "refund",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+      "name": "donations",
+      "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}
