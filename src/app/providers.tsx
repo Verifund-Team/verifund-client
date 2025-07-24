@@ -4,7 +4,7 @@ import React from "react";
 import { Config, WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { XellarKitProvider, defaultConfig, darkTheme } from "@xellar/kit"; 
-import { polygonAmoy } from "viem/chains";
+import { liskSepolia } from "viem/chains";
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { type ThemeProviderProps } from 'next-themes'
 
@@ -19,7 +19,7 @@ const config = defaultConfig({
   walletConnectProjectId,
   xellarAppId,
   xellarEnv: "sandbox",
-  chains: [polygonAmoy],
+  chains: [liskSepolia],
 }) as Config;
 
 const queryClient = new QueryClient();
