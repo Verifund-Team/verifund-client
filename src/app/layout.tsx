@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/footer'
 import Navbar from '@/components/navbar'
+import { Web3Provider } from '@/app/providers'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,14 +26,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  if (typeof window !== 'undefined') {
+    const originalError = console.error;
+    console.error = (...args) => {
+      if (typeof args[0] === 'string' && /Received `false` for a non-boolean attribute `invalid`/.test(args[0])) {
+        return;
+      }
+      originalError(...args);
+    };
+  }
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <main className="min-h-screen bg-background">
-          <Navbar />
-          {children}
-          <Footer />
-        </main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Web3Provider>
+            <main className="min-h-screen bg-background">
+              <Navbar />
+              {children}
+              <Footer />
+            </main>
+          </Web3Provider>
+        </ThemeProvider>
       </body>
     </html>
   )

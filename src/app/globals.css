@@ -79,24 +79,35 @@
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.985 0 0);
+  /* Variabel warna untuk tema gelap disesuaikan dengan SectionHero */
+  --background: oklch(0.214 0.021 262.35); /* DIUBAH: Menjadi #0A0F1A */
+  --foreground: oklch(0.985 0 0); /* TETAP: Putih, kontras tinggi */
+  
+  --card: oklch(0.24 0.022 262); /* DIUBAH: Sedikit lebih terang dari background */
+  --card-foreground: oklch(0.985 0 0); /* TETAP: Putih */
+  
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
+  
+  --primary: oklch(0.854 0.224 188.75); /* DIUBAH: Menjadi cyan terang #00F2DE */
+  --primary-foreground: oklch(0.14 0.02 260); /* DIUBAH: Menjadi hitam/gelap untuk kontras di atas tombol cyan */
+  
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
+  
   --muted: oklch(0.274 0.006 286.033);
   --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
+  
+  --accent: oklch(0.854 0.224 188.75 / 20%); /* DIUBAH: Aksen hover menjadi cyan transparan */
   --accent-foreground: oklch(0.985 0 0);
+  
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
+  
+  --border: oklch(0.854 0.224 188.75 / 15%); /* DIUBAH: Border menjadi cyan transparan */
+  --input: oklch(0.854 0.224 188.75 / 15%); /* DIUBAH: Input memiliki style serupa border */
+  --ring: oklch(0.854 0.224 188.75); /* DIUBAH: Ring focus menjadi cyan terang */
+
+  /* Variabel chart dan sidebar bisa disesuaikan lebih lanjut jika perlu */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
