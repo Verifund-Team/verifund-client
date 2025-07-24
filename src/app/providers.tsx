@@ -14,7 +14,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 
 const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!;
 const xellarAppId = process.env.NEXT_PUBLIC_XELLAR_APP_ID!;
-const config = defaultConfig({
+export const config = defaultConfig({
   appName: "Verifund",
   walletConnectProjectId,
   xellarAppId,
