@@ -7,11 +7,11 @@ function atob(str: string) {
 export function createSignature(
   method: string,
   url: string,
-  body: any,
+  body: Record<string, unknown> | null,
   timestamp: string,
   secretKey: string,
 ) {
-  const bodyBuffer = Buffer.from(JSON.stringify(body));
+  const bodyBuffer = body ? Buffer.from(JSON.stringify(body)) : Buffer.alloc(0);
   const secret = atob(secretKey);
 
   const hmac = crypto.createHmac('sha256', secret);
@@ -19,7 +19,7 @@ export function createSignature(
   hmac.update(method);
   hmac.update(url);
 
-  if (bodyBuffer != null) {
+  if (bodyBuffer.length > 0) {
     hmac.update(bodyBuffer);
   }
 

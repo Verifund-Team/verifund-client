@@ -1,6 +1,6 @@
 import { createSignature, generateTimestamp } from './idrx-signature';
 
-interface MintRequestPayload {
+interface MintRequestPayload extends Record<string, unknown> {
   toBeMinted: string;
   destinationWalletAddress: string;
   expiryPeriod: number;
@@ -127,9 +127,7 @@ export class IDRXService {
     return await response.json();
   }
 
-  async checkPaymentStatus(reference: string): Promise<any> {
-    // Implementasi untuk check status pembayaran
-    // Sesuaikan dengan dokumentasi IDRX untuk status check
+  async checkPaymentStatus(reference: string): Promise<TransactionRecord | null> {
     const method = 'GET';
     const url = `/transaction/status/${reference}`;
     const timestamp = generateTimestamp();
@@ -155,7 +153,8 @@ export class IDRXService {
       throw new Error(`IDRX API Error: ${response.status} ${response.statusText}`);
     }
 
-    return await response.json();
+    const result: TransactionRecord = await response.json(); // ✅ Proper typing
+    return result;
   }
   async getTransactionHistory(params: TransactionHistoryParams): Promise<TransactionHistoryResponse> {
     const method = 'GET';
