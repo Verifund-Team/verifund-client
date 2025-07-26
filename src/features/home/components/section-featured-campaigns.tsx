@@ -80,25 +80,7 @@ const SectionFeaturedCampaigns = () => {
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg blur-lg opacity-0 group-hover:opacity-60 transition duration-300"></div>
               <div className="relative h-full">
-                <CampaignCard
-                  key={campaign.address}
-                  campaign={{
-                    id: campaign.address,
-                    title: campaign.metadata?.name || campaign.name,
-                    description: campaign.metadata?.description || "",
-                    image:
-                      campaign.metadata?.image ||
-                      "https://placehold.co/400x300/e0e0e0/000000?text=No+Image",
-                    raised: parseFloat(campaign.raised),
-                    target: parseFloat(campaign.target),
-                    daysLeft: campaign.timeRemaining,
-                    category: campaign.metadata?.category || "Uncategorized",
-                    campaigner: {
-                      name: campaign.metadata?.creatorName || "Anonymous",
-                      isVerified: campaign.isOwnerVerified,
-                    },
-                  }}
-                />
+                <CampaignCard key={campaign.address} campaign={campaign} />
               </div>
             </motion.div>
           ))}
