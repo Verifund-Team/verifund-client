@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Shield, Users } from "lucide-react";
+import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatIDRX, formatTimeRemaining } from "@/lib/utils";
 import Image from "next/image";
@@ -16,15 +16,7 @@ import { useConnectModal } from "@xellar/kit";
 type Props = {
   campaign: Pick<
     TCampaign,
-    | "id"
-    | "title"
-    | "image"
-    | "category"
-    | "raised"
-    | "target"
-    | "description"
-    | "donors"
-    | "daysLeft"
+    "id" | "title" | "image" | "category" | "raised" | "target" | "description" | "daysLeft"
   > & {
     campaigner: {
       name: string;
