@@ -53,3 +53,13 @@ export const formatTimeRemaining = (seconds: number) => {
   if (days > 0) return `${days} hari ${hours} jam`;
   return `${hours} jam`;
 };
+
+export const formatCompactNumber = (num: number) => {
+  if (num >= 1_000_000_000) {
+    return `${(num / 1_000_000_000).toFixed(2)} M`;
+  }
+  if (num >= 1_000_000) {
+    return `${(num / 1_000_000).toFixed(0)} Jt`;
+  }
+  return num.toString();
+};
