@@ -1,15 +1,16 @@
-'use client'
+"use client";
 
 import React from "react";
 import { Config, WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { XellarKitProvider, defaultConfig, darkTheme } from "@xellar/kit"; 
+import { XellarKitProvider, defaultConfig, darkTheme } from "@xellar/kit";
 import { liskSepolia } from "viem/chains";
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { type ThemeProviderProps } from 'next-themes'
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { type ThemeProviderProps } from "next-themes";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
 const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!;
@@ -28,9 +29,8 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <XellarKitProvider theme={darkTheme}>
-          {children}
-        </XellarKitProvider>
+        <XellarKitProvider theme={darkTheme}>{children}</XellarKitProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </WagmiProvider>
   );

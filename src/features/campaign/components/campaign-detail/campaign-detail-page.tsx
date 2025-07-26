@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import CampaignImage from './campaign-image'
-import CampaignDescriptionInfo from './campaign-description-info'
-import NewestDonation from './newest-donation'
-import DonationForm from './donation-form'
-import CampaignerInfo from './campaigner-info'
+import CampaignImage from "./campaign-image";
+import CampaignDescriptionInfo from "./campaign-description-info";
+import NewestDonation from "./newest-donation";
+import DonationForm from "./donation-form";
+import CampaignerInfo from "./campaigner-info";
 
 const MOCK_CAMPAIGN_DATA: TCampaign = {
   id: 1,
-  title: 'Bantuan Pendidikan Anak Yatim',
+  title: "Bantuan Pendidikan Anak Yatim",
   description: `Assalamualaikum warahmatullahi wabarakatuh,
 
 Kami dari Yayasan Peduli Anak mengajak Anda untuk berpartisipasi dalam program bantuan pendidikan untuk 50 anak yatim di Jakarta Timur. Program ini bertujuan untuk memberikan akses pendidikan yang layak bagi anak-anak yang kurang beruntung.
@@ -31,89 +31,89 @@ Anak yatim usia 6-17 tahun di wilayah Jakarta Timur yang berasal dari keluarga k
 Mari bersama-sama memberikan harapan dan masa depan yang cerah untuk mereka. Setiap donasi Anda, sekecil apapun, sangat berarti bagi mereka.
 
 Jazakallahu khairan atas kebaikan Anda.`,
-  image: 'https://picsum.photos/id/3/1000',
+  image: "https://picsum.photos/id/3/1000",
   raised: 45000000,
   target: 100000000,
   donors: 234,
   daysLeft: 15,
-  createdAt: '2024-01-15',
-  category: 'Pendidikan',
-  status: 'ongoing',
+  createdAt: "2024-01-15",
+  category: "Pendidikan",
+  status: "ongoing",
   campaigner: {
-    name: 'Yayasan Peduli Anak',
-    address: '0x1234...5678',
+    name: "Yayasan Peduli Anak",
+    address: "0x1234...5678",
     isVerified: true,
-    avatar: '/placeholder.svg?height=40&width=40',
+    avatar: "/placeholder.svg?height=40&width=40",
     campaignsCount: 12,
     totalRaised: 850000000,
   },
-}
+};
 export type TCampaign = {
-  id: number
-  title: string
-  description: string
-  image: string
-  raised: number
-  target: number
-  donors: number
-  daysLeft: number
-  createdAt: string
-  category: string
-  status: 'ongoing' | 'completed'
+  id: number | string;
+  title: string;
+  description: string;
+  image: string;
+  raised: number;
+  target: number;
+  donors: number;
+  daysLeft: number;
+  createdAt: string;
+  category: string;
+  status: "ongoing" | "completed";
   campaigner?: {
-    name: string
-    address: string
-    isVerified: boolean
-    avatar: string
-    campaignsCount: number
-    totalRaised: number
-  }
-}
+    name: string;
+    address: string;
+    isVerified: boolean;
+    avatar: string;
+    campaignsCount: number;
+    totalRaised: number;
+  };
+};
 
 const MOCK_RECENT_DONATIONS = [
   {
     id: 1,
-    donor: '0x1a2b...3c4d',
+    donor: "0x1a2b...3c4d",
     amount: 500000,
-    timestamp: '2024-01-20T10:30:00Z',
-    message: 'Semoga bermanfaat untuk adik-adik',
+    timestamp: "2024-01-20T10:30:00Z",
+    message: "Semoga bermanfaat untuk adik-adik",
   },
   {
     id: 2,
-    donor: '0x5e6f...7g8h',
+    donor: "0x5e6f...7g8h",
     amount: 1000000,
-    timestamp: '2024-01-20T09:15:00Z',
-    message: 'Untuk masa depan anak-anak Indonesia',
+    timestamp: "2024-01-20T09:15:00Z",
+    message: "Untuk masa depan anak-anak Indonesia",
   },
   {
     id: 3,
-    donor: '0x9i0j...1k2l',
+    donor: "0x9i0j...1k2l",
     amount: 250000,
-    timestamp: '2024-01-20T08:45:00Z',
-    message: '',
+    timestamp: "2024-01-20T08:45:00Z",
+    message: "",
   },
   {
     id: 4,
-    donor: '0x3m4n...5o6p',
+    donor: "0x3m4n...5o6p",
     amount: 750000,
-    timestamp: '2024-01-19T16:20:00Z',
-    message: 'Barakallahu fiikum',
+    timestamp: "2024-01-19T16:20:00Z",
+    message: "Barakallahu fiikum",
   },
   {
     id: 5,
-    donor: '0x7q8r...9s0t',
+    donor: "0x7q8r...9s0t",
     amount: 2000000,
-    timestamp: '2024-01-19T14:10:00Z',
-    message: 'Semoga berkah dan bermanfaat',
+    timestamp: "2024-01-19T14:10:00Z",
+    message: "Semoga berkah dan bermanfaat",
   },
-]
+];
 export type TDonation = {
-  id: number
-  donor: string
-  amount: number
-  timestamp: string
-  message: string
-}
+  id: number;
+  donor: string;
+  amount: number;
+  timestamp: string;
+  message: string;
+};
 
 export default function CampaignDetailPage() {
   return (
@@ -131,5 +131,5 @@ export default function CampaignDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

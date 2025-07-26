@@ -1,29 +1,48 @@
-'use client' 
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Shield, Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { formatIDRX } from '@/lib/utils'
-import Image from 'next/image'
-import { TCampaign } from '../campaign-detail/campaign-detail-page'
-import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Shield, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { formatIDRX, formatTimeRemaining } from "@/lib/utils";
+import Image from "next/image";
+import { TCampaign } from "../campaign-detail/campaign-detail-page";
+import Link from "next/link";
 
-import { useAccount } from 'wagmi'
-import { useConnectModal } from '@xellar/kit'
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@xellar/kit";
 
-const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
+type Props = {
+  campaign: Pick<
+    TCampaign,
+    | "id"
+    | "title"
+    | "image"
+    | "category"
+    | "raised"
+    | "target"
+    | "description"
+    | "donors"
+    | "daysLeft"
+  > & {
+    campaigner: {
+      name: string;
+      isVerified: boolean;
+    };
+  };
+};
 
-  const { isConnected } = useAccount()
-  const { open } = useConnectModal()
+const CampaignCard = ({ campaign }: Props) => {
+  const { isConnected } = useAccount();
+  const { open } = useConnectModal();
 
   const handleDonateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isConnected) {
-      e.preventDefault() 
-      open() 
+      e.preventDefault();
+      open();
     }
-  }
+  };
 
   return (
     <Link key={campaign.id} href={`/campaigns/${campaign.id}`}>
@@ -34,15 +53,8 @@ const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
           </div>
 
           <Badge className="absolute top-3 left-3 bg-white text-black" variant="secondary">
-          {campaign.category}
-            </Badge>
-
-          {campaign.campaigner?.isVerified && (
-          <Badge className="absolute top-3 right-3 bg-white text-black" variant="default">
-          <Shield className="w-3 h-3 mr-1" />
-          Terverifikasi
+            {campaign.category}
           </Badge>
-          )}
         </div>
 
         <CardHeader className="pb-3">
@@ -60,19 +72,26 @@ const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
               <Progress value={(campaign.raised / campaign.target) * 100} className="h-2" />
             </div>
 
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <div className="flex items-center">
-                <Users className="w-4 h-4 mr-1" />
-                {campaign.donors} donatur
-              </div>
-              <div>{campaign.daysLeft} hari tersisa</div>
+            <div className="flex justify-end text-sm text-muted-foreground">
+              <div>{formatTimeRemaining(campaign.daysLeft)}</div>
             </div>
           </div>
 
           <div className="pt-2 mt-auto">
-            <p className="text-sm text-muted-foreground mb-3">oleh {campaign.campaigner?.name}</p>
-            <Button 
-              onClick={handleDonateClick} 
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-sm text-muted-foreground">
+                oleh {campaign.campaigner?.name}
+              </span>
+              {campaign.campaigner?.isVerified && (
+                <Badge className="bg-white text-black" variant="default">
+                  <Shield className="w-3 h-3 mr-1" />
+                  Terverifikasi
+                </Badge>
+              )}
+            </div>
+
+            <Button
+              onClick={handleDonateClick}
               className="hover:cursor-pointer w-full bg-white text-gray-900 font-bold hover:bg-gray-200 transition-colors duration-200"
             >
               Donasi Sekarang
@@ -81,7 +100,7 @@ const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
         </CardContent>
       </Card>
     </Link>
-  )
-}
+  );
+};
 
-export default CampaignCard
+export default CampaignCard;
