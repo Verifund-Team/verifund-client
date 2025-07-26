@@ -1,11 +1,15 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { MOCK_CAMPAIGNS } from '@/features/campaign/components/campaign-list/campaign-list-page'
-import { formatIDRX } from '@/lib/utils'
+import { Card, CardContent } from "@/components/ui/card";
+import { useGetCampaigns } from "@/features/campaign/api/get-campaigns";
+import { formatIDRX } from "@/lib/utils";
 
 const StatCards = () => {
-  const totalRaised = MOCK_CAMPAIGNS.reduce((sum, campaign) => sum + campaign.raised, 0)
-  const totalDonors = MOCK_CAMPAIGNS.reduce((sum, campaign) => sum + campaign.donors, 0)
-  const activeCampaigns = MOCK_CAMPAIGNS.filter((c) => c.status === 'ongoing').length
+  const { data } = useGetCampaigns();
+  const totalRaised = data?.reduce((sum, campaign) => sum + parseFloat(campaign.raised), 0);
+  const activeCampaigns = data?.filter((c) => c.status === 0).length; // 0 = ongoing
+  const totalCampaigns = data?.length;
+
+  // TODO: RESOLVE THIS
+  const MOCK_TOTAL_DONORS = 0;
 
   return (
     <div className="grid md:grid-cols-4 gap-4 mb-8">
@@ -17,7 +21,7 @@ const StatCards = () => {
       </Card>
       <Card>
         <CardContent className="p-6 text-center">
-          <div className="text-2xl font-bold text-primary">{totalDonors}</div>
+          <div className="text-2xl font-bold text-primary">{MOCK_TOTAL_DONORS}</div>
           <div className="text-sm text-muted-foreground">Total Donatur</div>
         </CardContent>
       </Card>
@@ -29,12 +33,12 @@ const StatCards = () => {
       </Card>
       <Card>
         <CardContent className="p-6 text-center">
-          <div className="text-2xl font-bold text-primary">{MOCK_CAMPAIGNS.length}</div>
+          <div className="text-2xl font-bold text-primary">{totalCampaigns}</div>
           <div className="text-sm text-muted-foreground">Total Kampanye</div>
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default StatCards
+export default StatCards;

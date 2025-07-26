@@ -216,7 +216,6 @@ export default function CampaignsListPage() {
                   "https://placehold.co/400x300/e0e0e0/000000?text=No+Image",
                 raised: parseFloat(campaign.raised),
                 target: parseFloat(campaign.target),
-                donors: 0, // Placeholder
                 daysLeft: campaign.timeRemaining,
                 category: campaign.metadata?.category || "Uncategorized",
                 campaigner: {

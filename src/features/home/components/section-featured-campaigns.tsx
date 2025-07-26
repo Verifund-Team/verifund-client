@@ -1,9 +1,9 @@
 // Pastikan Link diimpor dari next/link
-import Link from 'next/link';
-import CampaignCard from '@/features/campaign/components/campaign-list/campaign-card';
-import { MOCK_CAMPAIGNS } from '@/features/campaign/components/campaign-list/campaign-list-page';
-import { ArrowRight } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import Link from "next/link";
+import CampaignCard from "@/features/campaign/components/campaign-list/campaign-card";
+import { ArrowRight } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+import { useGetCampaigns } from "@/features/campaign/api/get-campaigns";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -21,13 +21,15 @@ const itemVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: "spring",
       stiffness: 100,
     },
   },
 };
 
 const SectionFeaturedCampaigns = () => {
+  const { data } = useGetCampaigns();
+
   return (
     <section id="campaigns" className="relative bg-[#0A0F2C] py-20 sm:py-24 px-4 overflow-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -46,54 +48,71 @@ const SectionFeaturedCampaigns = () => {
         </motion.div>
       </div>
       <div className="container mx-auto relative z-10">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
           viewport={{ once: true }}
         >
           <div className="text-cyan-400 font-semibold mb-3 tracking-wider">PILIHAN KAMI</div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            Kampanye Unggulan
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Kampanye Unggulan</h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Dukung kampanye-kampanye yang telah terverifikasi dan transparan untuk membawa perubahan.
+            Dukung kampanye-kampanye yang telah terverifikasi dan transparan untuk membawa
+            perubahan.
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {MOCK_CAMPAIGNS.slice(0, 4).map((campaign) => (
-            <motion.div 
-              variants={itemVariants} 
-              key={campaign.id} 
+          {data?.slice(0, 4).map((campaign) => (
+            <motion.div
+              variants={itemVariants}
+              key={campaign.address}
               className="group relative h-full"
               whileHover={{ y: -8 }}
-              transition={{ type: 'spring', stiffness: 300 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg blur-lg opacity-0 group-hover:opacity-60 transition duration-300"></div>
               <div className="relative h-full">
-                <CampaignCard campaign={campaign} />
+                <CampaignCard
+                  key={campaign.address}
+                  campaign={{
+                    id: campaign.address,
+                    title: campaign.metadata?.name || campaign.name,
+                    description: campaign.metadata?.description || "",
+                    image:
+                      campaign.metadata?.image ||
+                      "https://placehold.co/400x300/e0e0e0/000000?text=No+Image",
+                    raised: parseFloat(campaign.raised),
+                    target: parseFloat(campaign.target),
+                    daysLeft: campaign.timeRemaining,
+                    category: campaign.metadata?.category || "Uncategorized",
+                    campaigner: {
+                      name: campaign.metadata?.creatorName || "Anonymous",
+                      isVerified: campaign.isOwnerVerified,
+                    },
+                  }}
+                />
               </div>
             </motion.div>
           ))}
         </motion.div>
-        
-        <motion.div 
+
+        <motion.div
           className="text-center mt-16"
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
         >
           <Link href="/campaigns">
-            <motion.div 
+            <motion.div
               className="group inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg border-2 border-cyan-400 text-cyan-400 font-semibold transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-lg hover:shadow-cyan-400/20 cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -106,7 +125,7 @@ const SectionFeaturedCampaigns = () => {
         </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default SectionFeaturedCampaigns;
