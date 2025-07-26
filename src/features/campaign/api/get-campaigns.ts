@@ -1,8 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { web3Service } from "@/lib/web3";
-import { CampaignMetadata, getMetadataFromIPFS } from "@/lib/ipfs";
+import { getMetadataFromIPFS } from "@/lib/ipfs";
 
-type Campaign = {
+export type CampaignMetadata = {
+  name: string;
+  description: string;
+  category: string;
+  creatorName: string;
+  image?: string;
+};
+
+export type Campaign = {
   address: string;
   owner: string;
   name: string;
