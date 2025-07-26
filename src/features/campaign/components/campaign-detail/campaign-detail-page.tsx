@@ -5,70 +5,10 @@ import CampaignDescriptionInfo from "./campaign-description-info";
 import NewestDonation from "./newest-donation";
 import DonationForm from "./donation-form";
 import CampaignerInfo from "./campaigner-info";
-
-const MOCK_CAMPAIGN_DATA: TCampaign = {
-  id: 1,
-  title: "Bantuan Pendidikan Anak Yatim",
-  description: `Assalamualaikum warahmatullahi wabarakatuh,
-
-Kami dari Yayasan Peduli Anak mengajak Anda untuk berpartisipasi dalam program bantuan pendidikan untuk 50 anak yatim di Jakarta Timur. Program ini bertujuan untuk memberikan akses pendidikan yang layak bagi anak-anak yang kurang beruntung.
-
-**Mengapa Program Ini Penting?**
-- 50 anak yatim membutuhkan bantuan biaya sekolah
-- Banyak dari mereka memiliki potensi akademik yang tinggi
-- Pendidikan adalah kunci untuk memutus rantai kemiskinan
-- Investasi terbaik adalah investasi untuk masa depan anak-anak
-
-**Penggunaan Dana:**
-- 60% untuk biaya sekolah dan seragam
-- 25% untuk buku dan alat tulis
-- 10% untuk program bimbingan belajar
-- 5% untuk kegiatan ekstrakurikuler
-
-**Target Penerima:**
-Anak yatim usia 6-17 tahun di wilayah Jakarta Timur yang berasal dari keluarga kurang mampu namun memiliki semangat belajar yang tinggi.
-
-Mari bersama-sama memberikan harapan dan masa depan yang cerah untuk mereka. Setiap donasi Anda, sekecil apapun, sangat berarti bagi mereka.
-
-Jazakallahu khairan atas kebaikan Anda.`,
-  image: "https://picsum.photos/id/3/1000",
-  raised: 45000000,
-  target: 100000000,
-  donors: 234,
-  daysLeft: 15,
-  createdAt: "2024-01-15",
-  category: "Pendidikan",
-  status: "ongoing",
-  campaigner: {
-    name: "Yayasan Peduli Anak",
-    address: "0x1234...5678",
-    isVerified: true,
-    avatar: "/placeholder.svg?height=40&width=40",
-    campaignsCount: 12,
-    totalRaised: 850000000,
-  },
-};
-export type TCampaign = {
-  id: number | string;
-  title: string;
-  description: string;
-  image: string;
-  raised: number;
-  target: number;
-  donors: number;
-  daysLeft: number;
-  createdAt: string;
-  category: string;
-  status: "ongoing" | "completed";
-  campaigner?: {
-    name: string;
-    address: string;
-    isVerified: boolean;
-    avatar: string;
-    campaignsCount: number;
-    totalRaised: number;
-  };
-};
+import { useParams } from "next/navigation";
+import { useGetCampaignDetail } from "../../api/get-campaign-detail";
+import CampaignDetailSkeleton from "./campaign-detail-skeleton";
+import CampaignDetailError from "./campaign-detail-error";
 
 const MOCK_RECENT_DONATIONS = [
   {
@@ -116,18 +56,24 @@ export type TDonation = {
 };
 
 export default function CampaignDetailPage() {
+  const params = useParams<{ id: string }>();
+  const { data, isLoading, isError } = useGetCampaignDetail(params.id);
+
+  if (isLoading) return <CampaignDetailSkeleton />;
+  if (isError) return <CampaignDetailError />;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <CampaignImage data={MOCK_CAMPAIGN_DATA} />
-          <CampaignDescriptionInfo data={MOCK_CAMPAIGN_DATA} />
+          <CampaignImage data={data} />
+          <CampaignDescriptionInfo data={data!} />
           <NewestDonation data={MOCK_RECENT_DONATIONS} />
         </div>
 
         <div className="space-y-6">
           <DonationForm />
-          <CampaignerInfo data={MOCK_CAMPAIGN_DATA} />
+          <CampaignerInfo data={data!} />
         </div>
       </div>
     </div>
