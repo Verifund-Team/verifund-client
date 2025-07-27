@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@xellar/kit";
 import { Campaign } from "../../api/get-campaigns";
+import { IMAGE_PLACEHOLDER } from "@/lib/constants";
 
 type Props = {
   campaign: Pick<
@@ -37,8 +38,7 @@ const CampaignCard = ({ campaign }: Props) => {
 
   const title = campaign.name;
   const description = campaign.metadata?.description || "Tidak ada deskripsi tersedia.";
-  const imageUrl =
-    campaign.metadata?.image || "https://placehold.co/400x300/e0e0e0/000000?text=No+Image";
+  const imageUrl = campaign.metadata?.image || IMAGE_PLACEHOLDER;
   const category = campaign.metadata?.category || "Uncategorized";
 
   return (

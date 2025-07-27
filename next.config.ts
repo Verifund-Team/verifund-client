@@ -3,9 +3,21 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      new URL("https://picsum.photos/*/**"),
-      new URL("https://placehold.co/*/**"),
-      new URL("https://gateway.pinata.cloud/*/**"),
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "gateway.pinata.cloud",
+        pathname: "/**",
+      },
     ],
   },
 };

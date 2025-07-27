@@ -1,55 +1,57 @@
-import { CardDescription, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { CardDescription, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Step } from '@/components/ui/stepper'
-import { Textarea } from '@/components/ui/textarea'
-import { CampaignForm } from './create-campaign'
-import { Button } from '@/components/ui/button'
-import { Trash2, Upload } from 'lucide-react'
-import { createInputChangeHandler } from '@/lib/utils'
+} from "@/components/ui/select";
+import { Step } from "@/components/ui/stepper";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Trash2, Upload } from "lucide-react";
+import { Controller, useFormContext } from "react-hook-form";
+import { CampaignFormSchema } from "../../api/create-campaign";
+import Image from "next/image";
 
 const MOCK_CATEGORIES = [
-  'Pendidikan',
-  'Kesehatan',
-  'Keagamaan',
-  'Kemanusiaan',
-  'Teknologi',
-  'Ekonomi',
-  'Lingkungan',
-  'Olahraga',
-  'Seni & Budaya',
-]
+  "Pendidikan",
+  "Kesehatan",
+  "Keagamaan",
+  "Kemanusiaan",
+  "Teknologi",
+  "Ekonomi",
+  "Lingkungan",
+  "Olahraga",
+  "Seni & Budaya",
+  "Lainnya",
+];
 
-const StepOneBasicInfo = ({
-  formData,
-  setFormData,
-}: {
-  formData: CampaignForm
-  setFormData: React.Dispatch<React.SetStateAction<CampaignForm>>
-}) => {
-  const handleInputChange = createInputChangeHandler<CampaignForm>(setFormData)
+const StepOneBasicInfo = () => {
+  const {
+    register,
+    control,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useFormContext<CampaignFormSchema>();
+  const image = watch("image");
+  const descriptionLength = watch("description")?.length || 0;
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || [])
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ...files].slice(0, 5), // Max 5 images
-    }))
-  }
+    const file = event.target.files?.[0];
+    if (file) {
+      setValue("image", file, { shouldValidate: true });
+    }
+  };
 
-  const removeImage = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }))
-  }
+  // Remove the single image
+  const removeImage = () => {
+    // @ts-expect-error: undefined is not type of file.
+    setValue("image", undefined, { shouldValidate: true });
+  };
 
   return (
     <Step>
@@ -57,98 +59,118 @@ const StepOneBasicInfo = ({
       <CardDescription>Masukkan informasi dasar tentang kampanye Anda</CardDescription>
       <div className="space-y-6 mt-6">
         <div>
-          <Label htmlFor="title">Judul Kampanye *</Label>
+          <Label htmlFor="creatorName">Nama Kreator *</Label>
           <Input
-            id="title"
-            placeholder="Masukkan judul kampanye yang menarik"
-            value={formData.title}
-            onChange={(e) => handleInputChange('title', e.target.value)}
+            id="creatorName"
+            placeholder="Masukkan nama Anda atau organisasi"
+            {...register("creatorName")}
             className="mt-1"
           />
+          {errors.creatorName && (
+            <p className="text-sm text-destructive mt-1">{errors.creatorName.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label htmlFor="name">Judul Kampanye *</Label>
+          <Input
+            id="name"
+            placeholder="Masukkan judul kampanye yang menarik"
+            {...register("name")}
+            className="mt-1"
+          />
+          {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
         </div>
 
         <div>
           <Label htmlFor="description">Deskripsi Kampanye *</Label>
           <Textarea
             id="description"
-            placeholder="Ceritakan detail kampanye Anda, tujuan, dan dampak yang ingin dicapai..."
-            value={formData.description}
-            onChange={(e) => handleInputChange('description', e.target.value)}
+            placeholder="Ceritakan detail kampanye Anda..."
+            {...register("description")}
             className="mt-1 min-h-[200px]"
           />
-          <p className="text-sm text-muted-foreground mt-1">
-            Minimal 100 karakter ({formData.description.length}/100)
+          <p
+            className={`text-sm mt-1 ${descriptionLength < 20 ? "text-muted-foreground" : "text-green-600"}`}
+          >
+            Minimal 20 karakter ({descriptionLength}/20)
           </p>
+          {errors.description && (
+            <p className="text-sm text-destructive mt-1">{errors.description.message}</p>
+          )}
         </div>
 
         <div>
           <Label htmlFor="category">Kategori *</Label>
-          <Select
-            value={formData.category}
-            onValueChange={(value) => handleInputChange('category', value)}
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Pilih kategori kampanye" />
-            </SelectTrigger>
-            <SelectContent>
-              {MOCK_CATEGORIES.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Controller
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Pilih kategori kampanye" />
+                </SelectTrigger>
+                <SelectContent>
+                  {MOCK_CATEGORIES.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+          {errors.category && (
+            <p className="text-sm text-destructive mt-1">{errors.category.message}</p>
+          )}
         </div>
 
         <div>
-          <Label>Gambar Kampanye</Label>
+          <Label>Gambar Kampanye *</Label>
           <div className="mt-2 space-y-4">
-            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-              <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground mb-2">
-                Drag & drop gambar atau klik untuk upload (Max 5 gambar)
-              </p>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="image-upload"
-              />
-              <Button variant="outline" asChild>
-                <label htmlFor="image-upload" className="cursor-pointer">
-                  Pilih Gambar
-                </label>
-              </Button>
-            </div>
-
-            {formData.images.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {formData.images.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={URL.createObjectURL(image) || '/placeholder.svg'}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-lg"
-                    />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-1 right-1 w-6 h-6 p-0"
-                      onClick={() => removeImage(index)}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
-                  </div>
-                ))}
+            {!image ? (
+              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground mb-2">
+                  Drag & drop gambar atau klik untuk upload
+                </p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <Button type="button" variant="outline" asChild>
+                  <label htmlFor="image-upload" className="cursor-pointer">
+                    Pilih Gambar
+                  </label>
+                </Button>
+              </div>
+            ) : (
+              <div className="relative w-full max-w-xs h-48 rounded-lg overflow-hidden">
+                <Image
+                  src={URL.createObjectURL(image)}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-2 right-2 w-7 h-7 p-0"
+                  onClick={removeImage}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
             )}
           </div>
+          {errors.image && <p className="text-sm text-destructive mt-1">{errors.image.message}</p>}
         </div>
       </div>
     </Step>
-  )
-}
-
-export default StepOneBasicInfo
+  );
+};
+export default StepOneBasicInfo;

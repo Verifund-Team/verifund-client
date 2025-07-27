@@ -1,12 +1,17 @@
-import { Step } from '@/components/ui/stepper'
-import { CampaignForm } from './create-campaign'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Calendar, Shield, Users } from 'lucide-react'
-import { formatIDRX } from '@/lib/utils'
-import { Progress } from '@/components/ui/progress'
+import { Step } from "@/components/ui/stepper";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Shield, Users } from "lucide-react";
+import { formatIDRX } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
+import { CampaignFormSchema } from "../../api/create-campaign";
+import { useFormContext } from "react-hook-form";
+import Image from "next/image";
 
-const StepThreePreview = ({ formData }: { formData: CampaignForm }) => {
+const StepThreePreview = () => {
+  const { watch } = useFormContext<CampaignFormSchema>();
+  const formData = watch(); // Watch all form fields
+
   return (
     <Step>
       <div className="space-y-6">
@@ -14,20 +19,24 @@ const StepThreePreview = ({ formData }: { formData: CampaignForm }) => {
 
         <Card className="pt-0">
           <div className="relative">
-            {formData.images.length > 0 ? (
-              <img
-                src={URL.createObjectURL(formData.images[0]) || '/placeholder.svg'}
-                alt="Campaign preview"
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
+            {formData.image ? (
+              <div className="relative w-full h-48 rounded-t-lg">
+                <Image
+                  src={URL.createObjectURL(formData.image)}
+                  alt="Campaign preview"
+                  className="object-cover"
+                  fill
+                />
+              </div>
             ) : (
               <div className="w-full h-48 bg-muted rounded-t-lg flex items-center justify-center">
                 <p className="text-muted-foreground">Tidak ada gambar</p>
               </div>
             )}
             <Badge className="absolute top-3 left-3 bg-card/90 text-foreground" variant="secondary">
-              {formData.category}
+              {formData.category || "Kategori"}
             </Badge>
+            {/* Note: Verification status is not part of the form, so this is a placeholder */}
             <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
               <Shield className="w-3 h-3 mr-1" />
               Terverifikasi
@@ -35,8 +44,10 @@ const StepThreePreview = ({ formData }: { formData: CampaignForm }) => {
           </div>
 
           <CardHeader>
-            <CardTitle className="text-xl">{formData.title || 'Judul Kampanye'}</CardTitle>
-            <CardDescription>{formData.description || 'Deskripsi kampanye...'}</CardDescription>
+            <CardTitle className="text-xl">{formData.name || "Judul Kampanye Anda"}</CardTitle>
+            <CardDescription className="whitespace-pre-line">
+              {formData.description || "Deskripsi kampanye Anda akan muncul di sini..."}
+            </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -44,7 +55,7 @@ const StepThreePreview = ({ formData }: { formData: CampaignForm }) => {
               <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium text-primary">IDRX 0</span>
                 <span className="text-muted-foreground">
-                  dari {formatIDRX(Number.parseInt(formData.target) || 0)}
+                  dari {formatIDRX(Number.parseInt(formData.targetAmount) || 0)}
                 </span>
               </div>
               <Progress value={0} className="h-2" />
@@ -56,12 +67,14 @@ const StepThreePreview = ({ formData }: { formData: CampaignForm }) => {
               </div>
               <div className="flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
-                {formData.duration} hari
+                {formData.durationInDays || "0"} hari
               </div>
             </div>
 
             <div className="pt-2 border-t border-border">
-              <p className="text-sm text-muted-foreground">oleh Yayasan Peduli Anak</p>
+              <p className="text-sm text-muted-foreground">
+                oleh {formData.creatorName || "Nama Kreator"}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -74,26 +87,21 @@ const StepThreePreview = ({ formData }: { formData: CampaignForm }) => {
             <div className="flex justify-between">
               <span className="text-muted-foreground">Target Dana:</span>
               <span className="font-medium">
-                {formatIDRX(Number.parseInt(formData.target) || 0)}
+                {formatIDRX(Number.parseInt(formData.targetAmount) || 0)}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Durasi:</span>
-              <span className="font-medium">{formData.duration} hari</span>
+              <span className="font-medium">{formData.durationInDays || "0"} hari</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Kategori:</span>
-              <span className="font-medium">{formData.category}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Gambar:</span>
-              <span className="font-medium">{formData.images.length} gambar</span>
+              <span className="font-medium">{formData.category || "-"}</span>
             </div>
           </CardContent>
         </Card>
       </div>
     </Step>
-  )
-}
-
-export default StepThreePreview
+  );
+};
+export default StepThreePreview;
