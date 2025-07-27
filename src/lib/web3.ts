@@ -13,7 +13,6 @@ export class Web3Service {
     this.rpcProvider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL!);
   }
 
-  // Helper untuk mendapatkan signer dari Wagmi
   private async getSigner(): Promise<ethers.Signer> {
     const walletClient = await getWalletClient(config);
     if (!walletClient) {
@@ -22,7 +21,6 @@ export class Web3Service {
     return walletClientToSigner(walletClient);
   }
 
-  // Helper untuk mendapatkan address yang terhubung
   private async getConnectedAddress(): Promise<string> {
     const account = getAccount(config);
     if (!account.address) {
@@ -31,7 +29,6 @@ export class Web3Service {
     return account.address;
   }
 
-  // Helper untuk format IDRX dengan decimals yang benar
   private async formatIDRX(amount: bigint): Promise<string> {
     const tokenContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
@@ -42,7 +39,6 @@ export class Web3Service {
     return ethers.formatUnits(amount, decimals);
   }
 
-  // Helper untuk parse IDRX dengan decimals yang benar
   private async parseIDRX(amount: string): Promise<bigint> {
     const tokenContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
@@ -137,7 +133,6 @@ export class Web3Service {
 
     const amountInUnits = await this.parseIDRX(amount);
 
-    // Check IDRX balance
     const balance = await tokenContract.balanceOf(userAddress);
     const balanceFormatted = await this.formatIDRX(balance);
     
@@ -145,7 +140,6 @@ export class Web3Service {
       throw new Error(`Insufficient IDRX balance. You have ${balanceFormatted} IDRX, need ${amount} IDRX`);
     }
 
-    // Check gas balance
     const gasBalance = await this.checkGasBalance(userAddress);
     if (parseFloat(gasBalance) < 0.00001) {
       throw new Error(`Insufficient LSK for gas. You need at least 0.00001 LSK for transaction fees`);
@@ -157,21 +151,18 @@ export class Web3Service {
       if (currentAllowance >= amountInUnits) {
         console.log('Sufficient allowance already exists, skipping approve');
       } else {
-        // Reset allowance if exists
         if (currentAllowance > 0) {
           console.log('Resetting existing allowance to 0');
           const resetTx = await tokenContract.approve(campaignAddress, 0);
           await resetTx.wait();
         }
 
-        // Approve tokens
         console.log('Approving tokens...');
         const approveTx = await tokenContract.approve(campaignAddress, amountInUnits);
         await approveTx.wait();
         console.log('Tokens approved successfully');
       }
 
-      // Execute donation
       const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
       const donateTx = await campaign.donate(amountInUnits);
       const receipt = await donateTx.wait();
@@ -212,6 +203,68 @@ export class Web3Service {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
     const donation = await campaign.donations(userAddress);
     return await this.formatIDRX(donation);
+  }
+
+  async getDirectTransfers(campaignAddress: string, userAddress: string): Promise<string> {
+    try {
+      const idrxTokenAddress = process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!;
+      const tokenContract = new ethers.Contract(
+        idrxTokenAddress,
+        [
+          "event Transfer(address indexed from, address indexed to, uint256 value)"
+        ],
+        this.rpcProvider
+      );
+
+      const filter = tokenContract.filters.Transfer(userAddress, campaignAddress);
+      
+      const currentBlock = await this.rpcProvider.getBlockNumber();
+      const fromBlock = Math.max(0, currentBlock - 10000);
+      
+      const events = await tokenContract.queryFilter(filter, fromBlock, currentBlock);
+      
+      let totalDirectTransfers = ethers.getBigInt(0);
+      for (const event of events) {
+        if ('args' in event && event.args) {
+          totalDirectTransfers += event.args.value;
+        }
+      }
+      
+      return await this.formatIDRX(totalDirectTransfers);
+    } catch (error) {
+      console.error('Error getting direct transfers:', error);
+      return '0';
+    }
+  }
+
+  async getTotalUserDonation(campaignAddress: string, userAddress: string): Promise<{
+    fromDonateFunction: string;
+    fromDirectTransfer: string;
+    total: string;
+  }> {
+    try {
+      const [donateAmount, directTransfer] = await Promise.all([
+        this.getUserDonation(campaignAddress, userAddress),
+        this.getDirectTransfers(campaignAddress, userAddress)
+      ]);
+
+      const total = (
+        parseFloat(donateAmount) + parseFloat(directTransfer)
+      ).toFixed(6);
+
+      return {
+        fromDonateFunction: donateAmount,
+        fromDirectTransfer: directTransfer,
+        total: total
+      };
+    } catch (error) {
+      console.error('Error getting total user donation:', error);
+      return {
+        fromDonateFunction: '0',
+        fromDirectTransfer: '0',
+        total: '0'
+      };
+    }
   }
 
   async checkTokenBalance(walletAddress: string): Promise<string> {
@@ -278,13 +331,11 @@ export class Web3Service {
     }
   }
 
-  // Utility function untuk check apakah wallet terhubung
   isWalletConnected(): boolean {
     const account = getAccount(config);
     return account.isConnected;
   }
 
-  // Utility function untuk mendapatkan address saat ini
   getCurrentAddress(): string | undefined {
     const account = getAccount(config);
     return account.address;
