@@ -111,8 +111,9 @@ export class Web3Service {
       name: info[1],
       target: await this.formatIDRX(info[2]),
       raised: await this.formatIDRX(info[3]),
-      timeRemaining: Number(info[4]),
-      status: Number(info[5]),
+      actualBalance: await this.formatIDRX(info[4]),
+      timeRemaining: Number(info[5]),
+      status: Number(info[6]),
       ipfsHash,
       isOwnerVerified
     };
@@ -287,6 +288,20 @@ export class Web3Service {
   getCurrentAddress(): string | undefined {
     const account = getAccount(config);
     return account.address;
+  }
+  async syncIDRXDonations(campaignAddress: string): Promise<string> {
+    try {
+      const signer = await this.getSigner();
+      const campaignContract = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
+      
+      const tx = await campaignContract.syncIDRXDonations();
+      await tx.wait();
+      
+      return tx.hash;
+    } catch (error) {
+      console.error('Error syncing IDRX donations:', error);
+      throw error;
+    }
   }
 }
 
