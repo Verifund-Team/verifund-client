@@ -10,17 +10,20 @@ export interface CampaignMetadata {
 
 export const uploadToIPFS = async (metadata: CampaignMetadata): Promise<string> => {
   try {
-    const response = await axios.post(
-      'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-      metadata,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT!}`,
-        },
-      }
-    );
-    return response.data.IpfsHash;
+    const response = await fetch('/api/ipfs/upload-metadata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(metadata),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload metadata');
+    }
+
+    const result = await response.json();
+    return result.ipfsHash;
   } catch (error) {
     console.error('Error uploading to IPFS:', error);
     throw new Error('Failed to upload metadata to IPFS');
@@ -32,16 +35,17 @@ export const uploadImageToIPFS = async (file: File): Promise<string> => {
   formData.append('file', file);
 
   try {
-    const response = await axios.post(
-      'https://api.pinata.cloud/pinning/pinFileToIPFS',
-      formData,
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT!}`,
-        },
-      }
-    );
-    return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+    const response = await fetch('/api/ipfs/upload-image', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload image');
+    }
+
+    const result = await response.json();
+    return result.imageUrl;
   } catch (error) {
     console.error('Error uploading image to IPFS:', error);
     throw new Error('Failed to upload image to IPFS');
