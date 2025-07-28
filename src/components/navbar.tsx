@@ -60,7 +60,7 @@ const Navbar = () => {
                 pathname === '/' ? 'text-foreground font-semibold' : 'text-muted-foreground',
               )}
             >
-              Beranda
+              Home
             </Link>
             <Link
               href="/campaigns"
@@ -71,7 +71,7 @@ const Navbar = () => {
                   : 'text-muted-foreground',
               )}
             >
-              Kampanye
+              Campaign
             </Link>
           </div>
 
@@ -86,7 +86,7 @@ const Navbar = () => {
                         onClick={openConnectModal}
                         className="hover:cursor-pointer bg-primary"
                       >
-                        Hubungkan Dompet
+                        Connect Wallet
                       </Button>
                     )
                   }
