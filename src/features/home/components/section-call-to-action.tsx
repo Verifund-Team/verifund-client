@@ -21,10 +21,10 @@ const SectionCallToAction = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-6">
-            Siap Memulai Perubahan?
+            Ready to Start Change?
           </h2>
           <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
-            Bergabunglah dengan ribuan orang yang telah mempercayai Verifund untuk menyalurkan kebaikan mereka dengan transparan.
+            Join thousands of people who have trusted Verifund to channel their kindness transparently.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/campaigns">
@@ -34,7 +34,7 @@ const SectionCallToAction = () => {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
               >
-                Mulai Berdonasi
+                Start Donate!
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </motion.div>
             </Link>

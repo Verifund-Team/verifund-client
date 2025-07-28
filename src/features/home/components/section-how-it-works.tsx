@@ -5,17 +5,17 @@ import React from 'react'
 const steps = [
   {
     icon: Plus,
-    title: 'Buat Kampanye',
+    title: 'Create Campaign',
     description: 'Campaigner membuat kampanye dengan detail lengkap. Data disimpan di IPFS untuk transparansi maksimal.',
   },
   {
     icon: Wallet,
-    title: 'Donasi IDRX',
+    title: 'Donate IDRX',
     description: 'Donatur menggunakan IDRX untuk berdonasi. Dana langsung masuk ke smart contract yang aman.',
   },
   {
     icon: Eye,
-    title: 'Transparansi Penuh',
+    title: 'Full Transparantion',
     description: 'Semua transaksi tercatat di blockchain. Donatur dapat melacak kemana dana mereka disalurkan.',
   },
 ]
@@ -72,10 +72,10 @@ const SectionHowItWorks = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            Bagaimana Cara Kerjanya?
+            How does it work?
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Proses yang sederhana namun aman dengan teknologi blockchain
+            A simple yet secure process with blockchain technology
           </p>
         </motion.div>
 
@@ -108,7 +108,7 @@ const SectionHowItWorks = () => {
                 viewport={{ once: true, amount: 0.3 }}
               >
                 <p className="text-cyan-400 font-bold mb-3 tracking-widest">
-                  LANGKAH 0{index + 1}
+                  STEP 0{index + 1}
                 </p>
                 <h3 className="text-3xl font-bold text-white mb-4">{step.title}</h3>
                 <p className="text-gray-400 max-w-md">{step.description}</p>
