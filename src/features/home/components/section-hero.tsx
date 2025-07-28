@@ -109,11 +109,11 @@ const SectionHero = () => {
 
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent">
-                  Crowdfunding Transparan
+                  Transparent Crowdfunding
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 bg-clip-text text-transparent">
-                  untuk Indonesia
+                  for Indonesia
                 </span>
               </h1>
             </motion.div>
