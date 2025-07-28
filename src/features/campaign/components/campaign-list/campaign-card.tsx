@@ -43,7 +43,7 @@ const CampaignCard = ({ campaign }: Props) => {
 
   return (
     <Link href={`/campaigns/${campaign.address}`} passHref>
-      <Card className="overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-200 h-full flex flex-col">
+      <Card className="overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-200 h-full flex flex-col pt-0">
         <div className="relative">
           <div className="relative w-full h-48">
             <Image

@@ -88,7 +88,7 @@ const CreateCampaignPage = () => {
             onFinalStepCompleted={methods.handleSubmit(onSubmit)}
             backButtonText="Kembali"
             nextButtonText="Selanjutnya"
-            finalStepButtonText={true ? "Membuat kampanye..." : "Buat Kampanye"}
+            finalStepButtonText={isPending ? "Membuat kampanye..." : "Buat Kampanye"}
             nextButtonProps={{ disabled: isPending }}
             backButtonProps={{ disabled: isPending }}
             stepCircleContainerClassName="max-w-4xl"

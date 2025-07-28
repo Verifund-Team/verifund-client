@@ -34,7 +34,7 @@ export function useCreateCampaign() {
         description: formData.description,
         category: formData.category,
         creatorName: formData.creatorName,
-        imageUrl: imageUrl,
+        image: imageUrl,
       };
 
       const ipfsHash = await uploadToIPFS(metadata);
