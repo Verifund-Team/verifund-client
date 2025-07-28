@@ -98,7 +98,7 @@ export class IDRXService {
       destinationWalletAddress,
       expiryPeriod: expiryPeriodHours,
       networkChainId: this.networkChainId,
-      requestType: 'donation' // atau sesuai kebutuhan
+      requestType: 'idrx'
     };
 
     const signature = createSignature(
@@ -121,7 +121,14 @@ export class IDRXService {
     });
 
     if (!response.ok) {
-      throw new Error(`IDRX API Error: ${response.status} ${response.statusText}`);
+      let errorDetails = '';
+      try {
+        const errorBody = await response.json();
+        errorDetails = JSON.stringify(errorBody);
+      } catch {
+        errorDetails = response.statusText;
+      }
+      throw new Error(`IDRX API Error: ${response.status} ${response.statusText} - ${errorDetails}`);
     }
 
     return await response.json();
@@ -153,21 +160,19 @@ export class IDRXService {
       throw new Error(`IDRX API Error: ${response.status} ${response.statusText}`);
     }
 
-    const result: TransactionRecord = await response.json(); // ✅ Proper typing
+    const result: TransactionRecord = await response.json();
     return result;
   }
   async getTransactionHistory(params: TransactionHistoryParams): Promise<TransactionHistoryResponse> {
     const method = 'GET';
     const timestamp = generateTimestamp();
     
-    // Build query parameters
     const queryParams = new URLSearchParams({
       transactionType: params.transactionType,
       page: params.page.toString(),
       take: params.take.toString(),
     });
 
-    // Add optional parameters
     if (params.userMintStatus) queryParams.append('userMintStatus', params.userMintStatus);
     if (params.paymentStatus) queryParams.append('paymentStatus', params.paymentStatus);
     if (params.merchantOrderId) queryParams.append('merchantOrderId', params.merchantOrderId);
@@ -180,7 +185,7 @@ export class IDRXService {
     const signature = createSignature(
       method,
       url,
-      null, // GET request has no body
+      null,
       timestamp,
       this.secretKey
     );
@@ -226,7 +231,6 @@ export class IDRXService {
         orderByDate: 'DESC',
       });
 
-      // Filter transactions by destination wallet address (campaign address)
       return history.records.filter(record => 
         record.destinationWalletAddress.toLowerCase() === campaignAddress.toLowerCase()
       );
