@@ -55,11 +55,10 @@ const SectionFeaturedCampaigns = () => {
         >
           <div className="text-cyan-400 font-semibold mb-3 tracking-wider">PILIHAN KAMI</div>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            Kampanye Unggulan
+            Featured Campaign
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Dukung kampanye-kampanye yang telah terverifikasi dan transparan untuk membawa perubahan.
-          </p>
+            Support verified and transparent campaigns to bring about change.          </p>
         </motion.div>
 
         <motion.div 
@@ -99,7 +98,7 @@ const SectionFeaturedCampaigns = () => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
-              Lihat Semua Kampanye
+              View all campaigns
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </motion.div>
           </Link>
