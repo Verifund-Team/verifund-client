@@ -1,8 +1,9 @@
 "use client";
 
-import { Stepper } from "@/components/ui/stepper";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Stepper, Step } from "@/components/ui/stepper";
 import StepOneBasicInfo from "./step-1-basic-info";
 import StepTwoTargetDana from "./step-2-target-dana";
 import StepThreePreview from "./step-3-preview";
@@ -12,20 +13,19 @@ import {
   useCreateCampaign,
 } from "../../api/create-campaign";
 
-export interface CampaignForm {
-  title: string;
-  description: string;
-  category: string;
-  target: string;
-  duration: string;
-  images: File[];
-}
+const stepFields: (keyof CampaignFormSchema)[][] = [
+  ["creatorName", "name", "description", "category", "image"],
+  ["targetAmount", "durationInDays"],
+  [], // No validation needed for the preview step
+];
 
 const CreateCampaignPage = () => {
-  const { mutate: createCampaign } = useCreateCampaign();
+  const { mutate: createCampaign, isPending } = useCreateCampaign();
+  const [activeStep, setActiveStep] = useState(0);
 
   const methods = useForm<CampaignFormSchema>({
     resolver: zodResolver(campaignFormSchema),
+    mode: "onChange",
     defaultValues: {
       creatorName: "",
       name: "",
@@ -38,16 +38,36 @@ const CreateCampaignPage = () => {
   });
 
   const onSubmit = (data: CampaignFormSchema) => {
+    // console.log("Form data submitted:", data);
+
     createCampaign(data, {
       onSuccess: (txHash) => {
         alert(`Kampanye berhasil dibuat! Hash Transaksi: ${txHash}`);
         methods.reset();
-        // router.push(`/campaigns/${newCampaignAddress}`);
+        setActiveStep(0);
       },
       onError: (error) => {
         alert(`Gagal membuat kampanye: ${error.message}`);
       },
     });
+  };
+
+  const handleNext = async () => {
+    const fieldsToValidate = stepFields[activeStep];
+    const isValid = await methods.trigger(fieldsToValidate);
+    if (isValid) {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    setActiveStep((prev) => prev - 1);
+  };
+
+  const handleStepClick = (stepIndex: number) => {
+    if (stepIndex < activeStep) {
+      setActiveStep(stepIndex);
+    }
   };
 
   return (
@@ -59,17 +79,29 @@ const CreateCampaignPage = () => {
         </p>
       </div>
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <Stepper
-            stepCircleContainerClassName="max-w-7xl"
-            initialStep={1}
+            activeStep={activeStep}
+            onStepClick={handleStepClick}
+            onPrevClick={handlePrev}
+            onNextClick={handleNext}
             onFinalStepCompleted={methods.handleSubmit(onSubmit)}
-            backButtonText="Previous"
-            nextButtonText="Next"
+            backButtonText="Kembali"
+            nextButtonText="Selanjutnya"
+            finalStepButtonText={true ? "Membuat kampanye..." : "Buat Kampanye"}
+            nextButtonProps={{ disabled: isPending }}
+            backButtonProps={{ disabled: isPending }}
+            stepCircleContainerClassName="max-w-4xl"
           >
-            <StepOneBasicInfo />
-            <StepTwoTargetDana />
-            <StepThreePreview />
+            <Step>
+              <StepOneBasicInfo />
+            </Step>
+            <Step>
+              <StepTwoTargetDana />
+            </Step>
+            <Step>
+              <StepThreePreview />
+            </Step>
           </Stepper>
         </form>
       </FormProvider>

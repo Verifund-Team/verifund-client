@@ -6,7 +6,7 @@ import { uploadToIPFS, uploadImageToIPFS } from "@/lib/ipfs";
 export const campaignFormSchema = z.object({
   creatorName: z.string().min(1, "Nama kreator harus diisi"),
   name: z.string().min(5, "Judul minimal 5 karakter"),
-  description: z.string().min(20, "Deskripsi minimal 10 karakter"),
+  description: z.string().min(20, "Deskripsi minimal 20 karakter"),
   category: z.string().min(1, "Kategori harus dipilih"),
   targetAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
     message: "Target dana harus angka yang valid",
