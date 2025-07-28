@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { useGetCampaignDetail } from "../../api/get-campaign-detail";
 import CampaignDetailSkeleton from "./campaign-detail-skeleton";
 import CampaignDetailError from "./campaign-detail-error";
+import CampaignActions from "./campaign-actions";
 
 const MOCK_RECENT_DONATIONS = [
   {
@@ -74,6 +75,7 @@ export default function CampaignDetailPage() {
         <div className="space-y-6">
           <DonationForm campaign={data!} />
           <CampaignerInfo data={data!} />
+          <CampaignActions data={data!} />
         </div>
       </div>
     </div>
