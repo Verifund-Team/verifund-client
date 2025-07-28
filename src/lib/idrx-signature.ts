@@ -7,7 +7,7 @@ function atob(str: string) {
 export function createSignature(
   method: string,
   url: string,
-  body: any,
+  body: unknown,
   timestamp: string,
   secretKey: string,
 ) {

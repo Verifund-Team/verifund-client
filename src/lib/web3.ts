@@ -52,7 +52,7 @@ export class Web3Service {
   async createCampaign(
     name: string,
     targetAmount: string,
-    durationInDays: number,
+    durationInSeconds: number,
     ipfsHash: string
   ): Promise<string> {
     const signer = await this.getSigner();
@@ -61,7 +61,7 @@ export class Web3Service {
 
     const targetAmountInUnits = await this.parseIDRX(targetAmount);
     
-    const tx = await factory.createCampaign(name, targetAmountInUnits, durationInDays, ipfsHash);
+    const tx = await factory.createCampaign(name, targetAmountInUnits, durationInSeconds, ipfsHash);
     const receipt = await tx.wait();
     
     return receipt.hash;
@@ -76,17 +76,34 @@ export class Web3Service {
 
   async getCampaignInfo(campaignAddress: string) {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
-    const info = await campaign.getCampaignInfo();
+    const [info, isWithdrawn] = await Promise.all([
+      campaign.getCampaignInfo(),
+      campaign.isWithdrawn()
+    ]);
 
     const isOwnerVerified = await this.checkVerificationStatus(info[0]);
+    
+    const timeRemaining = Number(info[4]);
+    const raised = await this.formatIDRX(info[3]);
+    const target = await this.formatIDRX(info[2]);
+    
+    let correctedStatus = Number(info[5]);
+    
+    if (timeRemaining === 0) {
+      if (parseFloat(raised) >= parseFloat(target) || isWithdrawn) {
+        correctedStatus = 1;
+      } else {
+        correctedStatus = 2;
+      }
+    }
 
     return {
       owner: info[0],
       name: info[1],
-      target: await this.formatIDRX(info[2]),
-      raised: await this.formatIDRX(info[3]),
-      timeRemaining: Number(info[4]),
-      status: Number(info[5]),
+      target,
+      raised,
+      timeRemaining,
+      status: correctedStatus,
       isOwnerVerified
     };
   }
@@ -94,22 +111,38 @@ export class Web3Service {
   async getCampaignDetails(campaignAddress: string) {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
     
-    const [info, ipfsHash] = await Promise.all([
+    const [info, ipfsHash, isWithdrawn] = await Promise.all([
       campaign.getCampaignInfo(),
-      campaign.ipfsHash()
+      campaign.ipfsHash(),
+      campaign.isWithdrawn()
     ]);
 
     const isOwnerVerified = await this.checkVerificationStatus(info[0]);
+    
+    const timeRemaining = Number(info[5]);
+    const raised = await this.formatIDRX(info[3]);
+    const target = await this.formatIDRX(info[2]);
+    const actualBalance = await this.formatIDRX(info[4]);
+    
+    let correctedStatus = Number(info[6]);
+    
+    if (timeRemaining === 0) {
+      if (parseFloat(raised) >= parseFloat(target) || isWithdrawn) {
+        correctedStatus = 1;
+      } else {
+        correctedStatus = 2;
+      }
+    }
 
     return {
       address: campaignAddress,
       owner: info[0],
       name: info[1],
-      target: await this.formatIDRX(info[2]),
-      raised: await this.formatIDRX(info[3]),
-      actualBalance: await this.formatIDRX(info[4]),
-      timeRemaining: Number(info[5]),
-      status: Number(info[6]),
+      target,
+      raised,
+      actualBalance,
+      timeRemaining,
+      status: correctedStatus,
       ipfsHash,
       isOwnerVerified
     };
