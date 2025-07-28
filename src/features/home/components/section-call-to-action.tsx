@@ -34,7 +34,7 @@ const SectionCallToAction = () => {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
               >
-                Start Donation!
+                Start Donate!
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </motion.div>
             </Link>
