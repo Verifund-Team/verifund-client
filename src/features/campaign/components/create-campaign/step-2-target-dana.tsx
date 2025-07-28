@@ -16,6 +16,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CampaignFormSchema } from "../../api/create-campaign";
 
 const DURATIONS = [
+  { value: "0.00347", label: "5 Menit (Tes)" },
   { value: "1", label: "1 Hari" },
   { value: "7", label: "7 Hari" },
   { value: "14", label: "14 Hari" },
