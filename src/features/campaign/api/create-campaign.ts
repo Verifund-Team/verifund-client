@@ -39,10 +39,12 @@ export function useCreateCampaign() {
 
       const ipfsHash = await uploadToIPFS(metadata);
 
+      const durationInSeconds = parseInt(formData.durationInDays, 10) * 86400;
+
       const txHash = await web3Service.createCampaign(
         formData.name,
         formData.targetAmount,
-        parseInt(formData.durationInDays),
+        durationInSeconds,
         ipfsHash,
       );
 
