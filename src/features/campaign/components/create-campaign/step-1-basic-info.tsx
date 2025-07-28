@@ -90,11 +90,13 @@ const StepOneBasicInfo = () => {
             {...register("description")}
             className="mt-1 min-h-[200px]"
           />
-          <p
-            className={`text-sm mt-1 ${descriptionLength < 20 ? "text-muted-foreground" : "text-green-600"}`}
-          >
-            Minimal 20 karakter ({descriptionLength}/20)
-          </p>
+          {descriptionLength < 20 && (
+            <p
+              className={`text-sm mt-1 ${descriptionLength < 20 ? "text-muted-foreground" : "text-green-600"}`}
+            >
+              Minimal 20 karakter ({descriptionLength}/20)
+            </p>
+          )}
           {errors.description && (
             <p className="text-sm text-destructive mt-1">{errors.description.message}</p>
           )}

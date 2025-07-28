@@ -12,6 +12,7 @@ import {
   CampaignFormSchema,
   useCreateCampaign,
 } from "../../api/create-campaign";
+import { useQueryClient } from "@tanstack/react-query";
 
 const stepFields: (keyof CampaignFormSchema)[][] = [
   ["creatorName", "name", "description", "category", "image"],
@@ -20,6 +21,8 @@ const stepFields: (keyof CampaignFormSchema)[][] = [
 ];
 
 const CreateCampaignPage = () => {
+  const queryClient = useQueryClient();
+
   const { mutate: createCampaign, isPending } = useCreateCampaign();
   const [activeStep, setActiveStep] = useState(0);
 
@@ -42,6 +45,7 @@ const CreateCampaignPage = () => {
 
     createCampaign(data, {
       onSuccess: (txHash) => {
+        queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
         alert(`Kampanye berhasil dibuat! Hash Transaksi: ${txHash}`);
         methods.reset();
         setActiveStep(0);
