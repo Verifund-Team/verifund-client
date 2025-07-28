@@ -119,9 +119,9 @@ const SectionHero = () => {
             </motion.div>
 
             <motion.p variants={itemVariants} className="mt-6 text-lg text-gray-300 max-w-xl mx-auto md:mx-0">
-              Platform donasi terdesentralisasi pertama yang menggunakan teknologi blockchain untuk memastikan
+              The first decentralized donation platform that uses blockchain technology to ensure
               <span className="text-cyan-300 font-semibold"> 100% transparansi</span>.
-              Setiap rupiah dapat dilacak, tanpa biaya platform, powered by IDRX.
+              Every rupiah is trackable, with no platform fees, powered by IDRX.
             </motion.p>
 
             <motion.div variants={itemVariants} className="mt-8">
@@ -136,7 +136,7 @@ const SectionHero = () => {
 
                 <span className="relative z-10 drop-shadow-lg flex items-center gap-2">
                   <Zap className="w-5 h-5" />
-                  Mulai Berdonasi
+                  Let's Donate!
                 </span>
               </Button>
             </motion.div>
@@ -229,7 +229,7 @@ const SectionHero = () => {
               {
                 icon: <Eye className="w-7 h-7 text-blue-400" />,
                 title: "100%",
-                subtitle: "Transparan",
+                subtitle: "Transparant",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
                 glowColor: "shadow-transparent"
@@ -237,14 +237,14 @@ const SectionHero = () => {
               {
                 icon: <Zap className="w-7 h-7 text-green-400" />,
                 title: "0%",
-                subtitle: "Biaya Platform",
+                subtitle: "Fee Platform",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
                 glowColor: "shadow-transparent"
               },
               {
                 icon: <ShieldCheck className="w-7 h-7 text-purple-400" />,
-                title: "Terverifikasi",
+                title: "Verificated",
                 subtitle: "SBT",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
@@ -273,21 +273,21 @@ const SectionHero = () => {
               whileHover={{ scale: 1.05 }}
             >
               <Users className="w-4 h-4" />
-              <span>12.400 Donatur</span>
+              <span>12.400 Donor</span>
             </motion.div>
             <motion.div
               className="flex items-center gap-2 hover:text-green-300 transition-colors duration-300 cursor-pointer"
               whileHover={{ scale: 1.05 }}
             >
               <FileCheck className="w-4 h-4" />
-              <span>100% Audit Publik</span>
+              <span>100% Public Audit</span>
             </motion.div>
             <motion.div
               className="flex items-center gap-2 hover:text-purple-300 transition-colors duration-300 cursor-pointer"
               whileHover={{ scale: 1.05 }}
             >
               <Rocket className="w-4 h-4" />
-              <span>Didukung IDRX, Lisk, Xellar</span>
+              <span>Supported by IDRX, Lisk, Xellar</span>
             </motion.div>
           </div>
         </motion.div>
