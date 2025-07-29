@@ -69,7 +69,7 @@ export default function CampaignDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           <CampaignImage data={data} />
           <CampaignDescriptionInfo data={data!} />
-          <NewestDonation data={MOCK_RECENT_DONATIONS} />
+          <NewestDonation campaignAddress={data!.address} />
         </div>
 
         <div className="space-y-6">

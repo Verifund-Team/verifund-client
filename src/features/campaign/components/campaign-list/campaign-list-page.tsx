@@ -65,7 +65,7 @@ export default function CampaignsListPage() {
       const statusMatch =
         filters.status === "all" ||
         (filters.status === "ongoing" && campaign.status === 0) ||
-        (filters.status === "completed" && campaign.status === 1);
+        (filters.status === "completed" && (campaign.status === 1 || campaign.status === 2));
       const categoryMatch =
         filters.category === "all" || campaign.metadata?.category === filters.category;
       return statusMatch && categoryMatch;

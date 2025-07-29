@@ -1,10 +1,11 @@
-import { ethers } from 'ethers';
-import { getWalletClient, getAccount, getPublicClient } from '@wagmi/core';
-import { config } from '@/app/providers';
-import { walletClientToSigner } from '@/lib/ethers';
-import CampaignFactoryABI from '@/app/contracts/CampaignFactory.json';
-import CampaignABI from '@/app/contracts/Campaign.json';
-import VerifundSBTABI from '@/app/contracts/VerifundSBT.json';
+import { ethers } from "ethers";
+import { getWalletClient, getAccount, getPublicClient } from "@wagmi/core";
+import { config } from "@/app/providers";
+import { walletClientToSigner } from "@/lib/ethers";
+import CampaignFactoryABI from "@/app/contracts/CampaignFactory.json";
+import CampaignABI from "@/app/contracts/Campaign.json";
+import VerifundSBTABI from "@/app/contracts/VerifundSBT.json";
+import { WalletTransaction } from "@/features/campaign/api/get-recent-donations";
 
 export class Web3Service {
   private rpcProvider: ethers.JsonRpcProvider;
@@ -16,7 +17,7 @@ export class Web3Service {
   private async getSigner(): Promise<ethers.Signer> {
     const walletClient = await getWalletClient(config);
     if (!walletClient) {
-      throw new Error('Wallet not connected');
+      throw new Error("Wallet not connected");
     }
     return walletClientToSigner(walletClient);
   }
@@ -24,7 +25,7 @@ export class Web3Service {
   private async getConnectedAddress(): Promise<string> {
     const account = getAccount(config);
     if (!account.address) {
-      throw new Error('Wallet not connected');
+      throw new Error("Wallet not connected");
     }
     return account.address;
   }
@@ -33,7 +34,7 @@ export class Web3Service {
     const tokenContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
       ["function decimals() external view returns (uint8)"],
-      this.rpcProvider
+      this.rpcProvider,
     );
     const decimals = await tokenContract.decimals();
     return ethers.formatUnits(amount, decimals);
@@ -43,7 +44,7 @@ export class Web3Service {
     const tokenContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
       ["function decimals() external view returns (uint8)"],
-      this.rpcProvider
+      this.rpcProvider,
     );
     const decimals = await tokenContract.decimals();
     return ethers.parseUnits(amount, decimals);
@@ -53,24 +54,24 @@ export class Web3Service {
     name: string,
     targetAmount: string,
     durationInSeconds: number,
-    ipfsHash: string
+    ipfsHash: string,
   ): Promise<string> {
     const signer = await this.getSigner();
     const factoryAddress = process.env.NEXT_PUBLIC_CAMPAIGN_FACTORY_ADDRESS!;
     const factory = new ethers.Contract(factoryAddress, CampaignFactoryABI.abi, signer);
 
     const targetAmountInUnits = await this.parseIDRX(targetAmount);
-    
+
     const tx = await factory.createCampaign(name, targetAmountInUnits, durationInSeconds, ipfsHash);
     const receipt = await tx.wait();
-    
+
     return receipt.hash;
   }
 
   async getAllCampaigns(): Promise<string[]> {
     const factoryAddress = process.env.NEXT_PUBLIC_CAMPAIGN_FACTORY_ADDRESS!;
     const factory = new ethers.Contract(factoryAddress, CampaignFactoryABI.abi, this.rpcProvider);
-    
+
     return await factory.getDeployedCampaigns();
   }
 
@@ -78,17 +79,17 @@ export class Web3Service {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
     const [info, isWithdrawn] = await Promise.all([
       campaign.getCampaignInfo(),
-      campaign.isWithdrawn()
+      campaign.isWithdrawn(),
     ]);
 
     const isOwnerVerified = await this.checkVerificationStatus(info[0]);
-    
+
     const timeRemaining = Number(info[4]);
     const raised = await this.formatIDRX(info[3]);
     const target = await this.formatIDRX(info[2]);
-    
+
     let correctedStatus = Number(info[5]);
-    
+
     if (timeRemaining === 0) {
       if (parseFloat(raised) >= parseFloat(target)) {
         correctedStatus = 1;
@@ -104,28 +105,28 @@ export class Web3Service {
       raised,
       timeRemaining,
       status: correctedStatus,
-      isOwnerVerified
+      isOwnerVerified,
     };
   }
 
   async getCampaignDetails(campaignAddress: string) {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
-    
+
     const [info, ipfsHash, isWithdrawn] = await Promise.all([
       campaign.getCampaignInfo(),
       campaign.ipfsHash(),
-      campaign.isWithdrawn()
+      campaign.isWithdrawn(),
     ]);
 
     const isOwnerVerified = await this.checkVerificationStatus(info[0]);
-    
+
     const timeRemaining = Number(info[5]);
     const raised = await this.formatIDRX(info[3]);
     const target = await this.formatIDRX(info[2]);
     const actualBalance = await this.formatIDRX(info[4]);
-    
+
     let correctedStatus = Number(info[6]);
-    
+
     if (timeRemaining === 0) {
       if (parseFloat(raised) >= parseFloat(target)) {
         correctedStatus = 1;
@@ -144,7 +145,7 @@ export class Web3Service {
       timeRemaining,
       status: correctedStatus,
       ipfsHash,
-      isOwnerVerified
+      isOwnerVerified,
     };
   }
 
@@ -152,48 +153,52 @@ export class Web3Service {
     const signer = await this.getSigner();
     const userAddress = await this.getConnectedAddress();
     const idrxTokenAddress = process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!;
-    
+
     const tokenContract = new ethers.Contract(
-      idrxTokenAddress, 
+      idrxTokenAddress,
       [
         "function approve(address spender, uint256 amount) external returns (bool)",
         "function allowance(address owner, address spender) external view returns (uint256)",
         "function decimals() external view returns (uint8)",
-        "function balanceOf(address owner) external view returns (uint256)"
-      ], 
-      signer
+        "function balanceOf(address owner) external view returns (uint256)",
+      ],
+      signer,
     );
 
     const amountInUnits = await this.parseIDRX(amount);
 
     const balance = await tokenContract.balanceOf(userAddress);
     const balanceFormatted = await this.formatIDRX(balance);
-    
+
     if (parseFloat(balanceFormatted) < parseFloat(amount)) {
-      throw new Error(`Insufficient IDRX balance. You have ${balanceFormatted} IDRX, need ${amount} IDRX`);
+      throw new Error(
+        `Insufficient IDRX balance. You have ${balanceFormatted} IDRX, need ${amount} IDRX`,
+      );
     }
 
     const gasBalance = await this.checkGasBalance(userAddress);
     if (parseFloat(gasBalance) < 0.00001) {
-      throw new Error(`Insufficient LSK for gas. You need at least 0.00001 LSK for transaction fees`);
+      throw new Error(
+        `Insufficient LSK for gas. You need at least 0.00001 LSK for transaction fees`,
+      );
     }
 
     try {
       const currentAllowance = await tokenContract.allowance(userAddress, campaignAddress);
-      
+
       if (currentAllowance >= amountInUnits) {
-        console.log('Sufficient allowance already exists, skipping approve');
+        console.log("Sufficient allowance already exists, skipping approve");
       } else {
         if (currentAllowance > 0) {
-          console.log('Resetting existing allowance to 0');
+          console.log("Resetting existing allowance to 0");
           const resetTx = await tokenContract.approve(campaignAddress, 0);
           await resetTx.wait();
         }
 
-        console.log('Approving tokens...');
+        console.log("Approving tokens...");
         const approveTx = await tokenContract.approve(campaignAddress, amountInUnits);
         await approveTx.wait();
-        console.log('Tokens approved successfully');
+        console.log("Tokens approved successfully");
       }
 
       const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
@@ -202,16 +207,16 @@ export class Web3Service {
 
       return receipt.hash;
     } catch (error: unknown) {
-      console.error('Detailed error:', error);
-      
+      console.error("Detailed error:", error);
+
       const err = error as { code?: string; reason?: string; message?: string };
-      
-      if (err.code === 'INSUFFICIENT_FUNDS') {
-        throw new Error('Insufficient funds for gas fees. Please add more LSK to your wallet.');
+
+      if (err.code === "INSUFFICIENT_FUNDS") {
+        throw new Error("Insufficient funds for gas fees. Please add more LSK to your wallet.");
       } else if (err.reason) {
         throw new Error(`Transaction failed: ${err.reason}`);
       } else {
-        throw new Error(`Transaction failed: ${err.message || 'Unknown error'}`);
+        throw new Error(`Transaction failed: ${err.message || "Unknown error"}`);
       }
     }
   }
@@ -243,34 +248,35 @@ export class Web3Service {
       const idrxTokenAddress = process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!;
       const tokenContract = new ethers.Contract(
         idrxTokenAddress,
-        [
-          "event Transfer(address indexed from, address indexed to, uint256 value)"
-        ],
-        this.rpcProvider
+        ["event Transfer(address indexed from, address indexed to, uint256 value)"],
+        this.rpcProvider,
       );
 
       const filter = tokenContract.filters.Transfer(userAddress, campaignAddress);
-      
+
       const currentBlock = await this.rpcProvider.getBlockNumber();
       const fromBlock = Math.max(0, currentBlock - 10000);
-      
+
       const events = await tokenContract.queryFilter(filter, fromBlock, currentBlock);
-      
+
       let totalDirectTransfers = ethers.getBigInt(0);
       for (const event of events) {
-        if ('args' in event && event.args) {
+        if ("args" in event && event.args) {
           totalDirectTransfers += event.args.value;
         }
       }
-      
+
       return await this.formatIDRX(totalDirectTransfers);
     } catch (error) {
-      console.error('Error getting direct transfers:', error);
-      return '0';
+      console.error("Error getting direct transfers:", error);
+      return "0";
     }
   }
 
-  async getTotalUserDonation(campaignAddress: string, userAddress: string): Promise<{
+  async getTotalUserDonation(
+    campaignAddress: string,
+    userAddress: string,
+  ): Promise<{
     fromDonateFunction: string;
     fromDirectTransfer: string;
     total: string;
@@ -278,24 +284,22 @@ export class Web3Service {
     try {
       const [donateAmount, directTransfer] = await Promise.all([
         this.getUserDonation(campaignAddress, userAddress),
-        this.getDirectTransfers(campaignAddress, userAddress)
+        this.getDirectTransfers(campaignAddress, userAddress),
       ]);
 
-      const total = (
-        parseFloat(donateAmount) + parseFloat(directTransfer)
-      ).toFixed(6);
+      const total = (parseFloat(donateAmount) + parseFloat(directTransfer)).toFixed(6);
 
       return {
         fromDonateFunction: donateAmount,
         fromDirectTransfer: directTransfer,
-        total: total
+        total: total,
       };
     } catch (error) {
-      console.error('Error getting total user donation:', error);
+      console.error("Error getting total user donation:", error);
       return {
-        fromDonateFunction: '0',
-        fromDirectTransfer: '0',
-        total: '0'
+        fromDonateFunction: "0",
+        fromDirectTransfer: "0",
+        total: "0",
       };
     }
   }
@@ -304,9 +308,9 @@ export class Web3Service {
     const tokenContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
       ["function balanceOf(address owner) external view returns (uint256)"],
-      this.rpcProvider
+      this.rpcProvider,
     );
-    
+
     const balance = await tokenContract.balanceOf(walletAddress);
     return await this.formatIDRX(balance);
   }
@@ -321,13 +325,13 @@ export class Web3Service {
       const sbtContract = new ethers.Contract(
         process.env.NEXT_PUBLIC_VERIFUND_SBT_ADDRESS!,
         VerifundSBTABI.abi,
-        this.rpcProvider
+        this.rpcProvider,
       );
 
       const isVerified = await sbtContract.isVerified(userAddress);
       return isVerified;
     } catch (error) {
-      console.error('Error checking verification status:', error);
+      console.error("Error checking verification status:", error);
       return false;
     }
   }
@@ -342,24 +346,24 @@ export class Web3Service {
       const sbtContract = new ethers.Contract(
         process.env.NEXT_PUBLIC_VERIFUND_SBT_ADDRESS!,
         VerifundSBTABI.abi,
-        this.rpcProvider
+        this.rpcProvider,
       );
 
       const badgeInfo = await sbtContract.getBadgeInfo(userAddress);
-      
+
       return {
         hasWhitelistPermission: badgeInfo[0],
         isCurrentlyVerified: badgeInfo[1],
         tokenId: badgeInfo[2].toString(),
-        metadataURI: badgeInfo[3]
+        metadataURI: badgeInfo[3],
       };
     } catch (error) {
-      console.error('Error getting badge info:', error);
+      console.error("Error getting badge info:", error);
       return {
         hasWhitelistPermission: false,
         isCurrentlyVerified: false,
-        tokenId: '0',
-        metadataURI: ''
+        tokenId: "0",
+        metadataURI: "",
       };
     }
   }
@@ -377,14 +381,106 @@ export class Web3Service {
     try {
       const signer = await this.getSigner();
       const campaignContract = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
-      
+
       const tx = await campaignContract.syncIDRXDonations();
       await tx.wait();
-      
+
       return tx.hash;
     } catch (error) {
-      console.error('Error syncing IDRX donations:', error);
+      console.error("Error syncing IDRX donations:", error);
       throw error;
+    }
+  }
+
+  async getWalletTransactions(campaignAddress: string): Promise<WalletTransaction[]> {
+    try {
+      const loadDonateEvents = async (): Promise<WalletTransaction[]> => {
+        const campaignContract = new ethers.Contract(
+          campaignAddress,
+          CampaignABI.abi,
+          this.rpcProvider,
+        );
+        const donationFilter = campaignContract.filters.Donated();
+        const events = await campaignContract.queryFilter(donationFilter);
+
+        if (events.length === 0) return [];
+
+        const token = new ethers.Contract(
+          process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
+          ["function decimals() view returns(uint8)"],
+          this.rpcProvider,
+        );
+        const decimals = await token.decimals();
+
+        return Promise.all(
+          events.map(async (event) => {
+            const block = await this.rpcProvider.getBlock(event.blockNumber);
+            return {
+              type: "wallet" as const,
+              donor: (event as ethers.EventLog).args[0],
+              amount: ethers.formatUnits((event as ethers.EventLog).args[1], decimals),
+              timestamp: block!.timestamp,
+              txHash: event.transactionHash,
+              blockNumber: event.blockNumber,
+              method: "donate" as const,
+            };
+          }),
+        );
+      };
+
+      const loadDirectTransfers = async (): Promise<WalletTransaction[]> => {
+        const tokenContract = new ethers.Contract(
+          process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!,
+          [
+            "event Transfer(address indexed from, address indexed to, uint256 value)",
+            "function decimals() view returns(uint8)",
+          ],
+          this.rpcProvider,
+        );
+
+        const transferFilter = tokenContract.filters.Transfer(null, campaignAddress);
+        const transferEvents = await tokenContract.queryFilter(transferFilter);
+
+        if (transferEvents.length === 0) return [];
+
+        const decimals = await tokenContract.decimals();
+
+        const campaignContract = new ethers.Contract(
+          campaignAddress,
+          CampaignABI.abi,
+          this.rpcProvider,
+        );
+        const donateEvents = await campaignContract.queryFilter(campaignContract.filters.Donated());
+        const donateTxHashes = new Set(donateEvents.map((event) => event.transactionHash));
+
+        const directTransfers = await Promise.all(
+          transferEvents
+            .filter((event) => !donateTxHashes.has(event.transactionHash)) // Exclude transactions that are part of a donate() call
+            .map(async (event) => {
+              const block = await this.rpcProvider.getBlock(event.blockNumber);
+              return {
+                type: "wallet" as const,
+                donor: (event as ethers.EventLog).args[0],
+                amount: ethers.formatUnits((event as ethers.EventLog).args[2], decimals),
+                timestamp: block!.timestamp,
+                txHash: event.transactionHash,
+                blockNumber: event.blockNumber,
+                method: "transfer" as const,
+              };
+            }),
+        );
+        return directTransfers;
+      };
+
+      const [donateEvents, transferEvents] = await Promise.all([
+        loadDonateEvents(),
+        loadDirectTransfers(),
+      ]);
+
+      return [...donateEvents, ...transferEvents];
+    } catch (error) {
+      console.error("Error loading wallet transactions:", error);
+      return [];
     }
   }
 }
