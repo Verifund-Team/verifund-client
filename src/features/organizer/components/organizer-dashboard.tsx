@@ -12,10 +12,10 @@ export default function OrganizerDashboard() {
   const [activeTab, setActiveTab] = useState("campaigns");
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto lg:px-20 px-10 py-8">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Organizer Dashboard</h1>
-        <p className="text-xl text-muted-foreground">Kelola kampanye dan profil Anda</p>
+        <p className="text-xl text-muted-foreground">Manage your campaigns and profile</p>
       </div>
 
       <div className="grid lg:grid-cols-4 gap-8">
@@ -28,7 +28,7 @@ export default function OrganizerDashboard() {
                 className="w-full justify-start"
                 onClick={() => setActiveTab("campaigns")}
               >
-                Kampanye Saya
+                My Campaigns
               </Button>
               <Button
                 variant={"ghost"}
@@ -36,7 +36,7 @@ export default function OrganizerDashboard() {
                 onClick={() => setActiveTab("donations")}
                 disabled
               >
-                Donasi Terbaru
+                Recent Donations
               </Button>
             </CardContent>
           </Card>
