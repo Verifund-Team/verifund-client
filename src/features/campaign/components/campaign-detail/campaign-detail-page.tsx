@@ -74,7 +74,7 @@ export default function CampaignDetailPage() {
 
         <div className="space-y-6">
           <DonationForm campaign={data!} />
-          <CampaignerInfo data={data!} />
+          <CampaignerInfo campaign={data!} />
           <CampaignActions data={data!} />
         </div>
       </div>
