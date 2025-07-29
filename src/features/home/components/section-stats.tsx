@@ -94,10 +94,10 @@ const SectionWeb3 = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <StatCard icon={FaHandHoldingHeart} stat={MOCK_STATS.totalRaised} label="Total Dana Terkumpul" />
-          <StatCard icon={FaBullhorn} stat={MOCK_STATS.totalCampaigns} label="Kampanye Dibuat" />
-          <StatCard icon={FaUsers} stat={MOCK_STATS.totalDonors} label="Total Donatur" />
-          <StatCard icon={FiTrendingUp} stat={MOCK_STATS.successRate} label="Tingkat Keberhasilan" />
+          <StatCard icon={FaHandHoldingHeart} stat={MOCK_STATS.totalRaised} label="Total Funds Collected" />
+          <StatCard icon={FaBullhorn} stat={MOCK_STATS.totalCampaigns} label="Created Campaigns" />
+          <StatCard icon={FaUsers} stat={MOCK_STATS.totalDonors} label="Total Donors" />
+          //<StatCard icon={FiTrendingUp} stat={MOCK_STATS.successRate} label="Success Rate" />
         </motion.div>
       </div>
     </section>

@@ -7,7 +7,8 @@
         {"internalType": "uint256", "name": "_targetAmount", "type": "uint256"},
         {"internalType": "uint256", "name": "_deadline", "type": "uint256"},
         {"internalType": "string", "name": "_ipfsHash", "type": "string"},
-        {"internalType": "address", "name": "_tokenAddress", "type": "address"}
+        {"internalType": "address", "name": "_tokenAddress", "type": "address"},
+        {"internalType": "address", "name": "_verifundSBTAddress", "type": "address"}
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -164,6 +165,13 @@
       "inputs": [],
       "name": "getStatus",
       "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "verifundSBT",
+      "outputs": [{"internalType": "contract IVerifundSBT", "name": "", "type": "address"}],
       "stateMutability": "view",
       "type": "function"
     }

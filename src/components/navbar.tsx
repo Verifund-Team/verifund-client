@@ -60,7 +60,7 @@ const Navbar = () => {
                 pathname === '/' ? 'text-foreground font-semibold' : 'text-muted-foreground',
               )}
             >
-              Beranda
+              Home
             </Link>
             <Link
               href="/campaigns"
@@ -71,10 +71,19 @@ const Navbar = () => {
                   : 'text-muted-foreground',
               )}
             >
-              Kampanye
+              Campaigns
+            </Link>
+            <Link
+              href="/organizer-dashboard"
+              className={clsx(
+                'hover:text-foreground transition-colors',
+                pathname.startsWith('/organizer-dashboard') ? 'text-foreground font-semibold' : 'text-muted-foreground',
+              )}
+            >
+              Profile
             </Link>
           </div>
-
+          
           <ClientOnly>
             <div className="flex items-center space-x-3">
               <ConnectButton.Custom>
@@ -86,7 +95,7 @@ const Navbar = () => {
                         onClick={openConnectModal}
                         className="hover:cursor-pointer bg-primary"
                       >
-                        Hubungkan Dompet
+                        Connect Wallet
                       </Button>
                     )
                   }

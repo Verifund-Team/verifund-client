@@ -90,7 +90,7 @@ export class Web3Service {
     let correctedStatus = Number(info[5]);
     
     if (timeRemaining === 0) {
-      if (parseFloat(raised) >= parseFloat(target) || isWithdrawn) {
+      if (parseFloat(raised) >= parseFloat(target)) {
         correctedStatus = 1;
       } else {
         correctedStatus = 2;
@@ -127,7 +127,7 @@ export class Web3Service {
     let correctedStatus = Number(info[6]);
     
     if (timeRemaining === 0) {
-      if (parseFloat(raised) >= parseFloat(target) || isWithdrawn) {
+      if (parseFloat(raised) >= parseFloat(target)) {
         correctedStatus = 1;
       } else {
         correctedStatus = 2;
