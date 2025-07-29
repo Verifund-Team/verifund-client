@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -15,6 +15,7 @@ import CampaignCard from "./campaign-card";
 import { Campaign, useGetCampaigns } from "../../api/get-campaigns";
 import CampaignsListPageSkeleton from "./campaign-list-skeleton";
 import CampaignListError from "./campaign-list-error";
+import { CATEGORIES } from "../create-campaign/step-1-basic-info";
 
 const statusOptions = [
   { value: "all", label: "Semua Status" },
@@ -27,6 +28,14 @@ const sortOptions = [
   { value: "endingSoon", label: "Segera Berakhir" },
   { value: "mostFunded", label: "Paling Terkumpul" },
   { value: "leastFunded", label: "Paling Sedikit Terkumpul" },
+];
+
+const categoryOptions = [
+  { value: "all", label: "Semua Kategori" },
+  ...CATEGORIES.map((category) => ({
+    value: category,
+    label: category,
+  })),
 ];
 
 export default function CampaignsListPage() {
@@ -46,18 +55,6 @@ export default function CampaignsListPage() {
     setFilters({ status: "all", category: "all", sortBy: "latest" });
   };
 
-  const categoryOptions = useMemo(() => {
-    if (!initialCampaigns) return [{ value: "all", label: "Semua Kategori" }];
-    const categories = new Set(initialCampaigns.map((c) => c.metadata?.category).filter(Boolean));
-    return [
-      { value: "all", label: "Semua Kategori" },
-      ...Array.from(categories).map((category) => ({
-        value: category as string,
-        label: category as string,
-      })),
-    ];
-  }, [initialCampaigns]);
-
   const filteredAndSortedCampaigns = useMemo(() => {
     let campaigns: Campaign[] = [...(initialCampaigns || [])];
 
@@ -67,7 +64,8 @@ export default function CampaignsListPage() {
         (filters.status === "ongoing" && campaign.status === 0) ||
         (filters.status === "completed" && (campaign.status === 1 || campaign.status === 2));
       const categoryMatch =
-        filters.category === "all" || campaign.metadata?.category === filters.category;
+        filters.category === "all" ||
+        campaign.metadata?.category.toLowerCase() === filters.category.toLowerCase();
       return statusMatch && categoryMatch;
     });
 

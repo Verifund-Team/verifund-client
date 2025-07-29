@@ -16,7 +16,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CampaignFormSchema } from "../../api/create-campaign";
 import Image from "next/image";
 
-const MOCK_CATEGORIES = [
+export const CATEGORIES = [
   "Pendidikan",
   "Kesehatan",
   "Keagamaan",
@@ -113,7 +113,7 @@ const StepOneBasicInfo = () => {
                   <SelectValue placeholder="Pilih kategori kampanye" />
                 </SelectTrigger>
                 <SelectContent>
-                  {MOCK_CATEGORIES.map((category) => (
+                  {CATEGORIES.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
