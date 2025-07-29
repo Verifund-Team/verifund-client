@@ -13,6 +13,7 @@ import {
   useCreateCampaign,
 } from "../../api/create-campaign";
 import { useQueryClient } from "@tanstack/react-query";
+import AuthGuard from "@/components/auth-guard";
 
 const stepFields: (keyof CampaignFormSchema)[][] = [
   ["creatorName", "name", "description", "category", "image"],
@@ -75,41 +76,45 @@ const CreateCampaignPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl min-h-screen">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Buat Kampanye Baru</h1>
-        <p className="text-xl text-muted-foreground">
-          Buat kampanye crowdfunding yang transparan dan terpercaya
-        </p>
+    <AuthGuard>
+      <div className="container mx-auto px-4 py-8 max-w-4xl min-h-screen">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Buat Kampanye Baru
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Buat kampanye crowdfunding yang transparan dan terpercaya
+          </p>
+        </div>
+        <FormProvider {...methods}>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <Stepper
+              activeStep={activeStep}
+              onStepClick={handleStepClick}
+              onPrevClick={handlePrev}
+              onNextClick={handleNext}
+              onFinalStepCompleted={methods.handleSubmit(onSubmit)}
+              backButtonText="Kembali"
+              nextButtonText="Selanjutnya"
+              finalStepButtonText={isPending ? "Membuat kampanye..." : "Buat Kampanye"}
+              nextButtonProps={{ disabled: isPending }}
+              backButtonProps={{ disabled: isPending }}
+              stepCircleContainerClassName="max-w-4xl"
+            >
+              <Step>
+                <StepOneBasicInfo />
+              </Step>
+              <Step>
+                <StepTwoTargetDana />
+              </Step>
+              <Step>
+                <StepThreePreview />
+              </Step>
+            </Stepper>
+          </form>
+        </FormProvider>
       </div>
-      <FormProvider {...methods}>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <Stepper
-            activeStep={activeStep}
-            onStepClick={handleStepClick}
-            onPrevClick={handlePrev}
-            onNextClick={handleNext}
-            onFinalStepCompleted={methods.handleSubmit(onSubmit)}
-            backButtonText="Kembali"
-            nextButtonText="Selanjutnya"
-            finalStepButtonText={isPending ? "Membuat kampanye..." : "Buat Kampanye"}
-            nextButtonProps={{ disabled: isPending }}
-            backButtonProps={{ disabled: isPending }}
-            stepCircleContainerClassName="max-w-4xl"
-          >
-            <Step>
-              <StepOneBasicInfo />
-            </Step>
-            <Step>
-              <StepTwoTargetDana />
-            </Step>
-            <Step>
-              <StepThreePreview />
-            </Step>
-          </Stepper>
-        </form>
-      </FormProvider>
-    </div>
+    </AuthGuard>
   );
 };
 
