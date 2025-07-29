@@ -3,18 +3,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatAddress } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface ClipboardCopyProps {
   textToCopy: string | undefined;
   className?: string;
 }
-
-const formatAddress = (address: string, start = 6, end = 4) => {
-  if (!address) return "";
-  return `${address.substring(0, start)}...${address.substring(address.length - end)}`;
-};
 
 const ClipboardCopy = ({ textToCopy, className }: ClipboardCopyProps) => {
   const [isCopied, setIsCopied] = useState(false);
