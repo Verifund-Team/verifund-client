@@ -9,9 +9,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
-import ProfileSkeleton from "./profile-skeleton";
 import { AlertCircle, CheckCircle, Shield } from "lucide-react";
 import { web3Service } from "@/lib/web3";
+import ProfileSkeleton from "./profile-skeleton";
 import ClipboardCopy from "./copy-to-clipboard";
 
 type IBadgeInfo = {

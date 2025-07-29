@@ -1,12 +1,12 @@
 "use client";
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import StatCards from "./stat-cards";
-import CampaignsTab from "./campaigns-tab";
+import StatCards from "./stat-card/stat-cards";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ProfileCard from "./Profile/profile-card";
+import ProfileCard from "./profile/profile-card";
+import CampaignsTab from "./my-campaigns/campaigns-tab";
 
 export default function OrganizerDashboard() {
   const [activeTab, setActiveTab] = useState("campaigns");

@@ -21,7 +21,7 @@ export type Campaign = {
   status: number;
   ipfsHash: string;
   isOwnerVerified: boolean;
-  metadata: CampaignMetadata;
+  metadata?: CampaignMetadata;
 };
 
 export function useGetCampaigns() {
