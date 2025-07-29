@@ -31,13 +31,13 @@ const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
             <div className="text-2xl font-bold text-foreground">
               {formatTimeRemaining(data.timeRemaining)}
             </div>
-            <div className="text-sm text-muted-foreground">Berakhir dalam</div>
+            <div className="text-sm text-muted-foreground">Ends in</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
               {formatIDRX(parseFloat(data.raised))}
             </div>
-            <div className="text-sm text-muted-foreground">Terkumpul</div>
+            <div className="text-sm text-muted-foreground">Raised</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">

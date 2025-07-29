@@ -3,26 +3,34 @@ import { Campaign, CampaignMetadata } from "./get-campaigns";
 import { web3Service } from "@/lib/web3";
 import { getMetadataFromIPFS } from "@/lib/ipfs";
 
-export function useGetCampaignDetail(campaignAddress: string) {
-  return useQuery<Campaign, Error>({
-    queryKey: ["get-campaign-detail", campaignAddress],
+export type CampaignDetail = Campaign & { userDonation: string };
+
+export function useGetCampaignDetail(campaignAddress: string, userWalletAddress?: string) {
+  return useQuery<CampaignDetail, Error>({
+    queryKey: ["get-campaign-detail", campaignAddress, userWalletAddress],
 
     queryFn: async () => {
-      const details = await web3Service.getCampaignDetails(campaignAddress);
+      const [details, userDonation] = await Promise.all([
+        web3Service.getCampaignDetails(campaignAddress),
+        userWalletAddress
+          ? web3Service.getDirectTransfers(campaignAddress, userWalletAddress)
+          : Promise.resolve("0"),
+      ]);
 
       let metadata: CampaignMetadata | null = null;
       if (details.ipfsHash) {
         try {
           metadata = await getMetadataFromIPFS(details.ipfsHash);
         } catch (ipfsError) {
-          console.warn(`Could not load IPFS metadata for campaign ${campaignAddress}:`, ipfsError);
+          console.warn(`Could not load IPFS metadata for ${campaignAddress}:`, ipfsError);
         }
       }
 
       return {
         ...details,
         metadata,
-      } as Campaign;
+        userDonation,
+      } as CampaignDetail;
     },
     enabled: !!campaignAddress,
   });

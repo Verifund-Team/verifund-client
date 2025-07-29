@@ -45,7 +45,7 @@ export function isArrayLengthGreaterThanZero<T>(arr: T[] | undefined): boolean {
 }
 
 export const formatTimeRemaining = (seconds: number) => {
-  if (seconds <= 0) return "Berakhir";
+  if (seconds <= 0) return "Has ended";
 
   const days = Math.floor(seconds / (24 * 3600));
   const hours = Math.floor((seconds % (24 * 3600)) / 3600);

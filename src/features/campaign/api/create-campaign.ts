@@ -11,7 +11,7 @@ export const campaignFormSchema = z.object({
   targetAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
     message: "Target dana harus angka yang valid",
   }),
-  durationInDays: z.string().refine((val) => !isNaN(parseInt(val)) && parseInt(val) > 0, {
+  durationInDays: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
     message: "Durasi harus angka yang valid",
   }),
   image: z.instanceof(File, { message: "Gambar kampanye harus diunggah" }),
@@ -39,7 +39,7 @@ export function useCreateCampaign() {
 
       const ipfsHash = await uploadToIPFS(metadata);
 
-      const durationInSeconds = parseInt(formData.durationInDays, 10) * 86400;
+      const durationInSeconds = parseFloat(formData.durationInDays) * 86400;
 
       const txHash = await web3Service.createCampaign(
         formData.name,
