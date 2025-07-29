@@ -55,7 +55,7 @@ const SectionFeaturedCampaigns = () => {
           transition={{ duration: 0.6, ease: "easeInOut" }}
           viewport={{ once: true }}
         >
-          <div className="text-cyan-400 font-semibold mb-3 tracking-wider">PILIHAN KAMI</div>
+          <div className="text-cyan-400 font-semibold mb-3 tracking-wider">OUR CAMPAIGNS</div>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Featured Campaign</h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Support verified and transparent campaigns to bring about change.{" "}

@@ -69,7 +69,7 @@ const CampaignCard = ({ campaign }: Props) => {
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium text-primary">{formatIDRX(raisedAmount)}</span>
-                <span className="text-muted-foreground">dari {formatIDRX(targetAmount)}</span>
+                <span className="text-muted-foreground">of {formatIDRX(targetAmount)}</span>
               </div>
               <Progress value={progressPercentage} className="h-2" />
             </div>
@@ -81,18 +81,18 @@ const CampaignCard = ({ campaign }: Props) => {
           <div className="pt-2 mt-auto">
             <div className="flex items-center gap-3 mb-4">
               <span className="text-sm text-muted-foreground">
-                oleh {campaign.metadata.creatorName}
+                by {campaign.metadata.creatorName}
               </span>
               {campaign.isOwnerVerified && (
                 <Badge variant="default">
                   <Shield className="w-3 h-3 mr-1" />
-                  Terverifikasi
+                  Verified
                 </Badge>
               )}
             </div>
 
             <Button onClick={handleDonateClick} className="w-full">
-              Donasi Sekarang
+              Donate Now
             </Button>
           </div>
         </CardContent>

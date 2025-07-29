@@ -9,6 +9,7 @@ import { ConnectButton } from '@xellar/kit'
 import { useAccount } from 'wagmi'
 import clsx from 'clsx'
 import { ClientOnly } from './ClientOnly'
+import Image from 'next/image'
 
 const truncateAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
 
@@ -42,7 +43,7 @@ const Navbar = () => {
       >
         <div className="relative flex w-full items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <img
+            <Image
               src="/logoverifund.png"
               alt="Verifund Logo"
               width={32}
@@ -77,13 +78,15 @@ const Navbar = () => {
               href="/organizer-dashboard"
               className={clsx(
                 'hover:text-foreground transition-colors',
-                pathname.startsWith('/organizer-dashboard') ? 'text-foreground font-semibold' : 'text-muted-foreground',
+                pathname.startsWith('/organizer-dashboard')
+                  ? 'text-foreground font-semibold'
+                  : 'text-muted-foreground',
               )}
             >
               Profile
             </Link>
           </div>
-          
+
           <ClientOnly>
             <div className="flex items-center space-x-3">
               <ConnectButton.Custom>
@@ -111,7 +114,7 @@ const Navbar = () => {
                 <Button asChild>
                   <Link href="/create-campaign">
                     <Plus className="w-4 h-4 mr-2" />
-                    Buat Kampanye
+                    Create Campaign
                   </Link>
                 </Button>
               )}

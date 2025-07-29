@@ -6,44 +6,60 @@ const steps = [
   {
     icon: Plus,
     title: 'Create Campaign',
-    description: 'Campaigner membuat kampanye dengan detail lengkap. Data disimpan di IPFS untuk transparansi maksimal.',
+    description:
+      'Campaigners create campaigns with detailed client information. Data is stored in IPFS for maximum transparency.',
   },
   {
     icon: Wallet,
     title: 'Donate IDRX',
-    description: 'Donatur menggunakan IDRX untuk berdonasi. Dana langsung masuk ke smart contract yang aman.',
+    description:
+      'Donors can use IDRX to make donations, and the funds will go directly into a secure smart contract.',
   },
   {
     icon: Eye,
     title: 'Full Transparantion',
-    description: 'Semua transaksi tercatat di blockchain. Donatur dapat melacak kemana dana mereka disalurkan.',
+    description: 'All transactions are recorded on the blockchain, ensuring transparency.',
   },
 ]
 const textVariant: Variants = {
   hidden: { opacity: 0, x: -30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
-    transition: { duration: 0.6, ease: 'easeOut' }
+    transition: { duration: 0.6, ease: 'easeOut' },
   },
 }
 const iconVariant: Variants = {
   hidden: { opacity: 0, scale: 0.5 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
-    transition: { type: 'spring', stiffness: 150, damping: 20 }
+    transition: { type: 'spring', stiffness: 150, damping: 20 },
   },
 }
 
-
 const SectionHowItWorks = () => {
   return (
-    <section id="how-it-works" className="relative bg-[#0A0F2C] py-24 sm:py-32 px-4 overflow-hidden">
+    <section
+      id="how-it-works"
+      className="relative bg-[#0A0F2C] py-24 sm:py-32 px-4 overflow-hidden"
+    >
       <div className="absolute inset-0 z-0 flex justify-center pointer-events-none">
-        <svg width="1000" height="100%" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice">
+        <svg
+          width="1000"
+          height="100%"
+          viewBox="0 0 1000 1200"
+          preserveAspectRatio="xMidYMid slice"
+        >
           <defs>
-            <linearGradient id="path-gradient" gradientUnits="userSpaceOnUse" x1="500" y1="0" x2="500" y2="1200">
+            <linearGradient
+              id="path-gradient"
+              gradientUnits="userSpaceOnUse"
+              x1="500"
+              y1="0"
+              x2="500"
+              y2="1200"
+            >
               <stop stopColor="#06b6d4" stopOpacity="0" />
               <stop offset="0.1" stopColor="#06b6d4" stopOpacity="0.4" />
               <stop offset="0.9" stopColor="#8b5cf6" stopOpacity="0.4" />
@@ -57,23 +73,21 @@ const SectionHowItWorks = () => {
             strokeWidth="2"
             initial={{ pathLength: 0 }}
             whileInView={{ pathLength: 1 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
+            transition={{ duration: 2, ease: 'easeInOut' }}
             viewport={{ once: true }}
           />
         </svg>
       </div>
 
       <div className="container mx-auto relative z-10">
-        <motion.div 
+        <motion.div
           className="text-center mb-24"
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            How does it work?
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">How does it work?</h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             A simple yet secure process with blockchain technology
           </p>
@@ -87,7 +101,7 @@ const SectionHowItWorks = () => {
                 index % 2 === 1 ? 'md:flex-row-reverse' : ''
               }`}
             >
-              <motion.div 
+              <motion.div
                 className="flex-shrink-0 w-48 h-48 flex items-center justify-center relative"
                 variants={iconVariant}
                 initial="hidden"
@@ -100,16 +114,14 @@ const SectionHowItWorks = () => {
                 </div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 className="text-center md:text-left"
                 variants={textVariant}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.3 }}
               >
-                <p className="text-cyan-400 font-bold mb-3 tracking-widest">
-                  STEP 0{index + 1}
-                </p>
+                <p className="text-cyan-400 font-bold mb-3 tracking-widest">STEP 0{index + 1}</p>
                 <h3 className="text-3xl font-bold text-white mb-4">{step.title}</h3>
                 <p className="text-gray-400 max-w-md">{step.description}</p>
               </motion.div>
