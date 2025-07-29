@@ -1,4 +1,4 @@
-'use client' 
+'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -14,14 +14,13 @@ import { useAccount } from 'wagmi'
 import { useConnectModal } from '@xellar/kit'
 
 const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
-
   const { isConnected } = useAccount()
   const { open } = useConnectModal()
 
   const handleDonateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isConnected) {
-      e.preventDefault() 
-      open() 
+      e.preventDefault()
+      open()
     }
   }
 
@@ -34,14 +33,14 @@ const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
           </div>
 
           <Badge className="absolute top-3 left-3 bg-white text-black" variant="secondary">
-          {campaign.category}
-            </Badge>
+            {campaign.category}
+          </Badge>
 
           {campaign.campaigner?.isVerified && (
-          <Badge className="absolute top-3 right-3 bg-white text-black" variant="default">
-          <Shield className="w-3 h-3 mr-1" />
-          Terverifikasi
-          </Badge>
+            <Badge className="absolute top-3 right-3 bg-white text-black" variant="default">
+              <Shield className="w-3 h-3 mr-1" />
+              Verified
+            </Badge>
           )}
         </div>
 
@@ -55,7 +54,7 @@ const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium text-white">{formatIDRX(campaign.raised)}</span>
-                <span className="text-muted-foreground">dari {formatIDRX(campaign.target)}</span>
+                <span className="text-muted-foreground">of {formatIDRX(campaign.target)}</span>
               </div>
               <Progress value={(campaign.raised / campaign.target) * 100} className="h-2" />
             </div>
@@ -63,19 +62,19 @@ const CampaignCard = ({ campaign }: { campaign: TCampaign }) => {
             <div className="flex justify-between text-sm text-muted-foreground">
               <div className="flex items-center">
                 <Users className="w-4 h-4 mr-1" />
-                {campaign.donors} donatur
+                {campaign.donors} donor
               </div>
-              <div>{campaign.daysLeft} hari tersisa</div>
+              <div>{campaign.daysLeft} days remaining</div>
             </div>
           </div>
 
           <div className="pt-2 mt-auto">
-            <p className="text-sm text-muted-foreground mb-3">oleh {campaign.campaigner?.name}</p>
-            <Button 
-              onClick={handleDonateClick} 
+            <p className="text-sm text-muted-foreground mb-3">by {campaign.campaigner?.name}</p>
+            <Button
+              onClick={handleDonateClick}
               className="hover:cursor-pointer w-full bg-white text-gray-900 font-bold hover:bg-gray-200 transition-colors duration-200"
             >
-              Donasi Sekarang
+              Let&#39;s Donate
             </Button>
           </div>
         </CardContent>

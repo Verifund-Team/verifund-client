@@ -1,9 +1,8 @@
-// Pastikan Link diimpor dari next/link
-import Link from 'next/link';
-import CampaignCard from '@/features/campaign/components/campaign-list/campaign-card';
-import { MOCK_CAMPAIGNS } from '@/features/campaign/components/campaign-list/campaign-list-page';
-import { ArrowRight } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import Link from 'next/link'
+import CampaignCard from '@/features/campaign/components/campaign-list/campaign-card'
+import { MOCK_CAMPAIGNS } from '@/features/campaign/components/campaign-list/campaign-list-page'
+import { ArrowRight } from 'lucide-react'
+import { motion, Variants } from 'framer-motion'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -13,7 +12,7 @@ const containerVariants: Variants = {
       staggerChildren: 0.15,
     },
   },
-};
+}
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
@@ -25,7 +24,7 @@ const itemVariants: Variants = {
       stiffness: 100,
     },
   },
-};
+}
 
 const SectionFeaturedCampaigns = () => {
   return (
@@ -46,22 +45,21 @@ const SectionFeaturedCampaigns = () => {
         </motion.div>
       </div>
       <div className="container mx-auto relative z-10">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
           viewport={{ once: true }}
         >
-          <div className="text-cyan-400 font-semibold mb-3 tracking-wider">PILIHAN KAMI</div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            Featured Campaign
-          </h2>
+          <div className="text-cyan-400 font-semibold mb-3 tracking-wider">Our Campaigns</div>
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Featured Campaign</h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Support verified and transparent campaigns to bring about change.          </p>
+            Support verified and transparent campaigns to bring about change.
+          </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
           variants={containerVariants}
           initial="hidden"
@@ -69,9 +67,9 @@ const SectionFeaturedCampaigns = () => {
           viewport={{ once: true, amount: 0.1 }}
         >
           {MOCK_CAMPAIGNS.slice(0, 4).map((campaign) => (
-            <motion.div 
-              variants={itemVariants} 
-              key={campaign.id} 
+            <motion.div
+              variants={itemVariants}
+              key={campaign.id}
               className="group relative h-full"
               whileHover={{ y: -8 }}
               transition={{ type: 'spring', stiffness: 300 }}
@@ -83,8 +81,8 @@ const SectionFeaturedCampaigns = () => {
             </motion.div>
           ))}
         </motion.div>
-        
-        <motion.div 
+
+        <motion.div
           className="text-center mt-16"
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -92,11 +90,11 @@ const SectionFeaturedCampaigns = () => {
           viewport={{ once: true }}
         >
           <Link href="/campaigns">
-            <motion.div 
+            <motion.div
               className="group inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg border-2 border-cyan-400 text-cyan-400 font-semibold transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-lg hover:shadow-cyan-400/20 cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 15 }}
             >
               View all campaigns
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -108,4 +106,4 @@ const SectionFeaturedCampaigns = () => {
   )
 }
 
-export default SectionFeaturedCampaigns;
+export default SectionFeaturedCampaigns

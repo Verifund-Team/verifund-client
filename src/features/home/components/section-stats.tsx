@@ -34,26 +34,26 @@ const itemVariants: Variants = {
   hover: {
     scale: 1.05,
     transition: { type: 'spring', stiffness: 300 },
-  }
+  },
 }
 
 interface Stat {
-  value: number;
-  suffix?: string;
-  separator?: string;
-  decimals?: number;
+  value: number
+  suffix?: string
+  separator?: string
+  decimals?: number
 }
 
 interface StatCardProps {
-  icon: ElementType;
-  stat: Stat;
-  label: string;
+  icon: ElementType
+  stat: Stat
+  label: string
 }
 
 const StatCard = ({ icon: IconComponent, stat, label }: StatCardProps) => {
   return (
-    <motion.div 
-      variants={itemVariants} 
+    <motion.div
+      variants={itemVariants}
       whileHover="hover"
       className="
         relative flex flex-col items-center justify-center p-8 
@@ -77,7 +77,7 @@ const StatCard = ({ icon: IconComponent, stat, label }: StatCardProps) => {
       <IconComponent className="text-2xl mb-2 text-gray-400" />
       <div className="text-sm uppercase tracking-wider text-gray-400 font-medium">{label}</div>
     </motion.div>
-  );
+  )
 }
 
 const SectionWeb3 = () => {
@@ -94,14 +94,18 @@ const SectionWeb3 = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <StatCard icon={FaHandHoldingHeart} stat={MOCK_STATS.totalRaised} label="Total Funds Collected" />
+          <StatCard
+            icon={FaHandHoldingHeart}
+            stat={MOCK_STATS.totalRaised}
+            label="Total Funds Collected"
+          />
           <StatCard icon={FaBullhorn} stat={MOCK_STATS.totalCampaigns} label="Created Campaigns" />
           <StatCard icon={FaUsers} stat={MOCK_STATS.totalDonors} label="Total Donors" />
-          //<StatCard icon={FiTrendingUp} stat={MOCK_STATS.successRate} label="Success Rate" />
+          <StatCard icon={FiTrendingUp} stat={MOCK_STATS.successRate} label="Success Rate" />
         </motion.div>
       </div>
     </section>
   )
 }
 
-export default SectionWeb3;
+export default SectionWeb3
