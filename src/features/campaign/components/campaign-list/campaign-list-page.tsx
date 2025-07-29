@@ -93,7 +93,7 @@ export default function CampaignsListPage() {
     return {
       total: initialCampaigns.length,
       ongoing: initialCampaigns.filter((c) => c.status === 0).length,
-      completed: initialCampaigns.filter((c) => c.status === 1).length,
+      completed: initialCampaigns.filter((c) => c.status === 1 || c.status === 2).length,
       totalRaised: initialCampaigns.reduce((sum, c) => sum + parseFloat(c.raised), 0),
     };
   }, [initialCampaigns]);
