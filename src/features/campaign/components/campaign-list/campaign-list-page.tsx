@@ -29,18 +29,14 @@ const sortOptions = [
   { value: "leastFunded", label: "Paling Sedikit Terkumpul" },
 ];
 
-const INITIAL_ITEMS = 8;
-
-// Renamed to CampaignsListPage as it's the main page component now
 export default function CampaignsListPage() {
-  const { data: initialCampaigns, isPending, isError, refetch } = useGetCampaigns();
+  const { data: initialCampaigns, isPending, isError } = useGetCampaigns();
 
   const [filters, setFilters] = useState({
     status: "all",
     category: "all",
     sortBy: "latest",
   });
-  const [visibleCount, setVisibleCount] = useState(INITIAL_ITEMS);
 
   const handleFilterChange = (filterName: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [filterName]: value }));
@@ -50,7 +46,6 @@ export default function CampaignsListPage() {
     setFilters({ status: "all", category: "all", sortBy: "latest" });
   };
 
-  // Dynamically generate category options from the fetched data
   const categoryOptions = useMemo(() => {
     if (!initialCampaigns) return [{ value: "all", label: "Semua Kategori" }];
     const categories = new Set(initialCampaigns.map((c) => c.metadata?.category).filter(Boolean));
@@ -87,20 +82,11 @@ export default function CampaignsListPage() {
         campaigns.sort((a, b) => parseFloat(a.raised) - parseFloat(b.raised));
         break;
       default:
-        // 'latest' requires a creation timestamp, which should be added to the Campaign type
         break;
     }
 
     return campaigns;
   }, [initialCampaigns, filters]);
-
-  useEffect(() => {
-    setVisibleCount(INITIAL_ITEMS);
-  }, [filteredAndSortedCampaigns]);
-
-  const displayedCampaigns = useMemo(() => {
-    return filteredAndSortedCampaigns.slice(0, visibleCount);
-  }, [filteredAndSortedCampaigns, visibleCount]);
 
   const stats = useMemo(() => {
     if (!initialCampaigns) {
@@ -159,7 +145,8 @@ export default function CampaignsListPage() {
 
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="text-muted-foreground">
-          Menampilkan {displayedCampaigns.length} dari {filteredAndSortedCampaigns.length} kampanye
+          Menampilkan {filteredAndSortedCampaigns.length} dari {filteredAndSortedCampaigns.length}{" "}
+          kampanye
         </div>
 
         <div className="flex flex-wrap gap-4">
@@ -202,9 +189,9 @@ export default function CampaignsListPage() {
         </div>
       </div>
 
-      {isArrayLengthGreaterThanZero(displayedCampaigns) ? (
+      {isArrayLengthGreaterThanZero(filteredAndSortedCampaigns) ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {displayedCampaigns.map((campaign) => (
+          {filteredAndSortedCampaigns.map((campaign) => (
             <CampaignCard key={campaign.address} campaign={campaign} />
           ))}
         </div>
@@ -219,18 +206,6 @@ export default function CampaignsListPage() {
           <p className="text-muted-foreground mb-4">Coba ubah filter atau pilihan urutan Anda.</p>
           <Button variant="outline" onClick={handleResetFilters}>
             Reset Semua Filter
-          </Button>
-        </div>
-      )}
-
-      {visibleCount < filteredAndSortedCampaigns.length && (
-        <div className="text-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => setVisibleCount((prev) => prev + INITIAL_ITEMS)}
-          >
-            Muat Lebih Banyak
           </Button>
         </div>
       )}
