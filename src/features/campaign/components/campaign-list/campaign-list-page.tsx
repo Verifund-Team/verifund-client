@@ -74,10 +74,10 @@ export default function CampaignsListPage() {
         campaigns.sort((a, b) => a.timeRemaining - b.timeRemaining);
         break;
       case "mostFunded":
-        campaigns.sort((a, b) => parseFloat(b.raised) - parseFloat(a.raised));
+        campaigns.sort((a, b) => parseFloat(b.totalRaised) - parseFloat(a.totalRaised));
         break;
       case "leastFunded":
-        campaigns.sort((a, b) => parseFloat(a.raised) - parseFloat(b.raised));
+        campaigns.sort((a, b) => parseFloat(a.totalRaised) - parseFloat(b.totalRaised));
         break;
       default:
         break;
@@ -94,7 +94,7 @@ export default function CampaignsListPage() {
       total: initialCampaigns.length,
       ongoing: initialCampaigns.filter((c) => c.status === 0).length,
       completed: initialCampaigns.filter((c) => c.status === 1 || c.status === 2).length,
-      totalRaised: initialCampaigns.reduce((sum, c) => sum + parseFloat(c.raised), 0),
+      totalRaised: initialCampaigns.reduce((sum, c) => sum + parseFloat(c.totalRaised), 0),
     };
   }, [initialCampaigns]);
 

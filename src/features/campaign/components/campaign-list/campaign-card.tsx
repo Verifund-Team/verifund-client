@@ -19,7 +19,7 @@ type Props = {
     Campaign,
     | "address"
     | "name"
-    | "raised"
+    | "totalRaised"
     | "target"
     | "timeRemaining"
     | "isOwnerVerified"
@@ -52,7 +52,7 @@ const CampaignCard = ({ campaign }: Props) => {
     }
   };
 
-  const raisedAmount = parseFloat(campaign.raised);
+  const raisedAmount = parseFloat(campaign.totalRaised);
   const targetAmount = parseFloat(campaign.target);
   const progressPercentage = targetAmount > 0 ? (raisedAmount / targetAmount) * 100 : 0;
   const statusProps = getStatusProps(campaign.status);
@@ -105,7 +105,7 @@ const CampaignCard = ({ campaign }: Props) => {
           <div className="pt-2 mt-auto">
             <div className="flex items-center gap-3 mb-4">
               <span className="text-sm text-muted-foreground">
-                by {campaign.metadata.creatorName}
+                by {campaign.metadata?.creatorName}
               </span>
               {campaign.isOwnerVerified && (
                 <Badge variant="default">

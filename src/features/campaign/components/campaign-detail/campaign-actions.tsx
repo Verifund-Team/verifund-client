@@ -95,6 +95,14 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
     );
   };
 
+  console.log(
+    "hhhhhhhhhhhhhhhhhhhhhhh",
+    hasDonated,
+    !canRefund,
+    campaign.status === 2,
+    campaign.isOwnerVerified,
+  );
+
   if (
     !canWithdraw &&
     !canRefund &&
