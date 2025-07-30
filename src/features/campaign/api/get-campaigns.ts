@@ -16,6 +16,7 @@ export type Campaign = {
   name: string;
   target: string;
   raised: string;
+  actualBalance: string;
   timeRemaining: number;
   status: number;
   ipfsHash: string;

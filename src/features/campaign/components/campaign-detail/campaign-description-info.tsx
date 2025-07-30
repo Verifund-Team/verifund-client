@@ -6,7 +6,7 @@ import { Campaign } from "../../api/get-campaigns";
 import { getStatusProps } from "../campaign-list/campaign-card";
 
 const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
-  const progressPercentage = (parseFloat(data.raised) / parseFloat(data.target)) * 100;
+  const progressPercentage = (parseFloat(data.actualBalance) / parseFloat(data.target)) * 100;
   const statusProps = getStatusProps(data.status);
 
   return (
@@ -40,7 +40,7 @@ const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
-              {formatIDRX(parseFloat(data.raised))}
+              {formatIDRX(parseFloat(data.actualBalance))}
             </div>
             <div className="text-sm text-muted-foreground">Raised</div>
           </div>
