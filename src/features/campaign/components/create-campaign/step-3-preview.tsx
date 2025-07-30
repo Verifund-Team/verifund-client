@@ -1,3 +1,5 @@
+"use client";
+
 import { Step } from "@/components/ui/stepper";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,38 +17,36 @@ const StepThreePreview = () => {
   return (
     <Step>
       <div className="space-y-6">
-        <h3 className="text-lg font-semibold">Preview Kampanye</h3>
+        <h3 className="text-lg font-semibold">Campaign Preview</h3>
 
-        <Card className="pt-0">
-          <div className="relative">
+        <Card className="pt-0 overflow-hidden">
+          <div className="relative w-full h-48">
             {formData.image ? (
-              <div className="relative w-full h-48 rounded-t-lg">
-                <Image
-                  src={URL.createObjectURL(formData.image)}
-                  alt="Campaign preview"
-                  className="object-cover"
-                  fill
-                />
-              </div>
+              <Image
+                src={URL.createObjectURL(formData.image)}
+                alt="Campaign preview"
+                className="object-cover"
+                fill
+              />
             ) : (
-              <div className="w-full h-48 bg-muted rounded-t-lg flex items-center justify-center">
-                <p className="text-muted-foreground">Tidak ada gambar</p>
+              <div className="w-full h-full bg-muted rounded-t-lg flex items-center justify-center">
+                <p className="text-muted-foreground">No image uploaded</p>
               </div>
             )}
             <Badge className="absolute top-3 left-3 bg-card/90 text-foreground" variant="secondary">
-              {formData.category || "Kategori"}
+              {formData.category || "Category"}
             </Badge>
             {/* Note: Verification status is not part of the form, so this is a placeholder */}
             <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
               <Shield className="w-3 h-3 mr-1" />
-              Terverifikasi
+              Verified
             </Badge>
           </div>
 
           <CardHeader>
-            <CardTitle className="text-xl">{formData.name || "Judul Kampanye Anda"}</CardTitle>
+            <CardTitle className="text-xl">{formData.name || "Your Campaign Title"}</CardTitle>
             <CardDescription className="whitespace-pre-line">
-              {formData.description || "Deskripsi kampanye Anda akan muncul di sini..."}
+              {formData.description || "Your campaign description will appear here..."}
             </CardDescription>
           </CardHeader>
 
@@ -55,7 +55,7 @@ const StepThreePreview = () => {
               <div className="flex justify-between text-sm mb-2">
                 <span className="font-medium text-primary">IDRX 0</span>
                 <span className="text-muted-foreground">
-                  dari {formatIDRX(Number.parseInt(formData.targetAmount) || 0)}
+                  of {formatIDRX(Number.parseInt(formData.targetAmount) || 0)}
                 </span>
               </div>
               <Progress value={0} className="h-2" />
@@ -63,17 +63,17 @@ const StepThreePreview = () => {
 
             <div className="flex justify-between text-sm text-muted-foreground">
               <div className="flex items-center">
-                <Users className="w-4 h-4 mr-1" />0 donatur
+                <Users className="w-4 h-4 mr-1" />0 donors
               </div>
               <div className="flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
-                {formData.durationInDays || "0"} hari
+                {formData.durationInDays || "0"} days
               </div>
             </div>
 
             <div className="pt-2 border-t border-border">
               <p className="text-sm text-muted-foreground">
-                oleh {formData.creatorName || "Nama Kreator"}
+                by {formData.creatorName || "Creator Name"}
               </p>
             </div>
           </CardContent>
@@ -81,21 +81,21 @@ const StepThreePreview = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Ringkasan Kampanye</CardTitle>
+            <CardTitle className="text-base">Campaign Summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Target Dana:</span>
+              <span className="text-muted-foreground">Funding Target:</span>
               <span className="font-medium">
                 {formatIDRX(Number.parseInt(formData.targetAmount) || 0)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Durasi:</span>
-              <span className="font-medium">{formData.durationInDays || "0"} hari</span>
+              <span className="text-muted-foreground">Duration:</span>
+              <span className="font-medium">{formData.durationInDays || "0"} days</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Kategori:</span>
+              <span className="text-muted-foreground">Category:</span>
               <span className="font-medium">{formData.category || "-"}</span>
             </div>
           </CardContent>
