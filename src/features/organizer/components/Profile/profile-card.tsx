@@ -1,7 +1,6 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { useState } from "react";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,29 +9,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-import { toast } from "sonner";
 import { AlertCircle, CheckCircle, Shield } from "lucide-react";
 
 import ProfileSkeleton from "./profile-skeleton";
 import ClipboardCopy from "./copy-to-clipboard";
 import { useBadgeInfo } from "../../api/get-badge-info";
+import { useClaimSBT } from "../../api/claim-sbt";
 
 const ProfileCard = () => {
   const { address, isConnected } = useAccount();
-  const [isClaimingSBT, setIsClaimingSBT] = useState(false);
 
   const { data: badgeInfo, isLoading } = useBadgeInfo(address, isConnected);
+  const { mutate: claim, isPending: isClaimingSBT } = useClaimSBT();
 
   const handleClaimSBT = async () => {
-    setIsClaimingSBT(true);
-    try {
-      toast.loading("Claiming SBT...");
-      toast.success("SBT claimed successfully!");
-    } catch (error) {
-      toast.error("Failed to claim SBT: " + error);
-    } finally {
-      setIsClaimingSBT(false);
-    }
+    claim();
   };
 
   if (isLoading) return <ProfileSkeleton />;

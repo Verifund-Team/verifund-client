@@ -10,7 +10,7 @@ export type IBadgeInfo = {
 
 export const useBadgeInfo = (address: `0x${string}` | undefined, isConnected: boolean) => {
   return useQuery<IBadgeInfo>({
-    queryKey: ["badgeInfo", address],
+    queryKey: ["badge-info", address],
     queryFn: () => {
       if (!address) throw new Error("Wallet not connected");
       return web3Service.getBadgeInfo(address);
