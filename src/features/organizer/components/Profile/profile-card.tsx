@@ -1,69 +1,43 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAccount } from "wagmi";
+import { useState } from "react";
+import Link from "next/link";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useAccount } from "wagmi";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
 import { toast } from "sonner";
 import { AlertCircle, CheckCircle, Shield } from "lucide-react";
-import { web3Service } from "@/lib/web3";
+
 import ProfileSkeleton from "./profile-skeleton";
 import ClipboardCopy from "./copy-to-clipboard";
-
-type IBadgeInfo = {
-  hasWhitelistPermission: boolean;
-  isCurrentlyVerified: boolean;
-  tokenId: string;
-  metadataURI: string;
-};
+import { useBadgeInfo } from "../../api/get-badge-info";
 
 const ProfileCard = () => {
-  const [badgeInfo, setBadgeInfo] = useState<IBadgeInfo | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isClaimingSBT, setIsClaimingSBT] = useState(false);
   const { address, isConnected } = useAccount();
+  const [isClaimingSBT, setIsClaimingSBT] = useState(false);
 
-  useEffect(() => {
-    if (!isConnected || !address) {
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchBadgeData = async () => {
-      try {
-        setIsLoading(true);
-        const fetchedBadgeInfo = await web3Service.getBadgeInfo(address);
-        setBadgeInfo(fetchedBadgeInfo);
-      } catch (error) {
-        toast.error("Failed to fetch badge info: " + error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBadgeData();
-  }, [address, isConnected]);
+  const { data: badgeInfo, isLoading } = useBadgeInfo(address, isConnected);
 
   const handleClaimSBT = async () => {
     setIsClaimingSBT(true);
     try {
-      toast.loading("Claimming SBT....");
+      toast.loading("Claiming SBT...");
+      toast.success("SBT claimed successfully!");
     } catch (error) {
-      toast.error("Failed to claim SBT, Please try again later :" + error);
+      toast.error("Failed to claim SBT: " + error);
     } finally {
       setIsClaimingSBT(false);
     }
   };
 
-  if (isLoading) {
-    return <ProfileSkeleton />;
-  }
+  if (isLoading) return <ProfileSkeleton />;
 
-  if (!isConnected) {
+  if (!isConnected || !address) {
     return (
       <Card className="h-fit">
         <CardContent className="pt-6">
@@ -126,9 +100,7 @@ const ProfileCard = () => {
               <AlertCircle className="h-5 w-5 text-yellow-500" />
               <span>Not yet verified. Submit verification to get SBT.</span>
               <Link
-                href={
-                  "https://docs.google.com/forms/d/1h7vU2ZmIMApamvkizJiUUVpRtkt0d9bVgb2N4gOUCws/viewform?edit_requested=true"
-                }
+                href="https://docs.google.com/forms/d/1h7vU2ZmIMApamvkizJiUUVpRtkt0d9bVgb2N4gOUCws/viewform?edit_requested=true"
                 target="_blank"
                 className="w-full"
               >
