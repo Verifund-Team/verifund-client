@@ -10,6 +10,7 @@ import { useGetCampaignDetail } from "../../api/get-campaign-detail";
 import CampaignDetailSkeleton from "./campaign-detail-skeleton";
 import CampaignDetailError from "./campaign-detail-error";
 import CampaignActions from "./campaign-actions";
+import { useAccount } from "wagmi";
 
 export type TDonation = {
   id: number;
@@ -21,7 +22,8 @@ export type TDonation = {
 
 export default function CampaignDetailPage() {
   const params = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useGetCampaignDetail(params.id);
+  const { address: userWallet } = useAccount();
+  const { data, isLoading, isError } = useGetCampaignDetail(params.id, userWallet);
 
   if (isLoading) return <CampaignDetailSkeleton />;
   if (isError) return <CampaignDetailError />;
