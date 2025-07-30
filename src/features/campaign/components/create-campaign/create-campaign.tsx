@@ -14,6 +14,8 @@ import {
 } from "../../api/create-campaign";
 import { useQueryClient } from "@tanstack/react-query";
 import AuthGuard from "@/components/auth-guard";
+import { ActionDialog } from "@/components/ui/action-dialog";
+import { useRouter } from "next/navigation";
 
 const stepFields: (keyof CampaignFormSchema)[][] = [
   ["creatorName", "name", "description", "category", "image"],
@@ -23,9 +25,19 @@ const stepFields: (keyof CampaignFormSchema)[][] = [
 
 const CreateCampaignPage = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { mutate: createCampaign, isPending } = useCreateCampaign();
   const [activeStep, setActiveStep] = useState(0);
+  const [isStepValidating, setIsStepValidating] = useState(false);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState({
+    title: "",
+    description: "",
+    txHash: "",
+    status: "success" as "success" | "error",
+  });
 
   const methods = useForm<CampaignFormSchema>({
     resolver: zodResolver(campaignFormSchema),
@@ -42,24 +54,36 @@ const CreateCampaignPage = () => {
   });
 
   const onSubmit = (data: CampaignFormSchema) => {
-    // console.log("Form data submitted:", data);
-
     createCampaign(data, {
       onSuccess: (txHash) => {
         queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
-        alert(`Kampanye berhasil dibuat! Hash Transaksi: ${txHash}`);
+        setDialogContent({
+          title: "Campaign Created Successfully!",
+          description: "Your new campaign is now live.",
+          txHash,
+          status: "success",
+        });
+        setIsDialogOpen(true);
         methods.reset();
         setActiveStep(0);
       },
       onError: (error) => {
-        alert(`Gagal membuat kampanye: ${error.message}`);
+        setDialogContent({
+          title: "Failed to Create Campaign",
+          description: error.message,
+          txHash: "",
+          status: "error",
+        });
+        setIsDialogOpen(true);
       },
     });
   };
 
   const handleNext = async () => {
     const fieldsToValidate = stepFields[activeStep];
+    setIsStepValidating(true);
     const isValid = await methods.trigger(fieldsToValidate);
+    setIsStepValidating(false);
     if (isValid) {
       setActiveStep((prev) => prev + 1);
     }
@@ -80,10 +104,10 @@ const CreateCampaignPage = () => {
       <div className="container mx-auto px-4 py-8 max-w-4xl min-h-screen">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Buat Kampanye Baru
+            Create a New Campaign
           </h1>
           <p className="text-xl text-muted-foreground">
-            Buat kampanye crowdfunding yang transparan dan terpercaya
+            Create a transparent and trustworthy crowdfunding campaign
           </p>
         </div>
         <FormProvider {...methods}>
@@ -94,11 +118,11 @@ const CreateCampaignPage = () => {
               onPrevClick={handlePrev}
               onNextClick={handleNext}
               onFinalStepCompleted={methods.handleSubmit(onSubmit)}
-              backButtonText="Kembali"
-              nextButtonText="Selanjutnya"
-              finalStepButtonText={isPending ? "Membuat kampanye..." : "Buat Kampanye"}
-              nextButtonProps={{ disabled: isPending }}
-              backButtonProps={{ disabled: isPending }}
+              backButtonText="Back"
+              nextButtonText={isStepValidating ? "Validating..." : "Next"}
+              finalStepButtonText={isPending ? "Creating Campaign..." : "Create Campaign"}
+              nextButtonProps={{ disabled: isPending || isStepValidating }}
+              backButtonProps={{ disabled: isPending || isStepValidating }}
               stepCircleContainerClassName="max-w-4xl"
             >
               <Step>
@@ -114,6 +138,25 @@ const CreateCampaignPage = () => {
           </form>
         </FormProvider>
       </div>
+      <ActionDialog
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        status={dialogContent.status}
+        title={dialogContent.title}
+        description={dialogContent.description}
+        txHash={dialogContent.txHash}
+        primaryAction={{
+          text: "View Campaigns",
+          onClick: () => {
+            setIsDialogOpen(false);
+            router.push("/campaigns");
+          },
+        }}
+        secondaryAction={{
+          text: "Close",
+          onClick: () => setIsDialogOpen(false),
+        }}
+      />
     </AuthGuard>
   );
 };
