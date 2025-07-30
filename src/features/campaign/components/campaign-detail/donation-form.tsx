@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Wallet, CreditCard } from "lucide-react";
+import { Wallet, CreditCard, Info } from "lucide-react";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@xellar/kit";
@@ -26,6 +26,8 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
   const [idrxPaymentLoading, setIDRXPaymentLoading] = useState(false);
   const [donorEmail, setDonorEmail] = useState("");
 
+  const isCampaignActive = campaign.status === 0;
+
   const handleWalletDonate = () => {
     if (!isConnected) {
       openConnectModal();
@@ -33,7 +35,7 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
     }
 
     if (!donationAmount || parseFloat(donationAmount) <= 0) {
-      alert("Silakan masukkan jumlah donasi yang valid.");
+      alert("Please enter a valid donation amount.");
       return;
     }
 
@@ -44,24 +46,23 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
       },
       {
         onSuccess: (txHash) => {
-          alert(`Donasi berhasil! Hash Transaksi: ${txHash}`);
+          alert(`Donation successful! Transaction Hash: ${txHash}`);
           setDonationAmount("");
         },
         onError: (error) => {
-          alert(`Gagal berdonasi: ${error.message}`);
+          alert(`Donation failed: ${error.message}`);
         },
       },
     );
   };
 
-  // Handler for off-chain donation via payment gateway
   const handleIDRXPayment = async () => {
     if (!donationAmount || parseFloat(donationAmount) <= 0) {
-      alert("Silakan masukkan jumlah donasi yang valid.");
+      alert("Please enter a valid donation amount.");
       return;
     }
     if (!donorEmail) {
-      alert("Silakan masukkan email Anda untuk konfirmasi.");
+      alert("Please enter your email for confirmation.");
       return;
     }
 
@@ -80,22 +81,18 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
       const result = await response.json();
 
       if (result.success && result.paymentUrl) {
-        // Open the payment gateway link in a new tab
         window.open(result.paymentUrl, "_blank");
-        alert(
-          `Link pembayaran telah dibuat! Silakan selesaikan pembayaran. Referensi: ${result.reference}`,
-        );
+        alert(`Payment link created! Please complete the payment. Reference: ${result.reference}`);
 
-        // Reset form state
         setDonationAmount("");
         setDonorEmail("");
         setShowIDRXPayment(false);
       } else {
-        throw new Error(result.error || "Gagal membuat link pembayaran.");
+        throw new Error(result.error || "Failed to create payment link.");
       }
     } catch (error) {
       console.error("IDRX Payment Error:", error);
-      alert(`Terjadi kesalahan: ${(error as Error).message}`);
+      alert(`An error occurred: ${(error as Error).message}`);
     } finally {
       setIDRXPaymentLoading(false);
     }
@@ -108,70 +105,82 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
       <CardHeader>
         <CardTitle className="flex items-center">
           <Wallet className="w-5 h-5 mr-2 text-primary" />
-          Donasi Sekarang
+          Donate Now
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-1">
-          <Label htmlFor="amount">Jumlah Donasi (IDRX)</Label>
-          <Input
-            id="amount"
-            type="number"
-            placeholder="Masukkan jumlah donasi"
-            value={donationAmount}
-            onChange={(e) => setDonationAmount(e.target.value)}
-            disabled={isProcessing}
-          />
-        </div>
+        {isCampaignActive ? (
+          <>
+            <div className="space-y-1">
+              <Label htmlFor="amount">Donation Amount (IDRX)</Label>
+              <Input
+                id="amount"
+                type="number"
+                placeholder="Enter donation amount"
+                value={donationAmount}
+                onChange={(e) => setDonationAmount(e.target.value)}
+                disabled={isProcessing}
+              />
+            </div>
 
-        <div className="space-y-2 pt-2">
-          <p className="text-sm font-medium text-foreground mb-2">Pilih Metode Pembayaran:</p>
+            <div className="space-y-2 pt-2">
+              <p className="text-sm font-medium text-foreground mb-2">Select Payment Method:</p>
 
-          <Button
-            className="w-full"
-            onClick={handleWalletDonate}
-            disabled={!donationAmount || isProcessing}
-          >
-            {isDonating ? "Memproses..." : "Bayar dengan Wallet"}
-          </Button>
+              <Button
+                className="w-full"
+                onClick={handleWalletDonate}
+                disabled={!donationAmount || isProcessing}
+              >
+                {isDonating ? "Processing..." : "Pay with Wallet"}
+              </Button>
 
-          <Button
-            className="w-full"
-            variant="outline"
-            onClick={() => setShowIDRXPayment(!showIDRXPayment)}
-            disabled={isProcessing}
-          >
-            <CreditCard className="w-4 h-4 mr-2" />
-            Bayar (Tanpa Wallet)
-          </Button>
-        </div>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => setShowIDRXPayment(!showIDRXPayment)}
+                disabled={isProcessing}
+              >
+                <CreditCard className="w-4 h-4 mr-2" />
+                Pay (Without Wallet)
+              </Button>
+            </div>
 
-        {showIDRXPayment && (
-          <div className="p-4 bg-muted rounded-lg border space-y-3">
-            <Label htmlFor="email">Email untuk Konfirmasi</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="contoh@email.com"
-              value={donorEmail}
-              onChange={(e) => setDonorEmail(e.target.value)}
-              disabled={idrxPaymentLoading}
-            />
-            <Button
-              className="w-full"
-              onClick={handleIDRXPayment}
-              disabled={!donationAmount || !donorEmail || idrxPaymentLoading}
-            >
-              {idrxPaymentLoading ? "Membuat Link..." : "Buat Link Pembayaran"}
-            </Button>
+            {showIDRXPayment && (
+              <div className="p-4 bg-muted rounded-lg border space-y-3">
+                <Label htmlFor="email">Email for Confirmation</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="example@email.com"
+                  value={donorEmail}
+                  onChange={(e) => setDonorEmail(e.target.value)}
+                  disabled={idrxPaymentLoading}
+                />
+                <Button
+                  className="w-full"
+                  onClick={handleIDRXPayment}
+                  disabled={!donationAmount || !donorEmail || idrxPaymentLoading}
+                >
+                  {idrxPaymentLoading ? "Creating Link..." : "Create Payment Link"}
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center p-4 bg-muted rounded-lg">
+            <Info className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
+            <p className="font-medium">Donations are Closed</p>
+            <p className="text-sm text-muted-foreground">
+              This campaign is no longer active and is not accepting new donations.
+            </p>
           </div>
         )}
 
         <div className="text-xs text-muted-foreground space-y-1 pt-2">
-          <p>• Donasi menggunakan token IDRX.</p>
-          <p>• Biaya gas (jika via wallet) dibayar dengan LSK.</p>
-          <p>• Dana masuk ke smart contract yang aman.</p>
-          <p>• transparan dan dapat dilacak di blockchain.</p>
+          <p>• Donations use the IDRX token.</p>
+          <p>• Gas fees (if using wallet) are paid with LSK.</p>
+          <p>• Funds go directly to a secure smart contract.</p>
+          <p>• 100% transparent and traceable on the blockchain.</p>
         </div>
       </CardContent>
     </Card>
