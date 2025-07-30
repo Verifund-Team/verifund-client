@@ -1,54 +1,19 @@
 "use client";
 
 import { DollarSign, List, Flame } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useAccount } from "wagmi";
-import { web3Service } from "@/lib/web3";
-import { toast } from "sonner";
-import { Campaign } from "@/features/campaign/api/get-campaigns";
 import StatSkeleton from "./stat-skeleton";
 import StatCard from "./stat-card";
+import { useGetMyCampaigns } from "../../api/get-my-campaigns";
+import { useGetCampaigns } from "@/features/campaign/api/get-campaigns"; // <-- 1. Impor hook utama
 
 const StatCards = () => {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { address: currentAddress, isConnected } = useAccount();
-
-  useEffect(() => {
-    if (!isConnected || !currentAddress) {
-      setIsLoading(false);
-      setCampaigns([]);
-      return;
-    }
-
-    const fetchMyCampaigns = async () => {
-      setIsLoading(true);
-      try {
-        const allCampaignAddresses = await web3Service.getAllCampaigns();
-        const allCampaignDetailsPromises = allCampaignAddresses.map((address) =>
-          web3Service.getCampaignDetails(address),
-        );
-        const allCampaigns = await Promise.all(allCampaignDetailsPromises);
-
-        const filteredCampaigns = allCampaigns.filter(
-          (campaign) => campaign.owner.toLowerCase() === currentAddress?.toLowerCase(),
-        );
-        setCampaigns(filteredCampaigns);
-        console.log(filteredCampaigns);
-      } catch (err) {
-        toast.error("Failed to get campaigns data: " + err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMyCampaigns();
-  }, [currentAddress, isConnected]);
+  const { isLoading } = useGetCampaigns();
+  const { data: myCampaigns } = useGetMyCampaigns();
 
   const totalRaised =
-    campaigns?.reduce((sum, campaign) => sum + parseFloat(campaign.raised), 0) || 0;
-  const activeCampaigns = campaigns?.filter((c) => c.status === 0).length || 0;
-  const totalCampaigns = campaigns?.length || 0;
+    myCampaigns?.reduce((sum, campaign) => sum + parseFloat(campaign.raised), 0) || 0;
+  const activeCampaigns = myCampaigns?.filter((c) => c.status === 0).length || 0;
+  const totalCampaigns = myCampaigns?.length || 0;
 
   if (isLoading) {
     return (

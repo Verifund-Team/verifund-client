@@ -5,11 +5,13 @@ import StatCards from "./stat-card/stat-cards";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ProfileCard from "./profile/profile-card";
 import CampaignsTab from "./my-campaigns/campaigns-tab";
+import ProfileCard from "./Profile/profile-card";
+import { useGetCampaigns } from "@/features/campaign/api/get-campaigns";
 
 export default function OrganizerDashboard() {
   const [activeTab, setActiveTab] = useState("campaigns");
+  useGetCampaigns();
 
   return (
     <div className="container mx-auto lg:px-20 px-10 py-8">

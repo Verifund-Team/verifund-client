@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -9,76 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { web3Service } from "@/lib/web3";
 import { formatIDRX, formatTimeRemaining } from "@/lib/utils";
-import { useAccount } from "wagmi";
-import { Campaign } from "@/features/campaign/api/get-campaigns";
 import { CAMPAIGN_STATUS_CONFIG } from "@/lib/constants";
-import { toast } from "sonner";
-
-const fetchIpfsMetadata = async (ipfsHash: string) => {
-  try {
-    const url = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to get IPFS metadata: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    toast.error("Failed to get IPFS metadata: " + error);
-    return {};
-  }
-};
+import { useGetMyCampaigns } from "../../api/get-my-campaigns";
+import { useGetCampaigns } from "@/features/campaign/api/get-campaigns";
 
 const CampaignsTab = () => {
-  const [myCampaigns, setMyCampaigns] = useState<Campaign[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { isLoading: isPrimaryLoading } = useGetCampaigns();
+  const { data: myCampaigns } = useGetMyCampaigns();
 
-  const { address: currentAddress, isConnected } = useAccount();
-
-  useEffect(() => {
-    if (!isConnected || !currentAddress) {
-      setIsLoading(false);
-      setMyCampaigns([]);
-      return;
-    }
-
-    const fetchMyCampaigns = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const allCampaignAddresses = await web3Service.getAllCampaigns();
-        const allCampaignDetailsPromises = allCampaignAddresses.map((address) =>
-          web3Service.getCampaignDetails(address),
-        );
-        const allCampaigns = await Promise.all(allCampaignDetailsPromises);
-
-        const filteredCampaigns = allCampaigns.filter(
-          (campaign) => campaign.owner.toLowerCase() === currentAddress.toLowerCase(),
-        );
-
-        const campaignsWithMetadata = await Promise.all(
-          filteredCampaigns.map(async (campaign) => {
-            const metadata = await fetchIpfsMetadata(campaign.ipfsHash);
-            return { ...campaign, metadata };
-          }),
-        );
-
-        setMyCampaigns(campaignsWithMetadata);
-      } catch (err) {
-        toast.error("failed to get campaign data: " + err);
-        setError("Failed to get campaign data, Try again later.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMyCampaigns();
-  }, [currentAddress, isConnected]);
-
-  if (isLoading) {
+  if (isPrimaryLoading) {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
@@ -101,15 +40,6 @@ const CampaignsTab = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -120,7 +50,7 @@ const CampaignsTab = () => {
         </Button>
       </div>
 
-      {myCampaigns.length > 0 ? (
+      {myCampaigns && myCampaigns.length > 0 ? (
         <div className="grid md:grid-cols-2 gap-6">
           {myCampaigns.map((campaign) => (
             <Card key={campaign.address} className="overflow-hidden pt-0 flex flex-col">
