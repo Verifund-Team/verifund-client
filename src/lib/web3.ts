@@ -1,10 +1,10 @@
 import { ethers } from 'ethers';
 import { getWalletClient, getAccount, getPublicClient } from '@wagmi/core';
 import { config } from '@/app/providers';
-import { walletClientToSigner } from '@/utils/ethers';
-import CampaignFactoryABI from '@/contracts/CampaignFactory.json';
-import CampaignABI from '@/contracts/Campaign.json';
-import VerifundSBTABI from '@/contracts/VerifundSBT.json';
+import { walletClientToSigner } from '@/lib/ethers';
+import CampaignFactoryABI from '@/app/contracts/CampaignFactory.json';
+import CampaignABI from '@/app/contracts/Campaign.json';
+import VerifundSBTABI from '@/app/contracts/VerifundSBT.json';
 
 export class Web3Service {
   private rpcProvider: ethers.JsonRpcProvider;
