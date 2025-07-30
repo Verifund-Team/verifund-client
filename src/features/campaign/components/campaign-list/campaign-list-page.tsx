@@ -39,7 +39,7 @@ const categoryOptions = [
 ];
 
 export default function CampaignsListPage() {
-  const { data: initialCampaigns, isPending, isError } = useGetCampaigns();
+  const { data: initialCampaigns, isFetching, isError } = useGetCampaigns();
 
   const [filters, setFilters] = useState({
     status: "all",
@@ -98,7 +98,7 @@ export default function CampaignsListPage() {
     };
   }, [initialCampaigns]);
 
-  if (isPending) {
+  if (isFetching) {
     return <CampaignsListPageSkeleton />;
   }
 
