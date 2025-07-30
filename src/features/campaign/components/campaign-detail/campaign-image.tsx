@@ -10,7 +10,7 @@ const CampaignImage = ({ data }: { data: Campaign | undefined }) => {
         <div className="relative">
           <div className="w-full h-64 md:h-96 relative"></div>
           <Image
-            src={data?.metadata.image ?? IMAGE_PLACEHOLDER}
+            src={data?.metadata?.image ?? IMAGE_PLACEHOLDER}
             alt={data!.name}
             className="object-cover rounded-t-lg"
             fill

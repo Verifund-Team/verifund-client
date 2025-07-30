@@ -15,7 +15,7 @@ const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <Badge>{data.metadata.category}</Badge>
+              <Badge>{data.metadata?.category}</Badge>
               <Badge variant="outline" className={statusProps.className}>
                 {statusProps.text}
               </Badge>
@@ -27,7 +27,7 @@ const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
       <CardContent>
         <div className="prose max-w-none mb-6">
           <div className="whitespace-pre-line text-muted-foreground">
-            {data.metadata.description}
+            {data.metadata?.description}
           </div>
         </div>
 

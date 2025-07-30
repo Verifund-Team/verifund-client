@@ -34,7 +34,7 @@ const CampaignsTab = () => {
             <div className="relative">
               <div className="relative w-full h-48">
                 <Image
-                  src={campaign.metadata.image || "/placeholder.svg"}
+                  src={campaign.metadata?.image || "/placeholder.svg"}
                   alt={campaign.name}
                   className="object-cover"
                   fill
@@ -52,7 +52,7 @@ const CampaignsTab = () => {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg line-clamp-1">{campaign.name}</CardTitle>
               <CardDescription className="line-clamp-2">
-                {campaign.metadata.description}
+                {campaign.metadata?.description}
               </CardDescription>
             </CardHeader>
 
