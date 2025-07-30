@@ -95,14 +95,6 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
     );
   };
 
-  console.log(
-    "hhhhhhhhhhhhhhhhhhhhhhh",
-    hasDonated,
-    !canRefund,
-    campaign.status === 2,
-    campaign.isOwnerVerified,
-  );
-
   if (
     !canWithdraw &&
     !canRefund &&
@@ -162,10 +154,10 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
             </div>
           )}
 
-          {hasDonated && !canRefund && campaign.status === 2 && campaign.isOwnerVerified && (
+          {campaign.status === 2 && campaign.isOwnerVerified && (
             <Alert variant="destructive">
               <ShieldCheck className="h-4 w-4" />
-              <AlertTitle>Refunds Not Available</AlertTitle>
+              <AlertTitle>Campaign Failed - Refunds Not Available</AlertTitle>
               <AlertDescription className="text-xs">
                 The owner of this campaign is verified and is eligible to withdraw the funds even
                 though the target was not met. Refunds are not available.
