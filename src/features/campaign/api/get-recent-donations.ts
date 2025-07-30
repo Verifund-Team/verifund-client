@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { web3Service } from "@/lib/web3";
 
 export interface WalletTransaction {
-  type: "wallet";
+  type: "wallet" | "transfer";
   donor: string;
   amount: string;
   timestamp: number;
