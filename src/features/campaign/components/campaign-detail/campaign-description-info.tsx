@@ -3,9 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatIDRX, formatTimeRemaining } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Campaign } from "../../api/get-campaigns";
+import { getStatusProps } from "../campaign-list/campaign-card";
 
 const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
   const progressPercentage = (parseFloat(data.raised) / parseFloat(data.target)) * 100;
+  const statusProps = getStatusProps(data.status);
 
   return (
     <Card>
@@ -14,6 +16,9 @@ const CampaignDescriptionInfo = ({ data }: { data: Campaign }) => {
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Badge>{data.metadata.category}</Badge>
+              <Badge variant="outline" className={statusProps.className}>
+                {statusProps.text}
+              </Badge>
             </div>
             <CardTitle className="text-2xl md:text-3xl">{data.name}</CardTitle>
           </div>

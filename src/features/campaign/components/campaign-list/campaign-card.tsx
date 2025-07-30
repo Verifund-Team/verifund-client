@@ -17,8 +17,28 @@ import { IMAGE_PLACEHOLDER } from "@/lib/constants";
 type Props = {
   campaign: Pick<
     Campaign,
-    "address" | "name" | "raised" | "target" | "timeRemaining" | "isOwnerVerified" | "metadata"
+    | "address"
+    | "name"
+    | "raised"
+    | "target"
+    | "timeRemaining"
+    | "isOwnerVerified"
+    | "metadata"
+    | "status"
   >;
+};
+
+export const getStatusProps = (status: number) => {
+  switch (status) {
+    case 0:
+      return { text: "Active", className: "bg-blue-100 text-blue-800 hover:bg-blue-100" };
+    case 1:
+      return { text: "Successful", className: "bg-green-100 text-green-800 hover:bg-green-100" };
+    case 2:
+      return { text: "Failed", className: "bg-red-100 text-red-800 hover:bg-red-100" };
+    default:
+      return { text: "Unknown", className: "bg-gray-100 text-gray-800 hover:bg-gray-100" };
+  }
 };
 
 const CampaignCard = ({ campaign }: Props) => {
@@ -35,6 +55,7 @@ const CampaignCard = ({ campaign }: Props) => {
   const raisedAmount = parseFloat(campaign.raised);
   const targetAmount = parseFloat(campaign.target);
   const progressPercentage = targetAmount > 0 ? (raisedAmount / targetAmount) * 100 : 0;
+  const statusProps = getStatusProps(campaign.status);
 
   const title = campaign.name;
   const description = campaign.metadata?.description || "Tidak ada deskripsi tersedia.";
@@ -54,9 +75,12 @@ const CampaignCard = ({ campaign }: Props) => {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
-          <Badge className="absolute top-3 left-3" variant="secondary">
-            {category}
-          </Badge>
+          <div className="absolute top-3 left-3 flex items-center gap-3">
+            <Badge variant="secondary">{category}</Badge>
+            <Badge variant="outline" className={statusProps.className}>
+              {statusProps.text}
+            </Badge>
+          </div>
         </div>
 
         <CardHeader className="pb-3">
