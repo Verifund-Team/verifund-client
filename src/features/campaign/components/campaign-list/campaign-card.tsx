@@ -115,8 +115,12 @@ const CampaignCard = ({ campaign }: Props) => {
               )}
             </div>
 
-            <Button onClick={handleDonateClick} className="w-full">
-              Donate Now
+            <Button
+              onClick={handleDonateClick}
+              className="w-full"
+              variant={campaign.status === 0 ? "default" : "outline"}
+            >
+              {campaign.status === 0 ? "Donate Now" : "View Campaign"}
             </Button>
           </div>
         </CardContent>
