@@ -1,10 +1,10 @@
 import { ethers } from 'ethers';
 import { getWalletClient, getAccount, getPublicClient } from '@wagmi/core';
 import { config } from '@/app/providers';
-import { walletClientToSigner } from '@/lib/ethers';
-import CampaignFactoryABI from '@/app/contracts/CampaignFactory.json';
-import CampaignABI from '@/app/contracts/Campaign.json';
-import VerifundSBTABI from '@/app/contracts/VerifundSBT.json';
+import { walletClientToSigner } from '@/utils/ethers';
+import CampaignFactoryABI from '@/contracts/CampaignFactory.json';
+import CampaignABI from '@/contracts/Campaign.json';
+import VerifundSBTABI from '@/contracts/VerifundSBT.json';
 
 export class Web3Service {
   private rpcProvider: ethers.JsonRpcProvider;
@@ -111,10 +111,12 @@ export class Web3Service {
   async getCampaignDetails(campaignAddress: string) {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
     
-    const [info, ipfsHash, isWithdrawn] = await Promise.all([
+    const [info, ipfsHash, isWithdrawn, peakBalance, isPeakBalanceUpdated] = await Promise.all([
       campaign.getCampaignInfo(),
       campaign.ipfsHash(),
-      campaign.isWithdrawn()
+      campaign.isWithdrawn(),
+      campaign.getPeakBalance(),
+      campaign.isPeakBalanceUpdated()
     ]);
 
     const isOwnerVerified = await this.checkVerificationStatus(info[0]);
@@ -123,6 +125,7 @@ export class Web3Service {
     const raised = await this.formatIDRX(info[3]);
     const target = await this.formatIDRX(info[2]);
     const actualBalance = await this.formatIDRX(info[4]);
+    const peakBalanceFormatted = await this.formatIDRX(peakBalance);
     
     let correctedStatus = Number(info[6]);
     
@@ -141,6 +144,8 @@ export class Web3Service {
       target,
       raised,
       actualBalance,
+      peakBalance: peakBalanceFormatted,
+      isPeakBalanceUpdated,
       timeRemaining,
       status: correctedStatus,
       ipfsHash,
@@ -214,6 +219,14 @@ export class Web3Service {
         throw new Error(`Transaction failed: ${err.message || 'Unknown error'}`);
       }
     }
+  }
+
+  async updatePeakBalance(campaignAddress: string): Promise<string> {
+    const signer = await this.getSigner();
+    const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
+    const tx = await campaign.updatePeakBalance();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
   async withdrawFromCampaign(campaignAddress: string): Promise<string> {
@@ -296,6 +309,30 @@ export class Web3Service {
         fromDonateFunction: '0',
         fromDirectTransfer: '0',
         total: '0'
+      };
+    }
+  }
+
+  async getPeakBalanceInfo(campaignAddress: string): Promise<{
+    peakBalance: string;
+    isPeakBalanceUpdated: boolean;
+  }> {
+    try {
+      const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
+      const [peakBalance, isPeakBalanceUpdated] = await Promise.all([
+        campaign.getPeakBalance(),
+        campaign.isPeakBalanceUpdated()
+      ]);
+      
+      return {
+        peakBalance: await this.formatIDRX(peakBalance),
+        isPeakBalanceUpdated
+      };
+    } catch (error) {
+      console.error('Error getting peak balance info:', error);
+      return {
+        peakBalance: '0',
+        isPeakBalanceUpdated: false
       };
     }
   }

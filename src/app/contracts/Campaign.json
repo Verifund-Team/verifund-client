@@ -106,6 +106,14 @@
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {"indexed": false, "internalType": "uint256", "name": "peakBalance", "type": "uint256"}
+      ],
+      "name": "PeakBalanceUpdated",
+      "type": "event"
+    },
+    {
       "inputs": [],
       "name": "owner",
       "outputs": [{"internalType": "address", "name": "", "type": "address"}],
@@ -172,6 +180,41 @@
       "inputs": [],
       "name": "verifundSBT",
       "outputs": [{"internalType": "contract IVerifundSBT", "name": "", "type": "address"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "updatePeakBalance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPeakBalance",
+      "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isPeakBalanceUpdated",
+      "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "peakBalance",
+      "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "peakBalanceUpdated",
+      "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
       "stateMutability": "view",
       "type": "function"
     }
