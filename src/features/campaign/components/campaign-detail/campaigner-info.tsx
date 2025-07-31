@@ -22,7 +22,7 @@ const CampaignerInfo = ({ campaign }: CampaignerInfoProps) => {
       return { count: 0, totalRaised: 0 };
     }
     const campaignsByOwner = allCampaigns.filter((c) => c.owner === campaign.owner);
-    const totalRaised = campaignsByOwner.reduce((sum, c) => sum + parseFloat(c.raised), 0);
+    const totalRaised = campaignsByOwner.reduce((sum, c) => sum + parseFloat(c.totalRaised), 0);
     return {
       count: campaignsByOwner.length,
       totalRaised: totalRaised,

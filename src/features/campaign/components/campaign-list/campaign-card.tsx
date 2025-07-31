@@ -19,7 +19,7 @@ type Props = {
     Campaign,
     | "address"
     | "name"
-    | "raised"
+    | "totalRaised"
     | "target"
     | "timeRemaining"
     | "isOwnerVerified"
@@ -52,13 +52,13 @@ const CampaignCard = ({ campaign }: Props) => {
     }
   };
 
-  const raisedAmount = parseFloat(campaign.raised);
+  const raisedAmount = parseFloat(campaign.totalRaised);
   const targetAmount = parseFloat(campaign.target);
   const progressPercentage = targetAmount > 0 ? (raisedAmount / targetAmount) * 100 : 0;
   const statusProps = getStatusProps(campaign.status);
 
   const title = campaign.name;
-  const description = campaign.metadata?.description || "Tidak ada deskripsi tersedia.";
+  const description = campaign.metadata?.description || "No description available.";
   const imageUrl = campaign.metadata?.image || IMAGE_PLACEHOLDER;
   const category = campaign.metadata?.category || "Uncategorized";
 
@@ -75,7 +75,7 @@ const CampaignCard = ({ campaign }: Props) => {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
-          <div className="absolute top-3 left-3 flex items-center gap-3">
+          <div className="absolute top-3 left-3 flex items-center gap-2">
             <Badge variant="secondary">{category}</Badge>
             <Badge variant="outline" className={statusProps.className}>
               {statusProps.text}
@@ -83,9 +83,9 @@ const CampaignCard = ({ campaign }: Props) => {
           </div>
         </div>
 
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-3 h-[120px]">
           <CardTitle className="text-lg line-clamp-2">{title}</CardTitle>
-          <CardDescription className="line-clamp-2 h-10">{description}</CardDescription>
+          <CardDescription className="line-clamp-3">{description}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4 flex flex-col flex-grow">
@@ -102,10 +102,10 @@ const CampaignCard = ({ campaign }: Props) => {
             </div>
           </div>
 
-          <div className="pt-2 mt-auto">
+          <div className="">
             <div className="flex items-center gap-3 mb-4">
               <span className="text-sm text-muted-foreground">
-                by {campaign.metadata.creatorName}
+                by {campaign.metadata?.creatorName}
               </span>
               {campaign.isOwnerVerified && (
                 <Badge variant="default">
@@ -115,8 +115,12 @@ const CampaignCard = ({ campaign }: Props) => {
               )}
             </div>
 
-            <Button onClick={handleDonateClick} className="w-full">
-              Donate Now
+            <Button
+              onClick={handleDonateClick}
+              className="w-full"
+              variant={campaign.status === 0 ? "default" : "outline"}
+            >
+              {campaign.status === 0 ? "Donate Now" : "View Campaign"}
             </Button>
           </div>
         </CardContent>

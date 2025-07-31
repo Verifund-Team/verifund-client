@@ -4,11 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ActionDialog } from "@/components/ui/action-dialog"; // Import the new reusable component
-import { AlertTriangle, Download, RotateCcw, ShieldCheck } from "lucide-react";
+import { ActionDialog } from "@/components/ui/action-dialog";
+import { AlertTriangle, Download, RotateCcw, ShieldCheck, BarChart2 } from "lucide-react";
 import { useAccount } from "wagmi";
 import { CampaignDetail } from "../../api/get-campaign-detail";
 import { useWithdrawFromCampaign, useRefundFromCampaign } from "../../api/campaign-fund-actions";
+import { useUpdatePeakBalance } from "../../api/update-peak-balance";
 
 interface CampaignActionsProps {
   campaign: CampaignDetail;
@@ -18,6 +19,7 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
   const { address: userWallet } = useAccount();
   const { mutate: withdraw, isPending: isWithdrawing } = useWithdrawFromCampaign();
   const { mutate: refund, isPending: isRefunding } = useRefundFromCampaign();
+  const { mutate: updatePeakBalance, isPending: isUpdatingPeak } = useUpdatePeakBalance();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState({
@@ -30,9 +32,20 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
   const isOwner = userWallet && userWallet.toLowerCase() === campaign.owner.toLowerCase();
   const hasDonated = parseFloat(campaign.userDonation) > 0;
 
+  const hasExternalTransfers =
+    parseFloat(campaign.actualBalance || "0") > parseFloat(campaign.raised || "0");
+
+  const canUpdatePeakBalance =
+    isOwner &&
+    campaign.timeRemaining === 0 &&
+    !campaign.isPeakBalanceUpdated &&
+    hasExternalTransfers &&
+    parseFloat(campaign.actualBalance || "0") > 0;
+
   const canWithdraw =
     isOwner &&
     campaign.timeRemaining === 0 &&
+    (campaign.isPeakBalanceUpdated || !hasExternalTransfers) &&
     (campaign.status === 1 || (campaign.status === 2 && campaign.isOwnerVerified));
 
   const canRefund =
@@ -41,7 +54,33 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
     campaign.status === 2 &&
     !campaign.isOwnerVerified;
 
-  const showVerifiedOwnerPrivilege = isOwner && campaign.status === 2 && campaign.isOwnerVerified;
+  const isProcessing = isWithdrawing || isRefunding || isUpdatingPeak;
+
+  const handleUpdatePeakBalance = () => {
+    updatePeakBalance(
+      { campaignAddress: campaign.address },
+      {
+        onSuccess: (txHash) => {
+          setDialogContent({
+            title: "Peak Balance Updated",
+            description: "The final raised amount has been successfully recorded on-chain.",
+            txHash,
+            status: "success",
+          });
+          setIsDialogOpen(true);
+        },
+        onError: (error) => {
+          setDialogContent({
+            title: "Update Peak Balance Failed",
+            description: error.message,
+            txHash: "",
+            status: "error",
+          });
+          setIsDialogOpen(true);
+        },
+      },
+    );
+  };
 
   const handleWithdraw = () => {
     withdraw(
@@ -76,7 +115,7 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
         onSuccess: (txHash) => {
           setDialogContent({
             title: "Refund Successful",
-            description: "Your donation has been successfully refunded to your wallet.",
+            description: "Your donation has been successfully refunded.",
             txHash,
             status: "success",
           });
@@ -98,6 +137,7 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
   if (
     !canWithdraw &&
     !canRefund &&
+    !canUpdatePeakBalance &&
     !(hasDonated && campaign.status === 2 && campaign.isOwnerVerified)
   ) {
     return null;
@@ -113,6 +153,27 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {canUpdatePeakBalance && (
+            <Alert variant="default" className="border-yellow-200 bg-yellow-50 text-yellow-800">
+              <BarChart2 className="h-4 w-4 !text-yellow-800" />
+              <AlertTitle>Action Required</AlertTitle>
+              <AlertDescription className="text-xs text-yellow-700 space-y-3">
+                <p>
+                  Direct transfers were detected. Before withdrawing, you must update the peak
+                  balance to record the final donation total.
+                </p>
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={handleUpdatePeakBalance}
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? "Processing..." : "Update Peak Balance"}
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
           {canWithdraw && (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
@@ -120,21 +181,11 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
                   ? "Campaign was successful! You can now withdraw the funds."
                   : "As a verified owner, you can withdraw funds even though the target was not met."}
               </p>
-              <Button className="w-full" onClick={handleWithdraw} disabled={isWithdrawing}>
+              <Button className="w-full" onClick={handleWithdraw} disabled={isProcessing}>
                 <Download className="w-4 h-4 mr-2" />
                 {isWithdrawing ? "Processing..." : "Withdraw Funds"}
               </Button>
             </div>
-          )}
-
-          {showVerifiedOwnerPrivilege && (
-            <Alert variant="default" className="border-purple-200 bg-purple-50 text-purple-800">
-              <ShieldCheck className="h-4 w-4 !text-purple-800" />
-              <AlertTitle>Verified Owner Privilege</AlertTitle>
-              <AlertDescription className="text-xs text-purple-700">
-                As a verified owner, you can withdraw the funds even if the campaign fails.
-              </AlertDescription>
-            </Alert>
           )}
 
           {canRefund && (
@@ -146,7 +197,7 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
                 className="w-full"
                 variant="destructive"
                 onClick={handleRefund}
-                disabled={isRefunding}
+                disabled={isProcessing}
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 {isRefunding ? "Processing..." : "Refund Donation"}
@@ -157,7 +208,7 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
           {hasDonated && !canRefund && campaign.status === 2 && campaign.isOwnerVerified && (
             <Alert variant="destructive">
               <ShieldCheck className="h-4 w-4" />
-              <AlertTitle>Refunds Not Available</AlertTitle>
+              <AlertTitle>Campaign Failed - Refunds Not Available</AlertTitle>
               <AlertDescription className="text-xs">
                 The owner of this campaign is verified and is eligible to withdraw the funds even
                 though the target was not met. Refunds are not available.

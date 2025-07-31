@@ -12,6 +12,11 @@ import {
 import { CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 
+interface DialogAction {
+  text: string;
+  onClick: () => void;
+}
+
 interface ActionDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
@@ -19,6 +24,8 @@ interface ActionDialogProps {
   title: string;
   description: string;
   txHash?: string;
+  primaryAction?: DialogAction;
+  secondaryAction?: DialogAction;
 }
 
 export const ActionDialog = ({
@@ -28,6 +35,8 @@ export const ActionDialog = ({
   title,
   description,
   txHash,
+  primaryAction,
+  secondaryAction,
 }: ActionDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -59,7 +68,16 @@ export const ActionDialog = ({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => onOpenChange(false)}>Close</Button>
+          {secondaryAction && (
+            <Button variant="outline" onClick={secondaryAction.onClick}>
+              {secondaryAction.text}
+            </Button>
+          )}
+          {primaryAction ? (
+            <Button onClick={primaryAction.onClick}>{primaryAction.text}</Button>
+          ) : (
+            <Button onClick={() => onOpenChange(false)}>Close</Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

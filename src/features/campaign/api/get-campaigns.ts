@@ -17,21 +17,31 @@ export type Campaign = {
   target: string;
   raised: string;
   actualBalance: string;
+  peakBalance: string;
+  isPeakBalanceUpdated: boolean;
   timeRemaining: number;
   status: number;
   ipfsHash: string;
   isOwnerVerified: boolean;
-  metadata?: CampaignMetadata;
+  metadata: CampaignMetadata | null | undefined;
+  totalRaised: string;
 };
 
 export function useGetCampaigns() {
   return useQuery<Campaign[], Error>({
-    queryKey: ["get-campaigns"], // Unique key for this query
+    queryKey: ["get-campaigns"],
     queryFn: async () => {
       const campaignAddresses = await web3Service.getAllCampaigns();
 
       const campaignDataPromises = campaignAddresses.map(async (address) => {
         const details = await web3Service.getCampaignDetails(address);
+
+        const totalRaised = Math.max(
+          parseFloat(details.raised || "0"),
+          parseFloat(details.actualBalance || "0"),
+          parseFloat(details.peakBalance || "0"),
+        ).toString();
+
         let metadata: CampaignMetadata | null = null;
         if (details.ipfsHash) {
           try {
@@ -41,17 +51,17 @@ export function useGetCampaigns() {
               `Could not load IPFS metadata for ${details.name} (hash: ${details.ipfsHash}):`,
               ipfsError,
             );
-            // Optionally, handle this error more gracefully, e.g., show a placeholder
           }
         }
         return {
           ...details,
-          metadata, // Attach the fetched metadata
-        } as Campaign; // Cast to ensure type safety
+          metadata,
+          totalRaised,
+        };
       });
 
       const campaignsWithMetadata = await Promise.all(campaignDataPromises);
-      return campaignsWithMetadata;
+      return campaignsWithMetadata as Campaign[];
     },
   });
 }

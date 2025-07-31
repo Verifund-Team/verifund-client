@@ -17,6 +17,11 @@ export function useGetCampaignDetail(campaignAddress: string, userWalletAddress?
           : Promise.resolve("0"),
       ]);
 
+      const totalRaised = Math.max(
+        parseFloat(details.raised || "0"),
+        parseFloat(details.actualBalance || "0"),
+      ).toString();
+
       let metadata: CampaignMetadata | null = null;
       if (details.ipfsHash) {
         try {
@@ -30,6 +35,7 @@ export function useGetCampaignDetail(campaignAddress: string, userWalletAddress?
         ...details,
         metadata,
         userDonation,
+        totalRaised,
       } as CampaignDetail;
     },
     enabled: !!campaignAddress,
