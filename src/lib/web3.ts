@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { getWalletClient, getAccount, getPublicClient } from "@wagmi/core";
+import { getWalletClient, getAccount } from "@wagmi/core";
 import { config } from "@/app/providers";
 import { walletClientToSigner } from "@/lib/ethers";
 import CampaignFactoryABI from "@/app/contracts/CampaignFactory.json";
@@ -414,6 +414,7 @@ export class Web3Service {
     const account = getAccount(config);
     return account.address;
   }
+
   async syncIDRXDonations(campaignAddress: string): Promise<string> {
     try {
       const signer = await this.getSigner();
@@ -517,6 +518,64 @@ export class Web3Service {
       return [...donateEvents, ...transferEvents];
     } catch (error) {
       console.error("Error loading wallet transactions:", error);
+      return [];
+    }
+  }
+
+  async getWithdrawalTimestamp(campaignAddress: string): Promise<number | null> {
+    const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
+
+    const filter = campaign.filters.Withdrawn();
+
+    const events = await campaign.queryFilter(filter, 0, "latest");
+
+    if (events.length === 0) {
+      return null;
+    }
+
+    const latestEvent = events[events.length - 1];
+    const block = await this.rpcProvider.getBlock(latestEvent.blockNumber);
+    return block ? block.timestamp : null;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getSpendingHistory(ownerAddress: string, withdrawalTimestamp: number): Promise<any[]> {
+    const idrxTokenAddress = process.env.NEXT_PUBLIC_IDRX_TOKEN_ADDRESS!;
+
+    const baseApiUrl = process.env.NEXT_PUBLIC_BLOCKSCOUT_API_URL;
+    const apiUrl = `${baseApiUrl}?module=account&action=tokentx&address=${ownerAddress}&contractaddress=${idrxTokenAddress}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`Blockscout API request failed: ${response.statusText}`);
+      }
+      const data = await response.json();
+
+      if (data.status !== "1") {
+        console.warn("Blockscout API returned an error or no transactions:", data.message);
+        return [];
+      }
+
+      const transactions = data.result;
+      const spendingHistory = transactions.filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (tx: any) =>
+          tx.from.toLowerCase() === ownerAddress.toLowerCase() &&
+          parseInt(tx.timeStamp) > withdrawalTimestamp,
+      );
+
+      return await Promise.all(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        spendingHistory.map(async (tx: any) => ({
+          to: tx.to,
+          value: await this.formatIDRX(BigInt(tx.value)),
+          timestamp: new Date(parseInt(tx.timeStamp) * 1000).toISOString(),
+          hash: tx.hash,
+        })),
+      );
+    } catch (error) {
+      console.error("Failed to fetch spending history:", error);
       return [];
     }
   }
