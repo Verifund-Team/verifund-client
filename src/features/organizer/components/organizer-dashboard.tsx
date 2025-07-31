@@ -14,7 +14,7 @@ export default function OrganizerDashboard() {
   useGetCampaigns();
 
   return (
-    <div className="container mx-auto lg:px-20 px-10 py-8">
+    <div className="min-h[calc(100vh-12rem)] container mx-auto lg:px-20 px-10 py-8">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Organizer Dashboard</h1>
         <p className="text-xl text-muted-foreground">Manage your campaigns and profile</p>
