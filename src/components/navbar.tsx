@@ -1,43 +1,43 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Button } from './ui/button'
-import { ConnectButton } from '@xellar/kit'
-import { useAccount } from 'wagmi'
-import clsx from 'clsx'
-import { ClientOnly } from './ClientOnly'
-import Image from 'next/image'
+import { useState, useEffect } from "react";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
+import { ConnectButton } from "@xellar/kit";
+import { useAccount } from "wagmi";
+import clsx from "clsx";
+import { ClientOnly } from "./ClientOnly";
+import Image from "next/image";
 
-const truncateAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`
+const truncateAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
 const Navbar = () => {
-  const { isConnected } = useAccount()
-  const [isScrolled, setIsScrolled] = useState(false)
-  const pathname = usePathname()
+  const { isConnected } = useAccount();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
-    window.addEventListener('scroll', handleScroll)
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="sticky top-0 z-50 w-full p-4">
       <nav
         className={clsx(
-          'mx-auto max-w-7xl rounded-xl p-3',
-          'relative flex items-center justify-between',
-          'transition-all duration-300',
+          "mx-auto max-w-7xl rounded-xl p-3",
+          "relative flex items-center justify-between",
+          "transition-all duration-300",
           {
-            'bg-card/95 backdrop-blur-md border shadow-lg': isScrolled,
-            'bg-transparent border-transparent': !isScrolled,
+            "bg-card/95 backdrop-blur-md border shadow-lg": isScrolled,
+            "bg-transparent border-transparent": !isScrolled,
           },
         )}
       >
@@ -57,8 +57,8 @@ const Navbar = () => {
             <Link
               href="/"
               className={clsx(
-                'hover:text-foreground transition-colors',
-                pathname === '/' ? 'text-foreground font-semibold' : 'text-muted-foreground',
+                "hover:text-foreground transition-colors",
+                pathname === "/" ? "text-foreground font-semibold" : "text-muted-foreground",
               )}
             >
               Home
@@ -66,21 +66,21 @@ const Navbar = () => {
             <Link
               href="/campaigns"
               className={clsx(
-                'hover:text-foreground transition-colors',
-                pathname.startsWith('/campaigns')
-                  ? 'text-foreground font-semibold'
-                  : 'text-muted-foreground',
+                "hover:text-foreground transition-colors",
+                pathname.startsWith("/campaigns")
+                  ? "text-foreground font-semibold"
+                  : "text-muted-foreground",
               )}
             >
               Campaigns
             </Link>
             <Link
-              href="/organizer-dashboard"
+              href="/dashboard"
               className={clsx(
-                'hover:text-foreground transition-colors',
-                pathname.startsWith('/organizer-dashboard')
-                  ? 'text-foreground font-semibold'
-                  : 'text-muted-foreground',
+                "hover:text-foreground transition-colors",
+                pathname.startsWith("/dashboard")
+                  ? "text-foreground font-semibold"
+                  : "text-muted-foreground",
               )}
             >
               Profile
@@ -91,7 +91,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-3">
               <ConnectButton.Custom>
                 {({ account, chain, openProfileModal, openConnectModal }) => {
-                  const connected = account && chain
+                  const connected = account && chain;
                   if (!connected) {
                     return (
                       <Button
@@ -100,13 +100,13 @@ const Navbar = () => {
                       >
                         Connect Wallet
                       </Button>
-                    )
+                    );
                   }
                   return (
                     <Button onClick={openProfileModal} variant="secondary" size="sm">
                       {truncateAddress(account.address)}
                     </Button>
-                  )
+                  );
                 }}
               </ConnectButton.Custom>
 
@@ -123,7 +123,7 @@ const Navbar = () => {
         </div>
       </nav>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
