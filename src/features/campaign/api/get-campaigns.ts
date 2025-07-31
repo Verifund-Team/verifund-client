@@ -17,6 +17,8 @@ export type Campaign = {
   target: string;
   raised: string;
   actualBalance: string;
+  peakBalance: string;
+  isPeakBalanceUpdated: boolean;
   timeRemaining: number;
   status: number;
   ipfsHash: string;
@@ -37,6 +39,7 @@ export function useGetCampaigns() {
         const totalRaised = Math.max(
           parseFloat(details.raised || "0"),
           parseFloat(details.actualBalance || "0"),
+          parseFloat(details.peakBalance || "0"),
         ).toString();
 
         let metadata: CampaignMetadata | null = null;
