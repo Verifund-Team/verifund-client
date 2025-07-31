@@ -2,12 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { web3Service } from "@/lib/web3";
 import { getMetadataFromIPFS } from "@/lib/ipfs";
 
+export interface GuardianAnalysisData {
+  credibilityScore: number;
+  riskLevel: string;
+  summary: string;
+  suggestions: string[];
+}
+
 export type CampaignMetadata = {
   name: string;
   description: string;
   category: string;
   creatorName: string;
   image?: string;
+  guardianAnalysis?: GuardianAnalysisData;
 };
 
 export type Campaign = {
