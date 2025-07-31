@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Stepper, Step } from "@/components/ui/stepper";
@@ -16,20 +16,27 @@ import { useQueryClient } from "@tanstack/react-query";
 import AuthGuard from "@/components/auth-guard";
 import { ActionDialog } from "@/components/ui/action-dialog";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
+import { web3Service } from "@/lib/web3";
+import { GuardianAnalysisData } from "../../api/get-guardian-analysis";
 
 const stepFields: (keyof CampaignFormSchema)[][] = [
   ["creatorName", "name", "description", "category", "image"],
   ["targetAmount", "durationInDays"],
-  [], // No validation needed for the preview step
+  [],
 ];
 
 const CreateCampaignPage = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { address, isConnected } = useAccount();
 
-  const { mutate: createCampaign, isPending } = useCreateCampaign();
+  const { mutate: createCampaign, isPending: isSubmitting } = useCreateCampaign();
   const [activeStep, setActiveStep] = useState(0);
   const [isStepValidating, setIsStepValidating] = useState(false);
+
+  const [isVerified, setIsVerified] = useState(false);
+  const [finalAnalysis, setFinalAnalysis] = useState<GuardianAnalysisData | null>(null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState({
@@ -53,30 +60,45 @@ const CreateCampaignPage = () => {
     },
   });
 
+  useEffect(() => {
+    const checkVerification = async () => {
+      if (isConnected && address) {
+        const verified = await web3Service.checkVerificationStatus(address);
+        setIsVerified(verified);
+      } else {
+        setIsVerified(false);
+      }
+    };
+    checkVerification();
+  }, [isConnected, address]);
+
   const onSubmit = (data: CampaignFormSchema) => {
-    createCampaign(data, {
-      onSuccess: (txHash) => {
-        queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
-        setDialogContent({
-          title: "Campaign Created Successfully!",
-          description: "Your new campaign is now live.",
-          txHash,
-          status: "success",
-        });
-        setIsDialogOpen(true);
-        methods.reset();
-        setActiveStep(0);
+    createCampaign(
+      { ...data, guardianAnalysis: finalAnalysis },
+      {
+        onSuccess: (txHash) => {
+          queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
+          setDialogContent({
+            title: "Campaign Created Successfully!",
+            description: "Your new campaign is now live.",
+            txHash,
+            status: "success",
+          });
+          setIsDialogOpen(true);
+          methods.reset();
+          setActiveStep(0);
+        },
+        onError: (error) => {
+          setDialogContent({
+            title: "Failed to Create Campaign",
+            description: error.message,
+            txHash: "",
+            status: "error",
+          });
+          setIsDialogOpen(true);
+        },
       },
-      onError: (error) => {
-        setDialogContent({
-          title: "Failed to Create Campaign",
-          description: error.message,
-          txHash: "",
-          status: "error",
-        });
-        setIsDialogOpen(true);
-      },
-    });
+    );
   };
 
   const handleNext = async () => {
@@ -89,14 +111,9 @@ const CreateCampaignPage = () => {
     }
   };
 
-  const handlePrev = () => {
-    setActiveStep((prev) => prev - 1);
-  };
-
+  const handlePrev = () => setActiveStep((prev) => prev - 1);
   const handleStepClick = (stepIndex: number) => {
-    if (stepIndex < activeStep) {
-      setActiveStep(stepIndex);
-    }
+    if (stepIndex < activeStep) setActiveStep(stepIndex);
   };
 
   return (
@@ -120,19 +137,19 @@ const CreateCampaignPage = () => {
               onFinalStepCompleted={methods.handleSubmit(onSubmit)}
               backButtonText="Back"
               nextButtonText={isStepValidating ? "Validating..." : "Next"}
-              finalStepButtonText={isPending ? "Creating Campaign..." : "Create Campaign"}
-              nextButtonProps={{ disabled: isPending || isStepValidating }}
-              backButtonProps={{ disabled: isPending || isStepValidating }}
+              finalStepButtonText={isSubmitting ? "Creating Campaign..." : "Create Campaign"}
+              nextButtonProps={{ disabled: isSubmitting || isStepValidating }}
+              backButtonProps={{ disabled: isSubmitting || isStepValidating }}
               stepCircleContainerClassName="max-w-4xl"
             >
               <Step>
-                <StepOneBasicInfo />
+                <StepOneBasicInfo isVerified={isVerified} setFinalAnalysis={setFinalAnalysis} />
               </Step>
               <Step>
                 <StepTwoTargetDana />
               </Step>
               <Step>
-                <StepThreePreview />
+                <StepThreePreview finalAnalysis={finalAnalysis} />
               </Step>
             </Stepper>
           </form>
@@ -145,17 +162,8 @@ const CreateCampaignPage = () => {
         title={dialogContent.title}
         description={dialogContent.description}
         txHash={dialogContent.txHash}
-        primaryAction={{
-          text: "View Campaigns",
-          onClick: () => {
-            setIsDialogOpen(false);
-            router.push("/campaigns");
-          },
-        }}
-        secondaryAction={{
-          text: "Close",
-          onClick: () => setIsDialogOpen(false),
-        }}
+        primaryAction={{ text: "View Campaigns", onClick: () => router.push("/campaigns") }}
+        secondaryAction={{ text: "Close", onClick: () => setIsDialogOpen(false) }}
       />
     </AuthGuard>
   );

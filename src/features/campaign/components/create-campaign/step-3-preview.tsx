@@ -3,14 +3,20 @@
 import { Step } from "@/components/ui/stepper";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Shield, Users } from "lucide-react";
+import { Calendar, Users } from "lucide-react";
 import { formatIDRX } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { CampaignFormSchema } from "../../api/create-campaign";
 import { useFormContext } from "react-hook-form";
 import Image from "next/image";
+import { GuardianAnalysisData } from "../../api/get-guardian-analysis";
+import GuardianAnalysis from "../guardian-analysis";
 
-const StepThreePreview = () => {
+interface StepThreePreviewProps {
+  finalAnalysis: GuardianAnalysisData | null;
+}
+
+const StepThreePreview = ({ finalAnalysis }: StepThreePreviewProps) => {
   const { watch } = useFormContext<CampaignFormSchema>();
   const formData = watch(); // Watch all form fields
 
@@ -27,6 +33,7 @@ const StepThreePreview = () => {
                 alt="Campaign preview"
                 className="object-cover"
                 fill
+                sizes="(max-width: 896px) 100vw, 896px"
               />
             ) : (
               <div className="w-full h-full bg-muted rounded-t-lg flex items-center justify-center">
@@ -36,16 +43,11 @@ const StepThreePreview = () => {
             <Badge className="absolute top-3 left-3 bg-card/90 text-foreground" variant="secondary">
               {formData.category || "Category"}
             </Badge>
-            {/* Note: Verification status is not part of the form, so this is a placeholder */}
-            <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
-              <Shield className="w-3 h-3 mr-1" />
-              Verified
-            </Badge>
           </div>
 
           <CardHeader>
             <CardTitle className="text-xl">{formData.name || "Your Campaign Title"}</CardTitle>
-            <CardDescription className="whitespace-pre-line">
+            <CardDescription className="whitespace-pre-line h-20 overflow-y-auto">
               {formData.description || "Your campaign description will appear here..."}
             </CardDescription>
           </CardHeader>
@@ -100,6 +102,14 @@ const StepThreePreview = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Display the Guardian Analysis if it exists */}
+        {finalAnalysis && (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-2">Guardian Analysis Preview</h3>
+            <GuardianAnalysis analysis={finalAnalysis} />
+          </div>
+        )}
       </div>
     </Step>
   );
