@@ -11,7 +11,7 @@ const StatCards = () => {
   const { data: myCampaigns } = useGetMyCampaigns();
 
   const totalRaised =
-    myCampaigns?.reduce((sum, campaign) => sum + parseFloat(campaign.raised), 0) || 0;
+    myCampaigns?.reduce((sum, campaign) => sum + parseFloat(campaign.totalRaised), 0) || 0;
   const activeCampaigns = myCampaigns?.filter((c) => c.status === 0).length || 0;
   const totalCampaigns = myCampaigns?.length || 0;
 

@@ -86,14 +86,14 @@ const CampaignsTab = () => {
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="font-medium text-primary">
-                        {formatIDRX(parseFloat(campaign.raised))}
+                        {formatIDRX(parseFloat(campaign.totalRaised))}
                       </span>
                       <span className="text-muted-foreground">
-                        dari {formatIDRX(parseFloat(campaign.target))}
+                        of {formatIDRX(parseFloat(campaign.target))}
                       </span>
                     </div>
                     <Progress
-                      value={(parseFloat(campaign.raised) / parseFloat(campaign.target)) * 100}
+                      value={(parseFloat(campaign.totalRaised) / parseFloat(campaign.target)) * 100}
                       className="h-2"
                     />
                   </div>
