@@ -3,18 +3,29 @@ import { z } from "zod";
 import { web3Service } from "@/lib/web3";
 import { uploadToIPFS, uploadImageToIPFS } from "@/lib/ipfs";
 
+const guardianAnalysisSchema = z
+  .object({
+    credibilityScore: z.number(),
+    riskLevel: z.enum(["Low", "Medium", "High"]),
+    summary: z.string(),
+    suggestions: z.array(z.string()),
+  })
+  .nullable()
+  .optional();
+
 export const campaignFormSchema = z.object({
-  creatorName: z.string().min(1, "Nama kreator harus diisi"),
-  name: z.string().min(5, "Judul minimal 5 karakter"),
-  description: z.string().min(20, "Deskripsi minimal 20 karakter"),
-  category: z.string().min(1, "Kategori harus dipilih"),
+  creatorName: z.string().min(1, "Creator name is required"),
+  name: z.string().min(5, "Title must be at least 5 characters"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
+  category: z.string().min(1, "Category is required"),
   targetAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-    message: "Target dana harus angka yang valid",
+    message: "Target amount must be a valid number",
   }),
   durationInDays: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-    message: "Durasi harus angka yang valid",
+    message: "Duration must be a valid number",
   }),
-  image: z.instanceof(File, { message: "Gambar kampanye harus diunggah" }),
+  image: z.instanceof(File, { message: "Campaign image is required" }),
+  guardianAnalysis: guardianAnalysisSchema,
 });
 
 export type CampaignFormSchema = z.infer<typeof campaignFormSchema>;
@@ -35,6 +46,7 @@ export function useCreateCampaign() {
         category: formData.category,
         creatorName: formData.creatorName,
         image: imageUrl,
+        guardianAnalysis: formData.guardianAnalysis,
       };
 
       const ipfsHash = await uploadToIPFS(metadata);

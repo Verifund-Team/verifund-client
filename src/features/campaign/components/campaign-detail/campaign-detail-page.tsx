@@ -11,6 +11,7 @@ import CampaignDetailSkeleton from "./campaign-detail-skeleton";
 import CampaignDetailError from "./campaign-detail-error";
 import CampaignActions from "./campaign-actions";
 import { useAccount } from "wagmi";
+import GuardianAnalysis from "../guardian-analysis";
 
 export type TDonation = {
   id: number;
@@ -39,6 +40,9 @@ export default function CampaignDetailPage() {
 
         <div className="space-y-6">
           <DonationForm campaign={data!} />
+          {data?.metadata?.guardianAnalysis && (
+            <GuardianAnalysis analysis={data.metadata.guardianAnalysis} />
+          )}
           <CampaignerInfo campaign={data!} />
           <CampaignActions campaign={data!} />
         </div>
