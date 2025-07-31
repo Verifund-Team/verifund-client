@@ -13,6 +13,7 @@ import { useConnectModal } from "@xellar/kit";
 import { useDonateToCampaign } from "../../api/donate-to-campaign";
 import { Campaign } from "../../api/get-campaigns";
 import { formatIDRX } from "@/lib/utils";
+import TrackerButton from "./tracker-button";
 
 interface DonationFormProps {
   campaign: Campaign;
@@ -215,9 +216,10 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
             <div className="text-center p-4 bg-muted rounded-lg">
               <Info className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="font-medium">Donations are Closed</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-2">
                 This campaign is no longer active and is not accepting new donations.
               </p>
+              <TrackerButton campaignAddress={campaign.address} />
             </div>
           )}
           {isCampaignActive && (
