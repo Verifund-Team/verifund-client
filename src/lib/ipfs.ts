@@ -1,11 +1,19 @@
 import axios from 'axios';
 
+export interface GuardianAnalysisData {
+  credibilityScore: number;
+  riskLevel: string;
+  summary: string;
+  suggestions: string[];
+}
+
 export interface CampaignMetadata {
   name: string;
   description: string;
   category: string;
   creatorName: string;
   image?: string;
+  guardianAnalysis?: GuardianAnalysisData;
 }
 
 export const uploadToIPFS = async (metadata: CampaignMetadata): Promise<string> => {
