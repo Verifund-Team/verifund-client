@@ -234,14 +234,6 @@ export class Web3Service {
     return receipt.hash;
   }
 
-  async updatePeakBalance(campaignAddress: string): Promise<string> {
-    const signer = await this.getSigner();
-    const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
-    const tx = await campaign.updatePeakBalance();
-    const receipt = await tx.wait();
-    return receipt.hash;
-  }
-
   async withdrawFromCampaign(campaignAddress: string): Promise<string> {
     const signer = await this.getSigner();
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, signer);
