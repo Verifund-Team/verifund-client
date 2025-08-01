@@ -1,6 +1,6 @@
 import { BadgeProps } from "@/components/ui/badge";
 
-export const IMAGE_PLACEHOLDER = "https://picsum.photos/1000";
+export const IMAGE_PLACEHOLDER = "/no-image.jpg";
 
 export const CAMPAIGN_STATUS_CONFIG: {
   [key: number]: { text: string; variant: BadgeProps["variant"] };
