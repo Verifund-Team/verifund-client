@@ -62,7 +62,7 @@ const GuardianAnalysis = ({ analysis }: { analysis: GuardianAnalysisData }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Credibility Score</CardTitle>
@@ -100,7 +100,6 @@ const GuardianAnalysis = ({ analysis }: { analysis: GuardianAnalysisData }) => {
           </p>
         </div>
 
-        {/* Disclaimer */}
         <Alert variant="default" className="border-yellow-200 bg-yellow-50 text-yellow-800">
           <Bot className="h-4 w-4 !text-yellow-800" />
           <AlertTitle>AI-Generated Analysis</AlertTitle>

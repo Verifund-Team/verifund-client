@@ -149,8 +149,8 @@ const StepOneBasicInfo = ({ isVerified, setFinalAnalysis }: StepOneBasicInfoProp
               </Button>
               {!isVerified && (
                 <p className="text-xs text-muted-foreground mt-2">
-                  Guardian analysis only available for verified users. <br /> Guardian analysis will
-                  run automatically upon submission for unverified users.
+                  Verified creators can preview the Guardian analysis. For all other users, the
+                  analysis will run automatically upon submission.
                 </p>
               )}
             </div>
