@@ -17,7 +17,6 @@ interface NewestDonationProps {
 const NewestDonation = ({ campaignAddress }: NewestDonationProps) => {
   const { data: donations, isLoading } = useGetRecentDonations(campaignAddress);
 
-  // Filter out IDRX donations that are not yet successful
   const filteredDonations = useMemo(() => {
     if (!donations) return [];
     return donations.filter((donation) => {
