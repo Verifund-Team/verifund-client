@@ -51,7 +51,7 @@ Campaign Description: "${description}"`;
 
       return NextResponse.json(analysisResult);
     } catch (parseError) {
-      console.error("Failed to parse AI response as JSON (even with JSON Mode):", text);
+      console.error("Failed to parse AI response as JSON (even with JSON Mode):", text, parseError);
 
       // Fallback in case of a rare parsing error
       return NextResponse.json({

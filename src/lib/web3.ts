@@ -8,10 +8,10 @@ import VerifundSBTABI from "@/app/contracts/VerifundSBT.json";
 import { WalletTransaction } from "@/features/campaign/api/get-recent-donations";
 
 export class Web3Service {
-  private rpcProvider: ethers.JsonRpcProvider;
+  private readonly rpcProvider: ethers.JsonRpcProvider;
 
   constructor() {
-    this.rpcProvider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL!);
+    this.rpcProvider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL);
   }
 
   private async getSigner(): Promise<ethers.Signer> {
@@ -77,10 +77,7 @@ export class Web3Service {
 
   async getCampaignInfo(campaignAddress: string) {
     const campaign = new ethers.Contract(campaignAddress, CampaignABI.abi, this.rpcProvider);
-    const [info, isWithdrawn] = await Promise.all([
-      campaign.getCampaignInfo(),
-      campaign.isWithdrawn(),
-    ]);
+    const [info] = await Promise.all([campaign.getCampaignInfo()]);
 
     const isOwnerVerified = await this.checkVerificationStatus(info[0]);
 

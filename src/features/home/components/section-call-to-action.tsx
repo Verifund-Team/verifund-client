@@ -1,7 +1,6 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button'
-import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const SectionCallToAction = () => {
   return (
@@ -11,20 +10,21 @@ const SectionCallToAction = () => {
         <div className="absolute bottom-1/3 left-0 w-2/3 h-px bg-gradient-to-r from-transparent via-purple-500/10 to-transparent"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-4xl max-h-4xl bg-radial-gradient from-cyan-500/10 to-transparent rounded-full blur-3xl"></div>
       </div>
-      
+
       <div className="container mx-auto">
-        <motion.div 
+        <motion.div
           className="bg-gray-800/20 backdrop-blur-lg border border-white/10 rounded-2xl max-w-4xl mx-auto p-10 sm:p-16 text-center"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-6">
             Ready to Start Change?
           </h2>
           <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
-            Join thousands of people who have trusted Verifund to channel their kindness transparently.
+            Join thousands of people who have trusted Verifund to channel their kindness
+            transparently.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/campaigns">
@@ -42,7 +42,7 @@ const SectionCallToAction = () => {
         </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default SectionCallToAction;

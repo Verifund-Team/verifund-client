@@ -1,16 +1,15 @@
-'use client'
+"use client";
 
-import { motion, Variants } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import { Hash, Coins, TrendingUp } from 'lucide-react'
-import React from 'react'
+import { motion, Variants } from "framer-motion";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { Hash } from "lucide-react";
 export const FloatingTransactionCard = ({
   amount,
   donor,
   positionClasses,
   delay,
-  icon
+  icon,
 }: {
   amount: string;
   donor: string;
@@ -24,13 +23,13 @@ export const FloatingTransactionCard = ({
     animate={{
       opacity: [0, 1, 1, 0],
       y: [50, 0, -20, -50],
-      scale: [0.8, 1, 1, 0.8]
+      scale: [0.8, 1, 1, 0.8],
     }}
     transition={{
       duration: 6,
       repeat: Infinity,
       delay: delay,
-      ease: "easeInOut"
+      ease: "easeInOut",
     }}
   >
     <div className="flex items-center gap-2">
@@ -44,11 +43,17 @@ export const FloatingTransactionCard = ({
     </div>
   </motion.div>
 );
-export const BlockHashIndicator = ({ positionClasses, delay }: { positionClasses: string; delay: number }) => {
+export const BlockHashIndicator = ({
+  positionClasses,
+  delay,
+}: {
+  positionClasses: string;
+  delay: number;
+}) => {
   const [randomHash, setRandomHash] = useState<string | null>(null);
   useEffect(() => {
     setRandomHash(Math.random().toString(16).substr(2, 6));
-  }, []); 
+  }, []);
 
   return (
     <motion.div
@@ -74,7 +79,17 @@ export const BlockHashIndicator = ({ positionClasses, delay }: { positionClasses
     </motion.div>
   );
 };
-export const FloatingIcon = ({ imgSrc, altText, positionClasses, animationVariant }: { imgSrc: string; altText: string; positionClasses: string; animationVariant: Variants }) => (
+export const FloatingIcon = ({
+  imgSrc,
+  altText,
+  positionClasses,
+  animationVariant,
+}: {
+  imgSrc: string;
+  altText: string;
+  positionClasses: string;
+  animationVariant: Variants;
+}) => (
   <motion.div
     className={`absolute w-16 h-16 p-3 bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 shadow-xl ${positionClasses}`}
     variants={animationVariant}
@@ -84,7 +99,13 @@ export const FloatingIcon = ({ imgSrc, altText, positionClasses, animationVarian
     <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
   </motion.div>
 );
-export const Sparkle = ({ positionClasses, duration }: { positionClasses: string; duration: number }) => (
+export const Sparkle = ({
+  positionClasses,
+  duration,
+}: {
+  positionClasses: string;
+  duration: number;
+}) => (
   <motion.div
     className={`absolute w-1 h-1 bg-white rounded-full ${positionClasses}`}
     animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
