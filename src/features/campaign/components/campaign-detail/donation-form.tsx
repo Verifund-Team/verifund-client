@@ -240,6 +240,7 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
             <p>• Gas fees (if using wallet) are paid with LSK.</p>
             <p>• Funds go directly to a secure smart contract.</p>
             <p>• 100% transparent and traceable on the blockchain.</p>
+            <p>* We recommend using the payment gateway only when supporting verified campaigns.</p>
           </div>
         </CardContent>
       </Card>
