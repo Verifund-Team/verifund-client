@@ -16,17 +16,16 @@ export async function POST(request: NextRequest) {
       responseMimeType: "application/json",
     };
 
-    // 2. Prompt tetap sama, namun kita tidak perlu lagi meminta format JSON secara eksplisit di akhir.
-    const prompt = `Anda adalah "Verifund Guardian", seorang analis risiko yang objektif dan membantu untuk platform crowdfunding.
-Analisis deskripsi kampanye berikut dan berikan output HANYA dalam format JSON yang valid.
+    const prompt = `You are "Verifund Guardian", an objective and helpful risk analyst for a crowdfunding platform.
+Analyze the following campaign description and provide the output ONLY in a valid JSON format.
 
-Kriteria Penilaian:
-1. **credibilityScore (Angka 0-100):** Nilai tinggi jika tujuan jelas, spesifik, ada detail angka, dan terasa tulus. Nilai rendah jika terlalu umum, ambigu, atau tidak masuk akal.
-2. **riskLevel (String):** Pilih salah satu dari: "Rendah", "Sedang", atau "Tinggi". Risiko tinggi jika ada tanda bahaya seperti janji keuntungan finansial, bahasa yang terlalu mendesak, atau kurangnya detail krusial.
-3. **summary (String):** Satu kalimat ringkasan analisis Anda yang netral dan informatif.
-4. **suggestions (Array of Strings):** Satu atau dua saran konkret dan membangun yang bisa membantu penulis meningkatkan kejelasan dan kepercayaan deskripsinya.
+Evaluation Criteria:
+1. **credibilityScore (Number 0-100):** A high score for clear, specific goals, numerical details, and a sincere tone. A low score for being too general, ambiguous, or nonsensical.
+2. **riskLevel (String):** Choose one of: "Low", "Medium", or "High". High risk for red flags like promises of financial return, overly urgent language, or lack of crucial details.
+3. **summary (String):** A single, neutral, and informative sentence summarizing your analysis.
+4. **suggestions (Array of Strings):** One or two concrete, constructive suggestions to help the author improve the clarity and trustworthiness of their description.
 
-Deskripsi Kampanye: "${description}"`;
+Campaign Description: "${description}"`;
 
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -54,14 +53,14 @@ Deskripsi Kampanye: "${description}"`;
     } catch (parseError) {
       console.error("Failed to parse AI response as JSON (even with JSON Mode):", text);
 
-      // Fallback jika terjadi error yang sangat jarang
+      // Fallback in case of a rare parsing error
       return NextResponse.json({
         credibilityScore: 50,
-        riskLevel: "Sedang",
-        summary: "Analisis otomatis gagal, silakan periksa deskripsi kampanye Anda.",
+        riskLevel: "Medium",
+        summary: "Automated analysis failed. Please review your campaign description.",
         suggestions: [
-          "Pastikan deskripsi kampanye Anda jelas dan spesifik",
-          "Sertakan detail yang konkret tentang tujuan kampanye",
+          "Ensure your campaign description is clear and specific.",
+          "Include concrete details about the campaign's goals.",
         ],
       });
     }
