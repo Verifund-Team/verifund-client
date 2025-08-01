@@ -81,10 +81,23 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
   };
 
   const handleIDRXPayment = async () => {
-    if (!donationAmount || parseFloat(donationAmount) <= 0) {
+    const amount = parseFloat(donationAmount);
+    const MINIMUM_GATEWAY_AMOUNT = 20000;
+
+    if (!donationAmount || amount <= 0) {
       setDialogContent({
         title: "Invalid Amount",
         description: "Please enter a valid donation amount.",
+        status: "error",
+        txHash: "",
+      });
+      setIsDialogOpen(true);
+      return;
+    }
+    if (amount < MINIMUM_GATEWAY_AMOUNT) {
+      setDialogContent({
+        title: "Minimum Amount Not Met",
+        description: `The minimum donation for the payment gateway is ${formatIDRX(MINIMUM_GATEWAY_AMOUNT)}.`,
         status: "error",
         txHash: "",
       });
@@ -166,11 +179,6 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
                   onChange={(e) => setDonationAmount(e.target.value)}
                   disabled={isProcessing}
                 />
-                {donationAmount && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {formatIDRX(Number.parseInt(donationAmount) || 0)}
-                  </p>
-                )}
               </div>
               <div className="space-y-2 pt-2">
                 <p className="text-sm font-medium text-foreground mb-2">Select Payment Method:</p>
@@ -202,6 +210,9 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
                     onChange={(e) => setDonorEmail(e.target.value)}
                     disabled={idrxPaymentLoading}
                   />
+                  <p className="text-xs text-muted-foreground">
+                    Minimum donation of {formatIDRX(20000)} for this method.
+                  </p>
                   <Button
                     className="w-full"
                     onClick={handleIDRXPayment}
