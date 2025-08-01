@@ -1,15 +1,20 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { motion, Variants } from 'framer-motion'
-import { useAccount } from 'wagmi'
-import { useConnectModal } from '@xellar/kit'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { Eye, Zap, ShieldCheck, Users, FileCheck, Rocket, Coins, TrendingUp } from 'lucide-react'
-import BlockchainNetwork from '@/features/home/components/blockchain-network'
-import GridPattern from '@/features/home/components/grid-pattern'
-import { FloatingTransactionCard, BlockHashIndicator, FloatingIcon, Sparkle } from '@/features/home/components/floating-elements'
-import React from 'react' 
+"use client";
+import { Button } from "@/components/ui/button";
+import { motion, Variants } from "framer-motion";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@xellar/kit";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Eye, Zap, ShieldCheck, Users, FileCheck, Rocket, Coins, TrendingUp } from "lucide-react";
+import BlockchainNetwork from "@/features/home/components/blockchain-network";
+import GridPattern from "@/features/home/components/grid-pattern";
+import {
+  FloatingTransactionCard,
+  BlockHashIndicator,
+  FloatingIcon,
+  Sparkle,
+} from "@/features/home/components/floating-elements";
+import React from "react";
 
 const SectionHero = () => {
   const { isConnected } = useAccount();
@@ -18,7 +23,7 @@ const SectionHero = () => {
 
   const handleActionClick = () => {
     if (isConnected) {
-      router.push('/campaigns');
+      router.push("/campaigns");
     } else {
       open();
     }
@@ -50,7 +55,7 @@ const SectionHero = () => {
     animate: {
       y: [0, -10, 0],
       rotate: [0, 5, -5, 0],
-      transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+      transition: { duration: 4, repeat: Infinity, ease: "easeInOut" },
     },
   };
   const floatVariant2: Variants = {
@@ -58,7 +63,7 @@ const SectionHero = () => {
       y: [0, 8, 0],
       x: [0, -8, 0],
       rotate: [0, -3, 3, 0],
-      transition: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+      transition: { duration: 5, repeat: Infinity, ease: "easeInOut" },
     },
   };
   const floatVariant3: Variants = {
@@ -66,14 +71,38 @@ const SectionHero = () => {
       y: [0, -8, 0],
       x: [0, 8, 0],
       rotate: [0, 8, -8, 0],
-      transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut" }
+      transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
     },
   };
   const mockTransactions = [
-    { amount: "1M IDRX", donor: "Faisal", position: "top-[20%] right-[10%]", delay: 0, icon: <Coins className="w-3 h-3 text-green-400" /> },
-    { amount: "25K IDRX", donor: "Bagas", position: "top-[60%] left-[5%]", delay: 3, icon: <TrendingUp className="w-3 h-3 text-blue-400" /> },
-    { amount: "100K IDRX", donor: "Opal", position: "bottom-[30%] right-[20%]", delay: 6, icon: <Coins className="w-3 h-3 text-purple-400" /> },
-    { amount: "75K IDRX", donor: "Arep", position: "top-[40%] left-[85%]", delay: 9, icon: <TrendingUp className="w-3 h-3 text-yellow-400" /> },
+    {
+      amount: "1M IDRX",
+      donor: "Faisal",
+      position: "top-[20%] right-[10%]",
+      delay: 0,
+      icon: <Coins className="w-3 h-3 text-green-400" />,
+    },
+    {
+      amount: "25K IDRX",
+      donor: "Bagas",
+      position: "top-[60%] left-[5%]",
+      delay: 3,
+      icon: <TrendingUp className="w-3 h-3 text-blue-400" />,
+    },
+    {
+      amount: "100K IDRX",
+      donor: "Opal",
+      position: "bottom-[30%] right-[20%]",
+      delay: 6,
+      icon: <Coins className="w-3 h-3 text-purple-400" />,
+    },
+    {
+      amount: "75K IDRX",
+      donor: "Arep",
+      position: "top-[40%] left-[85%]",
+      delay: 9,
+      icon: <TrendingUp className="w-3 h-3 text-yellow-400" />,
+    },
   ];
 
   const blockHashes = [
@@ -96,10 +125,7 @@ const SectionHero = () => {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-9 items-center">
           <div className="flex flex-col text-center md:text-left">
-            <motion.div
-              variants={itemVariants}
-              className="relative"
-            >
+            <motion.div variants={itemVariants} className="relative">
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 rounded-full px-4 py-2 mb-6 text-sm font-medium">
                 <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
                 <span className="bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
@@ -118,10 +144,13 @@ const SectionHero = () => {
               </h1>
             </motion.div>
 
-            <motion.p variants={itemVariants} className="mt-6 text-lg text-gray-300 max-w-xl mx-auto md:mx-0">
+            <motion.p
+              variants={itemVariants}
+              className="mt-6 text-lg text-gray-300 max-w-xl mx-auto md:mx-0"
+            >
               The first decentralized donation platform that uses blockchain technology to ensure
-              <span className="text-cyan-300 font-semibold"> 100% transparansi</span>.
-              Every rupiah is trackable, with no platform fees, powered by IDRX.
+              <span className="text-cyan-300 font-semibold"> 100% transparansi</span>. Every rupiah
+              is trackable, with no platform fees, powered by IDRX.
             </motion.p>
 
             <motion.div variants={itemVariants} className="mt-8">
@@ -136,7 +165,7 @@ const SectionHero = () => {
 
                 <span className="relative z-10 drop-shadow-lg flex items-center gap-2">
                   <Zap className="w-5 h-5" />
-                  Let's Donate!
+                  Let&apos;s Donate!
                 </span>
               </Button>
             </motion.div>
@@ -232,7 +261,7 @@ const SectionHero = () => {
                 subtitle: "Transparant",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
-                glowColor: "shadow-transparent"
+                glowColor: "shadow-transparent",
               },
               {
                 icon: <Zap className="w-7 h-7 text-green-400" />,
@@ -240,7 +269,7 @@ const SectionHero = () => {
                 subtitle: "Fee Platform",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
-                glowColor: "shadow-transparent"
+                glowColor: "shadow-transparent",
               },
               {
                 icon: <ShieldCheck className="w-7 h-7 text-purple-400" />,
@@ -248,7 +277,7 @@ const SectionHero = () => {
                 subtitle: "SBT",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
-                glowColor: "shadow-transparent"
+                glowColor: "shadow-transparent",
               },
             ].map((item, idx) => (
               <motion.div
@@ -257,12 +286,18 @@ const SectionHero = () => {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className={`flex-shrink-0 p-2 bg-gradient-to-br ${item.bgGradient} rounded-xl group-hover:scale-110 transition-transform duration-300`}>
+                <div
+                  className={`flex-shrink-0 p-2 bg-gradient-to-br ${item.bgGradient} rounded-xl group-hover:scale-110 transition-transform duration-300`}
+                >
                   {item.icon}
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold text-white text-lg group-hover:text-cyan-100 transition-colors duration-300">{item.title}</span>
-                  <span className="text-gray-300 text-sm group-hover:text-gray-200 transition-colors duration-300">{item.subtitle}</span>
+                  <span className="font-bold text-white text-lg group-hover:text-cyan-100 transition-colors duration-300">
+                    {item.title}
+                  </span>
+                  <span className="text-gray-300 text-sm group-hover:text-gray-200 transition-colors duration-300">
+                    {item.subtitle}
+                  </span>
                 </div>
               </motion.div>
             ))}
@@ -291,10 +326,9 @@ const SectionHero = () => {
             </motion.div>
           </div>
         </motion.div>
-
       </motion.div>
     </section>
-  )
-}
+  );
+};
 
 export default SectionHero;

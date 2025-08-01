@@ -1,75 +1,69 @@
-'use client'
+"use client";
 
-import { Tabs, TabsContent } from '@/components/ui/tabs'
-import ProfileCard from './profile-card'
-import StatCards from './stat-cards'
-import CampaignsTab from './campaigns-tab'
-import RecentDonationsTab from './recent-donations-tab'
-import { useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
-export const MOCK_USER_DATA = {
-  address: '0x1234567890abcdef1234567890abcdef12345678',
-  publicName: 'Yayasan Peduli Anak',
-  isNameSet: true,
-  isVerified: true,
-  isWhitelisted: false, // For SBT claim
-  hasSBT: true,
-  joinedDate: '2024-01-10',
-  avatar: '/placeholder.svg?height=80&width=80',
-}
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import StatCards from "./stat-card/stat-cards";
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import CampaignsTab from "./my-campaigns/campaigns-tab";
+import ProfileCard from "./Profile/profile-card";
+import { useGetCampaigns } from "@/features/campaign/api/get-campaigns";
+import AuthGuard from "@/components/auth-guard";
 
 export default function OrganizerDashboard() {
-  const [activeTab, setActiveTab] = useState('campaigns')
+  const [activeTab, setActiveTab] = useState("campaigns");
+  useGetCampaigns();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Organizer Dashboard</h1>
-        <p className="text-xl text-muted-foreground">Kelola kampanye dan profil Anda</p>
-      </div>
-
-      <div className="grid lg:grid-cols-4 gap-8">
-        <div>
-          <ProfileCard />
-          <Card className="mt-8">
-            <CardContent className="space-y-2">
-              <Button
-                variant={activeTab === 'campaigns' ? 'ghost-active' : 'ghost'}
-                className="w-full justify-start"
-                onClick={() => setActiveTab('campaigns')}
-              >
-                Kampanye Saya
-              </Button>
-              <Button
-                variant={activeTab === 'donations' ? 'ghost-active' : 'ghost'}
-                className="w-full justify-start"
-                onClick={() => setActiveTab('donations')}
-              >
-                Donasi Terbaru
-              </Button>
-            </CardContent>
-          </Card>
+    <AuthGuard>
+      <div className="min-h[calc(100vh-12rem)] container mx-auto lg:px-20 px-10 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Organizer Dashboard
+          </h1>
+          <p className="text-xl text-muted-foreground">Manage your campaigns and profile</p>
         </div>
-
-        <div className="lg:col-span-3">
-          <StatCards />
-          <Tabs
-            defaultValue={activeTab}
-            onValueChange={setActiveTab}
-            value={activeTab}
-            className="w-full"
-          >
-            <TabsContent value="campaigns" className="space-y-6">
-              <CampaignsTab />
-            </TabsContent>
-            <TabsContent value="donations" className="space-y-6">
-              <RecentDonationsTab />
-            </TabsContent>
-          </Tabs>
+        <div className="grid lg:grid-cols-4 gap-8">
+          <div>
+            <ProfileCard />
+            <Card className="mt-8">
+              <CardContent className="space-y-2">
+                <Button
+                  variant={activeTab === "campaigns" ? "ghost-active" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => setActiveTab("campaigns")}
+                >
+                  My Campaigns
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  className="w-full justify-start"
+                  onClick={() => setActiveTab("donations")}
+                  disabled
+                >
+                  Recent Donations
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="lg:col-span-3">
+            <StatCards />
+            <Tabs
+              defaultValue={activeTab}
+              onValueChange={setActiveTab}
+              value={activeTab}
+              className="w-full"
+            >
+              <TabsContent value="campaigns" className="space-y-6">
+                <CampaignsTab />
+              </TabsContent>
+              {/* <TabsContent value="donations" className="space-y-6">
+                <RecentDonationsTab />
+              </TabsContent> */}
+            </Tabs>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    </AuthGuard>
+  );
 }
