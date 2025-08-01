@@ -179,6 +179,11 @@ const DonationForm = ({ campaign }: DonationFormProps) => {
                   onChange={(e) => setDonationAmount(e.target.value)}
                   disabled={isProcessing}
                 />
+                {donationAmount && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {formatIDRX(Number.parseInt(donationAmount) || 0)}
+                  </p>
+                )}
               </div>
               <div className="space-y-2 pt-2">
                 <p className="text-sm font-medium text-foreground mb-2">Select Payment Method:</p>
