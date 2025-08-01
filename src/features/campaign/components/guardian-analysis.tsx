@@ -9,6 +9,7 @@ import { GuardianAnalysisData } from "../api/get-guardian-analysis";
 const getRiskLevelProps = (level: GuardianAnalysisData["riskLevel"]) => {
   switch (level) {
     case "Low":
+    case "Rendah":
       return {
         Icon: TrendingUp,
         className: "text-green-600 border-green-200 bg-green-50",
@@ -16,6 +17,7 @@ const getRiskLevelProps = (level: GuardianAnalysisData["riskLevel"]) => {
         description: "This campaign shows positive indicators.",
       };
     case "Medium":
+    case "Sedang":
       return {
         Icon: AlertCircle,
         className: "text-yellow-600 border-yellow-200 bg-yellow-50",
@@ -23,6 +25,7 @@ const getRiskLevelProps = (level: GuardianAnalysisData["riskLevel"]) => {
         description: "Some factors require caution.",
       };
     case "High":
+    case "Tinggi":
       return {
         Icon: TrendingDown,
         className: "text-red-600 border-red-200 bg-red-50",

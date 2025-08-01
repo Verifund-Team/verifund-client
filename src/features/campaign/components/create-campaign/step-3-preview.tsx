@@ -18,7 +18,7 @@ interface StepThreePreviewProps {
 
 const StepThreePreview = ({ finalAnalysis }: StepThreePreviewProps) => {
   const { watch } = useFormContext<CampaignFormSchema>();
-  const formData = watch(); // Watch all form fields
+  const formData = watch();
 
   return (
     <Step>
@@ -103,7 +103,6 @@ const StepThreePreview = ({ finalAnalysis }: StepThreePreviewProps) => {
           </CardContent>
         </Card>
 
-        {/* Display the Guardian Analysis if it exists */}
         {finalAnalysis && (
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">Guardian Analysis Preview</h3>

@@ -78,7 +78,6 @@ const StepOneBasicInfo = ({ isVerified, setFinalAnalysis }: StepOneBasicInfoProp
       { description: currentDescription },
       {
         onSuccess: (data) => {
-          console.log("ooooooo", data);
           setAnalysisResult(data);
           setIsModalOpen(true);
         },
@@ -150,7 +149,8 @@ const StepOneBasicInfo = ({ isVerified, setFinalAnalysis }: StepOneBasicInfoProp
               </Button>
               {!isVerified && (
                 <p className="text-xs text-muted-foreground mt-2">
-                  Guardian analysis only available for verified users.
+                  Guardian analysis only available for verified users. <br /> Guardian analysis will
+                  run automatically upon submission for unverified users.
                 </p>
               )}
             </div>

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export interface GuardianAnalysisData {
   credibilityScore: number;
-  riskLevel: "Low" | "Medium" | "High";
+  riskLevel: "Low" | "Medium" | "High" | "Rendah" | "Sedang" | "Tinggi";
   summary: string;
   suggestions: string[];
 }
