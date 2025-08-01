@@ -19,6 +19,9 @@ export function useDonateToCampaign() {
         queryKey: ["get-campaign-detail", variables.campaignAddress],
       });
       queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-recent-donations", variables.campaignAddress],
+      });
     },
     onError: (error: Error) => {
       console.error("Error donating to campaign:", error);

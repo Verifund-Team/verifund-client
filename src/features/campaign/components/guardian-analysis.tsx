@@ -9,6 +9,7 @@ import { GuardianAnalysisData } from "../api/get-guardian-analysis";
 const getRiskLevelProps = (level: GuardianAnalysisData["riskLevel"]) => {
   switch (level) {
     case "Low":
+    case "Rendah":
       return {
         Icon: TrendingUp,
         className: "text-green-600 border-green-200 bg-green-50",
@@ -16,6 +17,7 @@ const getRiskLevelProps = (level: GuardianAnalysisData["riskLevel"]) => {
         description: "This campaign shows positive indicators.",
       };
     case "Medium":
+    case "Sedang":
       return {
         Icon: AlertCircle,
         className: "text-yellow-600 border-yellow-200 bg-yellow-50",
@@ -23,6 +25,7 @@ const getRiskLevelProps = (level: GuardianAnalysisData["riskLevel"]) => {
         description: "Some factors require caution.",
       };
     case "High":
+    case "Tinggi":
       return {
         Icon: TrendingDown,
         className: "text-red-600 border-red-200 bg-red-50",
@@ -59,7 +62,7 @@ const GuardianAnalysis = ({ analysis }: { analysis: GuardianAnalysisData }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Credibility Score</CardTitle>
@@ -97,7 +100,6 @@ const GuardianAnalysis = ({ analysis }: { analysis: GuardianAnalysisData }) => {
           </p>
         </div>
 
-        {/* Disclaimer */}
         <Alert variant="default" className="border-yellow-200 bg-yellow-50 text-yellow-800">
           <Bot className="h-4 w-4 !text-yellow-800" />
           <AlertTitle>AI-Generated Analysis</AlertTitle>

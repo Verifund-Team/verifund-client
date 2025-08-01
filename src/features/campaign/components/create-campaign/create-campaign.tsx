@@ -18,7 +18,8 @@ import { ActionDialog } from "@/components/ui/action-dialog";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { web3Service } from "@/lib/web3";
-import { GuardianAnalysisData } from "../../api/get-guardian-analysis";
+import { GuardianAnalysisData, useGuardianAnalysis } from "../../api/get-guardian-analysis";
+import { toast } from "sonner";
 
 const stepFields: (keyof CampaignFormSchema)[][] = [
   ["creatorName", "name", "description", "category", "image"],
@@ -32,6 +33,8 @@ const CreateCampaignPage = () => {
   const { address, isConnected } = useAccount();
 
   const { mutate: createCampaign, isPending: isSubmitting } = useCreateCampaign();
+  const { mutate: analyzeDescription, isPending: isAnalyzing } = useGuardianAnalysis();
+
   const [activeStep, setActiveStep] = useState(0);
   const [isStepValidating, setIsStepValidating] = useState(false);
 
@@ -73,32 +76,54 @@ const CreateCampaignPage = () => {
   }, [isConnected, address]);
 
   const onSubmit = (data: CampaignFormSchema) => {
-    createCampaign(
-      { ...data, guardianAnalysis: finalAnalysis },
-      {
-        onSuccess: (txHash) => {
-          queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
-          setDialogContent({
-            title: "Campaign Created Successfully!",
-            description: "Your new campaign is now live.",
-            txHash,
-            status: "success",
-          });
-          setIsDialogOpen(true);
-          methods.reset();
-          setActiveStep(0);
+    const createCampaignWithAnalysis = (analysisData: GuardianAnalysisData | null) => {
+      createCampaign(
+        { ...data, guardianAnalysis: analysisData },
+        {
+          onSuccess: (txHash) => {
+            queryClient.invalidateQueries({ queryKey: ["get-campaigns"] });
+            setDialogContent({
+              title: "Campaign Created Successfully!",
+              description: "Your new campaign is now live.",
+              txHash,
+              status: "success",
+            });
+            setIsDialogOpen(true);
+            methods.reset();
+            setActiveStep(0);
+          },
+          onError: (error) => {
+            setDialogContent({
+              title: "Failed to Create Campaign",
+              description: error.message,
+              txHash: "",
+              status: "error",
+            });
+            setIsDialogOpen(true);
+          },
         },
-        onError: (error) => {
-          setDialogContent({
-            title: "Failed to Create Campaign",
-            description: error.message,
-            txHash: "",
-            status: "error",
-          });
-          setIsDialogOpen(true);
+      );
+    };
+
+    if (!isVerified) {
+      toast.info("Running final Guardian analysis before submission...");
+      analyzeDescription(
+        { description: data.description },
+        {
+          onSuccess: (analysisData) => {
+            createCampaignWithAnalysis(analysisData);
+          },
+          onError: (error) => {
+            toast.error(
+              `Guardian analysis failed! Creating campaign without analysis. ${error.message}`,
+            );
+            createCampaignWithAnalysis(null);
+          },
         },
-      },
-    );
+      );
+    } else {
+      createCampaignWithAnalysis(finalAnalysis);
+    }
   };
 
   const handleNext = async () => {
@@ -115,6 +140,8 @@ const CreateCampaignPage = () => {
   const handleStepClick = (stepIndex: number) => {
     if (stepIndex < activeStep) setActiveStep(stepIndex);
   };
+
+  const isProcessing = isSubmitting || isAnalyzing;
 
   return (
     <AuthGuard>
@@ -137,9 +164,9 @@ const CreateCampaignPage = () => {
               onFinalStepCompleted={methods.handleSubmit(onSubmit)}
               backButtonText="Back"
               nextButtonText={isStepValidating ? "Validating..." : "Next"}
-              finalStepButtonText={isSubmitting ? "Creating Campaign..." : "Create Campaign"}
-              nextButtonProps={{ disabled: isSubmitting || isStepValidating }}
-              backButtonProps={{ disabled: isSubmitting || isStepValidating }}
+              finalStepButtonText={isProcessing ? "Processing..." : "Create Campaign"}
+              nextButtonProps={{ disabled: isProcessing || isStepValidating }}
+              backButtonProps={{ disabled: isProcessing || isStepValidating }}
               stepCircleContainerClassName="max-w-4xl"
             >
               <Step>

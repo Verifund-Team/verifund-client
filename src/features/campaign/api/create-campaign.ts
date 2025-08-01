@@ -6,7 +6,7 @@ import { uploadToIPFS, uploadImageToIPFS } from "@/lib/ipfs";
 const guardianAnalysisSchema = z
   .object({
     credibilityScore: z.number(),
-    riskLevel: z.enum(["Low", "Medium", "High"]),
+    riskLevel: z.enum(["Low", "Medium", "High", "Rendah", "Sedang", "Tinggi"]),
     summary: z.string(),
     suggestions: z.array(z.string()),
   })
