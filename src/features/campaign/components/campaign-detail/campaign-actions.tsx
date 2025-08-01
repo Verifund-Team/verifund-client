@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ActionDialog } from "@/components/ui/action-dialog";
-import { AlertTriangle, Download, RotateCcw, ShieldCheck, BarChart2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Download,
+  RotateCcw,
+  ShieldCheck,
+  BarChart2,
+  CheckCircle,
+} from "lucide-react";
 import { useAccount } from "wagmi";
 import { CampaignDetail } from "../../api/get-campaign-detail";
 import { useWithdrawFromCampaign, useRefundFromCampaign } from "../../api/campaign-fund-actions";
@@ -44,6 +51,7 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
 
   const canWithdraw =
     isOwner &&
+    !campaign.isWithdrawn &&
     campaign.timeRemaining === 0 &&
     (campaign.isPeakBalanceUpdated || !hasExternalTransfers) &&
     (campaign.status === 1 || (campaign.status === 2 && campaign.isOwnerVerified));
@@ -212,6 +220,16 @@ const CampaignActions = ({ campaign }: CampaignActionsProps) => {
               <AlertDescription className="text-xs">
                 The owner of this campaign is verified and is eligible to withdraw the funds even
                 though the target was not met. Refunds are not available.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {campaign.isWithdrawn && (
+            <Alert variant="default" className="border-green-200 bg-green-50 text-green-800">
+              <CheckCircle className="h-4 w-4 !text-green-800" />
+              <AlertTitle>Funds Withdrawn</AlertTitle>
+              <AlertDescription className="text-xs text-green-700">
+                The funds for this campaign have been successfully withdrawn by the owner.
               </AlertDescription>
             </Alert>
           )}

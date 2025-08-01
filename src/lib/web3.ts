@@ -151,6 +151,7 @@ export class Web3Service {
       status: correctedStatus,
       ipfsHash,
       isOwnerVerified,
+      isWithdrawn,
     };
   }
 

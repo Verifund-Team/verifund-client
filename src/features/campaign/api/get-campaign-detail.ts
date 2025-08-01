@@ -3,7 +3,7 @@ import { Campaign, CampaignMetadata } from "./get-campaigns";
 import { web3Service } from "@/lib/web3";
 import { getMetadataFromIPFS } from "@/lib/ipfs";
 
-export type CampaignDetail = Campaign & { userDonation: string };
+export type CampaignDetail = Campaign & { userDonation: string; isWithdrawn: boolean };
 
 export function useGetCampaignDetail(campaignAddress: string, userWalletAddress?: string) {
   return useQuery<CampaignDetail, Error>({
