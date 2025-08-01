@@ -30,7 +30,7 @@ const StatCards = () => {
       <StatCard
         title="Total Donations"
         value={totalRaised}
-        prefix="Rp"
+        suffix=" IDRX"
         icon={DollarSign}
         color="var(--primary)"
         delay={0}
