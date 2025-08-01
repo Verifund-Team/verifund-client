@@ -18,20 +18,20 @@ import CampaignListError from "./campaign-list-error";
 import { CATEGORIES } from "../create-campaign/step-1-basic-info";
 
 const statusOptions = [
-  { value: "all", label: "Semua Status" },
-  { value: "ongoing", label: "Sedang Berjalan" },
-  { value: "completed", label: "Selesai" },
+  { value: "all", label: "All Statuses" },
+  { value: "ongoing", label: "Ongoing" },
+  { value: "completed", label: "Completed" },
 ];
 
 const sortOptions = [
-  { value: "latest", label: "Terbaru" },
-  { value: "endingSoon", label: "Segera Berakhir" },
-  { value: "mostFunded", label: "Paling Terkumpul" },
-  { value: "leastFunded", label: "Paling Sedikit Terkumpul" },
+  { value: "latest", label: "Latest" },
+  { value: "endingSoon", label: "Ending Soon" },
+  { value: "mostFunded", label: "Most Funded" },
+  { value: "leastFunded", label: "Least Funded" },
 ];
 
 const categoryOptions = [
-  { value: "all", label: "Semua Kategori" },
+  { value: "all", label: "All Categories" },
   ...CATEGORIES.map((category) => ({
     value: category,
     label: category,
@@ -109,33 +109,33 @@ export default function CampaignsListPage() {
   return (
     <div className="min-h-[calc(100vh-12rem)] container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Semua Kampanye</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">All Campaigns</h1>
         <p className="text-xl text-muted-foreground mb-6">
-          Temukan dan dukung kampanye yang Anda pedulikan dengan transparansi penuh
+          Discover and support the campaigns you care about with full transparency
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{stats.total}</div>
-              <div className="text-sm text-muted-foreground">Total Kampanye</div>
+              <div className="text-sm text-muted-foreground">Total Campaigns</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{stats.ongoing}</div>
-              <div className="text-sm text-muted-foreground">Sedang Berjalan</div>
+              <div className="text-sm text-muted-foreground">Ongoing</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{stats.completed}</div>
-              <div className="text-sm text-muted-foreground">Selesai</div>
+              <div className="text-sm text-muted-foreground">Completed</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{formatIDRX(stats.totalRaised)}</div>
-              <div className="text-sm text-muted-foreground">Total Terkumpul</div>
+              <div className="text-sm text-muted-foreground">Total Raised</div>
             </CardContent>
           </Card>
         </div>
@@ -143,8 +143,8 @@ export default function CampaignsListPage() {
 
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="text-muted-foreground">
-          Menampilkan {filteredAndSortedCampaigns.length} dari {filteredAndSortedCampaigns.length}{" "}
-          kampanye
+          Showing {filteredAndSortedCampaigns.length} out of {filteredAndSortedCampaigns.length}{" "}
+          campaigns
         </div>
 
         <div className="flex flex-wrap gap-4">
@@ -199,11 +199,11 @@ export default function CampaignsListPage() {
             <Target className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="text-lg font-semibold text-foreground mb-2">
-            Tidak ada kampanye ditemukan
+            No campaigns found
           </h3>
-          <p className="text-muted-foreground mb-4">Coba ubah filter atau pilihan urutan Anda.</p>
+          <p className="text-muted-foreground mb-4">Try adjusting your filters or sorting options.</p>
           <Button variant="outline" onClick={handleResetFilters}>
-            Reset Semua Filter
+            Reset All Filters
           </Button>
         </div>
       )}
