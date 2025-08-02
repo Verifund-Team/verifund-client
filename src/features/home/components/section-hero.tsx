@@ -5,7 +5,16 @@ import { useAccount } from "wagmi";
 import { useConnectModal } from "@xellar/kit";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Eye, Zap, ShieldCheck, Users, FileCheck, Rocket, Coins, TrendingUp } from "lucide-react";
+import {
+  Zap,
+  ShieldCheck,
+  Users,
+  FileCheck,
+  Rocket,
+  Coins,
+  TrendingUp,
+  BrainCircuit,
+} from "lucide-react";
 import BlockchainNetwork from "@/features/home/components/blockchain-network";
 import GridPattern from "@/features/home/components/grid-pattern";
 import {
@@ -148,9 +157,11 @@ const SectionHero = () => {
               variants={itemVariants}
               className="mt-6 text-lg text-gray-300 max-w-xl mx-auto md:mx-0"
             >
-              The first decentralized donation platform that uses blockchain technology to ensure
-              <span className="text-cyan-300 font-semibold"> 100% transparansi</span>. Every rupiah
-              is trackable, with no platform fees, powered by IDRX.
+              Verifund is hybrid donation platform. Give easily with
+              <span className="text-cyan-300 font-semibold"> QRIS or crypto</span>, and support
+              creators verified on the blockchain with{" "}
+              <span className="text-cyan-300 font-semibold"> Soulbound Tokens (SBTs).</span> Every
+              donation is transparent and trackable.
             </motion.p>
 
             <motion.div variants={itemVariants} className="mt-8">
@@ -256,17 +267,17 @@ const SectionHero = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-6">
             {[
               {
-                icon: <Eye className="w-7 h-7 text-blue-400" />,
-                title: "100%",
-                subtitle: "Transparant",
+                icon: <BrainCircuit className="w-7 h-7 text-blue-400" />,
+                title: "AI-Powered",
+                subtitle: "Insights",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
                 glowColor: "shadow-transparent",
               },
               {
                 icon: <Zap className="w-7 h-7 text-green-400" />,
-                title: "0%",
-                subtitle: "Fee Platform",
+                title: "Hybrid",
+                subtitle: "Payments",
                 bgGradient: "from-white/5 to-white/5",
                 borderColor: "border-white/20",
                 glowColor: "shadow-transparent",

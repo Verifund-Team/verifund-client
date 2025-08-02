@@ -1,42 +1,48 @@
-import { Eye, Plus, Wallet } from 'lucide-react'
-import { motion, Variants } from 'framer-motion'
-import React from 'react'
+import { Eye, Plus, ShieldCheck, Wallet } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+import React from "react";
 
 const steps = [
   {
     icon: Plus,
-    title: 'Create Campaign',
+    title: "Create Campaign",
     description:
-      'Campaigners create campaigns with detailed client information. Data is stored in IPFS for maximum transparency.',
+      "Campaigners create campaigns with detailed client information. Data is stored in IPFS for maximum transparency.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Get Verified (Optional)",
+    description:
+      "To build donor trust, creators can undergo a verification process. Once approved, they receive a non-transferable Soulbound Token (SBT) as a permanent, on-chain badge of credibility.",
   },
   {
     icon: Wallet,
-    title: 'Donate IDRX',
+    title: "Donate IDRX",
     description:
-      'Donors can use IDRX to make donations, and the funds will go directly into a secure smart contract.',
+      "Donors can use IDRX to make donations, and the funds will go directly into a secure smart contract.",
   },
   {
     icon: Eye,
-    title: 'Full Transparantion',
-    description: 'All transactions are recorded on the blockchain, ensuring transparency.',
+    title: "Full Transparantion",
+    description: "All transactions are recorded on the blockchain, ensuring transparency.",
   },
-]
+];
 const textVariant: Variants = {
   hidden: { opacity: 0, x: -30 },
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
+    transition: { duration: 0.6, ease: "easeOut" },
   },
-}
+};
 const iconVariant: Variants = {
   hidden: { opacity: 0, scale: 0.5 },
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { type: 'spring', stiffness: 150, damping: 20 },
+    transition: { type: "spring", stiffness: 150, damping: 20 },
   },
-}
+};
 
 const SectionHowItWorks = () => {
   return (
@@ -73,7 +79,7 @@ const SectionHowItWorks = () => {
             strokeWidth="2"
             initial={{ pathLength: 0 }}
             whileInView={{ pathLength: 1 }}
-            transition={{ duration: 2, ease: 'easeInOut' }}
+            transition={{ duration: 2, ease: "easeInOut" }}
             viewport={{ once: true }}
           />
         </svg>
@@ -98,7 +104,7 @@ const SectionHowItWorks = () => {
             <div
               key={step.title}
               className={`flex flex-col md:flex-row items-center gap-12 ${
-                index % 2 === 1 ? 'md:flex-row-reverse' : ''
+                index % 2 === 1 ? "md:flex-row-reverse" : ""
               }`}
             >
               <motion.div
@@ -130,7 +136,7 @@ const SectionHowItWorks = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default SectionHowItWorks
+export default SectionHowItWorks;
