@@ -4,7 +4,7 @@ import React from "react";
 import { Config, WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { XellarKitProvider, defaultConfig, darkTheme } from "@xellar/kit";
-import { liskSepolia } from "viem/chains";
+import { lisk } from "viem/chains";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -19,8 +19,8 @@ export const config = defaultConfig({
   appName: "Verifund",
   walletConnectProjectId,
   xellarAppId,
-  xellarEnv: "sandbox",
-  chains: [liskSepolia],
+  xellarEnv: "production",
+  chains: [lisk],
 }) as Config;
 
 const queryClient = new QueryClient();
