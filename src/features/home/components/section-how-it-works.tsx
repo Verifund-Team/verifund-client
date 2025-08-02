@@ -23,7 +23,7 @@ const steps = [
   },
   {
     icon: Eye,
-    title: "Full Transparantion",
+    title: "Full Transparency",
     description: "All transactions are recorded on the blockchain, ensuring transparency.",
   },
 ];

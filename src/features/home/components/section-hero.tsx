@@ -6,7 +6,7 @@ import { useConnectModal } from "@xellar/kit";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
-  Zap,
+  Wallet,
   ShieldCheck,
   Users,
   FileCheck,
@@ -138,7 +138,7 @@ const SectionHero = () => {
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 rounded-full px-4 py-2 mb-6 text-sm font-medium">
                 <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
                 <span className="bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
-                  Powered by Web3 & Blockchain
+                  Powered by Web3 Technology
                 </span>
               </div>
 
@@ -175,7 +175,7 @@ const SectionHero = () => {
                 <div className="absolute inset-0 rounded-2xl border border-cyan-400/50 group-hover:border-cyan-300/80 transition-colors duration-300" />
 
                 <span className="relative z-10 drop-shadow-lg flex items-center gap-2">
-                  <Zap className="w-5 h-5" />
+                  <Wallet className="w-5 h-5" />
                   Let&apos;s Donate!
                 </span>
               </Button>
@@ -275,7 +275,7 @@ const SectionHero = () => {
                 glowColor: "shadow-transparent",
               },
               {
-                icon: <Zap className="w-7 h-7 text-green-400" />,
+                icon: <Wallet className="w-7 h-7 text-green-400" />,
                 title: "Hybrid",
                 subtitle: "Payments",
                 bgGradient: "from-white/5 to-white/5",
