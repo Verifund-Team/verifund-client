@@ -10,11 +10,11 @@ export function useGetCampaignDetail(campaignAddress: string, userWalletAddress?
     queryKey: ["get-campaign-detail", campaignAddress, userWalletAddress],
 
     queryFn: async () => {
-      const [details, userDonation] = await Promise.all([
+      const [details, userDonationData] = await Promise.all([
         web3Service.getCampaignDetails(campaignAddress),
         userWalletAddress
-          ? web3Service.getDirectTransfers(campaignAddress, userWalletAddress)
-          : Promise.resolve("0"),
+          ? web3Service.getTotalUserDonation(campaignAddress, userWalletAddress)
+          : Promise.resolve({ fromDonateFunction: "0", fromDirectTransfer: "0", total: "0" }),
       ]);
 
       const totalRaised = Math.max(
@@ -34,7 +34,7 @@ export function useGetCampaignDetail(campaignAddress: string, userWalletAddress?
       return {
         ...details,
         metadata,
-        userDonation,
+        userDonation: userDonationData.total,
         totalRaised,
       } as CampaignDetail;
     },
