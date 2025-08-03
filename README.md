@@ -127,6 +127,13 @@ This application integrates with:
 - **VerifundSBT Contract**: Soul Bound Token for campaigners
 - **IDRX Token**: Digital rupiah stablecoin
 
+## 📋 Smart Contract Addresses
+
+### Lisk Mainnet
+- **IDRX Token**: `0x18Bc5bcC660cf2B9cE3cd51a404aFe1a0cBD3C22` (Official IDRX)
+- **VerifundSBT**: `0x3eb9972beA8f2fDE0C011c77E432f3706078E65E`
+- **CampaignFactory**: `0x72c4C531d16458622Fbd3B050923a1A2c7E69E3E`
+
 ### 🌍 Network Information
 - **Blockchain**: Lisk Mainnet
 - **Chain ID**: 1135
