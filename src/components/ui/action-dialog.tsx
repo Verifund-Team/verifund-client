@@ -56,7 +56,7 @@ export const ActionDialog = ({
               <p className="mt-2 text-xs text-muted-foreground break-all">
                 Tx Hash:{" "}
                 <Link
-                  href={`https://sepolia-blockscout.lisk.com/tx/${txHash}`}
+                  href={`https://blockscout.lisk.com/tx/${txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"

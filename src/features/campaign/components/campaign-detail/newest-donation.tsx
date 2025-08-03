@@ -71,7 +71,7 @@ const NewestDonation = ({ campaignAddress }: NewestDonationProps) => {
             <p>
               Tx Hash:
               <Link
-                href={`https://sepolia-blockscout.lisk.com/tx/${donation.txHash}`}
+                href={`https://blockscout.lisk.com/tx/${donation.txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline ml-1"

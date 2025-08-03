@@ -128,7 +128,7 @@ const TrackerPage = () => {
               <TableCell>{formatDate(tx.timestamp)}</TableCell>
               <TableCell>
                 <Link
-                  href={`https://sepolia-blockscout.lisk.com/tx/${tx.hash}`}
+                  href={`https://blockscout.lisk.com/tx/${tx.hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center text-primary hover:underline"
